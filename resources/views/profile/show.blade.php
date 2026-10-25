@@ -5,35 +5,57 @@
         @include('partials.kitchhug_header')
 
         <main>
-            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0]">
-                <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-                    <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
-                        <div class="flex items-center gap-5">
-                            <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-slate-900 text-2xl font-black text-white shadow-lg">
-                                {{ $user->initials() }}
+            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/70 to-[#FAF6F0]">
+                <div class="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+                    <div class="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-8">
+                        <div class="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-5 sm:grid-cols-[160px_minmax(0,1fr)] sm:gap-10">
+                            <div class="flex flex-col items-center gap-2">
+                                <div class="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-orange-100 bg-slate-900 text-2xl font-black text-white shadow-sm sm:h-36 sm:w-36">
+                                    @if ($user->profile_photo_path)
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($user->profile_photo_path) }}" alt="{{ $user->name }} profile photo" class="h-full w-full object-cover">
+                                    @else
+                                        {{ $user->initials() }}
+                                    @endif
+                                </div>
+                                <form method="POST" action="{{ route('profile.photo.update') }}" enctype="multipart/form-data" class="flex flex-col items-center gap-1">
+                                    @csrf
+                                    <label for="profile_photo" class="cursor-pointer text-xs font-bold text-orange-600 hover:text-orange-700">Change photo</label>
+                                    <input id="profile_photo" name="profile_photo" type="file" accept="image/jpeg,image/png,image/webp" required class="max-w-24 text-[10px] text-slate-400 file:hidden">
+                                    <button type="submit" class="text-[10px] font-semibold text-slate-500 underline decoration-orange-300 underline-offset-2 hover:text-orange-600">Upload</button>
+                                    @error('profile_photo')
+                                        <p class="w-36 text-center text-[10px] font-semibold text-rose-600">{{ $message }}</p>
+                                    @enderror
+                                </form>
                             </div>
-                            <div>
-                                <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-500">Your kitchen</p>
-                                <h1 class="mt-1 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">{{ $user->name }}</h1>
-                                <p class="mt-2 text-sm text-slate-600">Member since {{ $user->created_at->format('F Y') }}</p>
+
+                            <div class="min-w-0">
+                                <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-500">My profile</p>
+                                <h1 class="mt-1 break-words text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">{{ $user->name }}</h1>
+                                <p class="mt-1 truncate text-xs text-slate-500 sm:text-sm">{{ $user->email }}</p>
+                                <p class="mt-1 text-[11px] text-slate-400 sm:text-xs">Member since {{ $user->created_at->format('F Y') }}</p>
+
+                                <dl class="mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:max-w-lg sm:gap-6">
+                                    <div>
+                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $recipes->count() }}</dd>
+                                        <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Recipes</dt>
+                                    </div>
+                                    <div>
+                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $followersCount }}</dd>
+                                        <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Followers</dt>
+                                    </div>
+                                    <div>
+                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $followingCount }}</dd>
+                                        <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Following</dt>
+                                    </div>
+                                </dl>
                             </div>
                         </div>
-                        <div class="flex flex-wrap gap-3">
-                            <a href="{{ route('profile.edit') }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-50">Edit account</a>
-                            <a href="{{ route('recipes.create') }}" class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-600">＋ Share a recipe</a>
+
+                        <div class="mt-6 grid grid-cols-2 gap-3 border-t border-orange-100 pt-5">
+                            <a href="{{ route('profile.edit') }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-100">Edit profile</a>
+                            <a href="{{ route('recipes.create') }}" class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Share a recipe</a>
                         </div>
                     </div>
-
-                    <dl class="mt-8 grid max-w-xl grid-cols-2 gap-3">
-                        <div class="rounded-2xl border border-orange-100 bg-white/80 p-4">
-                            <dt class="text-xs font-bold uppercase tracking-widest text-slate-400">Recipes shared</dt>
-                            <dd class="mt-1 text-2xl font-black text-slate-900">{{ $recipes->count() }}</dd>
-                        </div>
-                        <div class="rounded-2xl border border-orange-100 bg-white/80 p-4">
-                            <dt class="text-xs font-bold uppercase tracking-widest text-slate-400">Account</dt>
-                            <dd class="mt-1 truncate text-sm font-bold text-slate-900">{{ $user->email }}</dd>
-                        </div>
-                    </dl>
                 </div>
             </section>
 
@@ -42,12 +64,12 @@
                     <div role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">{{ session('status') }}</div>
                 @endif
 
-                <div class="mb-6 flex items-end justify-between gap-4 border-b border-orange-100 pb-4">
+                <div class="mb-6 flex items-end justify-between gap-4">
                     <div>
                         <p class="text-[11px] font-extrabold uppercase tracking-widest text-orange-500">From your kitchen</p>
-                        <h2 class="mt-1 text-2xl font-black text-slate-900">Your recipes</h2>
+                        <h2 class="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">Your recipes</h2>
                     </div>
-                    <span class="text-sm font-semibold text-slate-500">{{ $recipes->count() }} {{ \Illuminate\Support\Str::plural('recipe', $recipes->count()) }}</span>
+                    <span class="rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-bold text-slate-600 shadow-sm">{{ $recipes->count() }} {{ \Illuminate\Support\Str::plural('recipe', $recipes->count()) }}</span>
                 </div>
 
                 @if ($recipes->isEmpty())
@@ -60,13 +82,17 @@
                 @else
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         @foreach ($recipes as $recipe)
-                            <article class="rounded-3xl border border-orange-100 bg-white p-6 shadow-sm">
-                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Recipe photo for {{ $recipe->title }}" class="mb-5 h-56 w-full rounded-2xl object-cover">
+                            <article class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                                <div class="relative h-56 overflow-hidden">
+                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Recipe photo for {{ $recipe->title }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                    <span class="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider text-orange-600 shadow-sm">{{ $recipe->category }}</span>
+                                    <span class="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm">⏱ {{ $recipe->prep_time_minutes }} min</span>
+                                </div>
+                                <div class="p-6">
                                 <div class="flex flex-wrap items-start justify-between gap-4">
                                     <div>
-                                        <span class="text-[11px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe->category }}</span>
-                                        <h3 class="mt-2 text-xl font-extrabold text-slate-900"><a href="{{ route('recipes.show', $recipe) }}" class="transition hover:text-orange-500">{{ $recipe->title }}</a></h3>
-                                        <p class="mt-1 text-xs font-semibold text-slate-400">⏱ {{ $recipe->prep_time_minutes }} min · Shared {{ $recipe->created_at->format('M j, Y') }}</p>
+                                        <h3 class="text-xl font-extrabold text-slate-900"><a href="{{ route('recipes.show', $recipe) }}" class="transition hover:text-orange-500">{{ $recipe->title }}</a></h3>
+                                        <p class="mt-2 text-xs font-semibold text-slate-400">Shared {{ $recipe->created_at->format('M j, Y') }}</p>
                                     </div>
                                     <div class="flex shrink-0 items-center gap-2">
                                         <a href="{{ route('recipes.edit', $recipe) }}" class="rounded-lg border border-orange-100 px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-orange-50 hover:text-orange-600">Edit</a>
@@ -97,6 +123,7 @@
                                         </div>
                                     </div>
                                 </details>
+                                </div>
                             </article>
                         @endforeach
                     </div>

@@ -40,7 +40,7 @@ test('profile shows only the signed in user recipes and offers account actions',
         ->get(route('profile.show'))
         ->assertOk()
         ->assertSee('My Tomato Soup')
-        ->assertSee('Edit account')
+        ->assertSee('Edit profile')
         ->assertSee('Share a recipe')
         ->assertSee('<video controls', false)
         ->assertDontSee('Someone Else Recipe');

@@ -1,23 +1,45 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex min-h-dvh flex-col bg-[#FAF6F0] text-slate-800 antialiased lg:h-dvh lg:min-h-0 lg:overflow-hidden">
+    <div class="flex min-h-dvh flex-col bg-[#FAF6F0] text-slate-800 antialiased">
         @include('partials.kitchhug_header')
 
-        <main class="lg:fixed lg:inset-x-0 lg:bottom-0 lg:top-[76px] lg:z-0 lg:overflow-hidden">
-            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0] lg:h-full lg:overflow-hidden">
-                <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:h-full lg:min-h-0 lg:grid-cols-2 lg:px-8">
-                    <div id="recipe-scroll-area" class="min-w-0 lg:col-span-1 lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
+        <main>
+            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0]">
+                <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-2 lg:px-8">
+                    <div id="recipe-scroll-area" class="min-w-0 lg:col-span-1 lg:pr-2">
                         <a href="{{ $recipe['back_url'] ?? (auth()->check() ? route('user_homepage') : route('home')) }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back to recipes</a>
                         <div class="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
                             @if ($recipe['image_url'])
-                                <img src="{{ $recipe['image_url'] }}" alt="Recipe photo for {{ $recipe['title'] }}" class="h-48 w-full rounded-3xl object-cover shadow-sm sm:h-56 sm:w-72">
+                                @if ($recipe['video_url'])
+                                    <div class="relative h-48 w-full shrink-0 overflow-hidden rounded-3xl bg-slate-900 shadow-sm sm:h-56 sm:w-72">
+                                        <video controls preload="none" poster="{{ $recipe['image_url'] }}" class="h-full w-full object-cover" aria-label="Recipe video for {{ $recipe['title'] }}">
+                                            <source src="{{ $recipe['video_url'] }}">
+                                            Your browser does not support video playback.
+                                        </video>
+                                        <button type="button" data-recipe-video-play class="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-orange-500/95 text-white shadow-lg transition hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200" aria-label="Play recipe video">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ml-1 h-7 w-7" aria-hidden="true">
+                                                <path d="M8 5.5a1 1 0 0 1 1.5-.86l10 6.5a1 1 0 0 1 0 1.72l-10 6.5A1 1 0 0 1 8 18.5z"></path>
+                                            </svg>
+                                        </button>
+                                        <p data-recipe-video-error role="status" class="absolute inset-x-2 bottom-2 hidden rounded-lg bg-rose-700/95 px-3 py-2 text-center text-xs font-semibold text-white"></p>
+                                    </div>
+                                @else
+                                    <img src="{{ $recipe['image_url'] }}" alt="Recipe photo for {{ $recipe['title'] }}" class="h-48 w-full rounded-3xl object-cover shadow-sm sm:h-56 sm:w-72">
+                                @endif
                             @else
                                 <div class="flex h-48 w-full items-center justify-center rounded-3xl bg-gradient-to-br from-orange-100 to-amber-50 text-8xl sm:h-56 sm:w-72" aria-hidden="true">{{ $recipe['emoji'] }}</div>
                             @endif
                             <div>
                                 <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-500">{{ $recipe['category'] }}</p>
                                 <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">{{ $recipe['title'] }}</h1>
+                                @if (($recipe['method'] ?? null) || ($recipe['recipe_type'] ?? null))
+                                    <p class="mt-2 text-xs font-bold uppercase tracking-wide text-slate-500">
+                                        @if ($recipe['recipe_type'] ?? null) {{ $recipe['recipe_type'] }} @endif
+                                        @if (($recipe['recipe_type'] ?? null) && ($recipe['method'] ?? null)) · @endif
+                                        @if ($recipe['method'] ?? null) {{ $recipe['method'] }} @endif
+                                    </p>
+                                @endif
                                 @if (isset($recipe['author_id']))
                                     <p class="mt-2 text-sm font-semibold text-slate-500">Shared by <a href="{{ route('users.show', $recipe['author_id']) }}" class="text-orange-600 transition hover:text-orange-700 hover:underline">{{ $recipe['author'] }}</a></p>
                                 @else
@@ -51,12 +73,6 @@
                                 <div class="rounded-3xl border border-orange-100 bg-white p-6 shadow-sm">
                                     <h2 class="text-xl font-black text-slate-900">Instructions</h2>
                                     <p class="mt-4 whitespace-pre-line text-sm leading-7 text-slate-600">{{ $recipe['instructions'] }}</p>
-                                    @if ($recipe['video_url'])
-                                        <video controls preload="metadata" class="mt-6 max-h-80 w-full rounded-2xl bg-slate-900" aria-label="Recipe video for {{ $recipe['title'] }}">
-                                            <source src="{{ $recipe['video_url'] }}">
-                                            Your browser does not support video playback.
-                                        </video>
-                                    @endif
                                 </div>
                             @else
                                 <div class="rounded-3xl border border-orange-100 bg-white p-6 shadow-sm">

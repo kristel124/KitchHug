@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['user_id', 'title', 'category', 'description', 'ingredients', 'instructions', 'prep_time_minutes', 'image_path', 'video_path'])]
+#[Fillable(['user_id', 'title', 'category', 'method', 'recipe_type', 'description', 'ingredients', 'instructions', 'prep_time_minutes', 'image_path', 'video_path'])]
 class Recipe extends Model
 {
     /**

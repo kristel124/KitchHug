@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -90,6 +91,28 @@ test('guests can view featured recipe information but must sign in or register t
         ->assertSee(route('register'))
         ->assertDontSee('Post comment')
         ->assertSee(route('home'));
+});
+
+test('uploaded recipe video appears on the recipe photo with a play button', function () {
+    $user = User::factory()->create();
+    $recipe = Recipe::create([
+        'user_id' => $user->id,
+        'title' => 'Garden Pasta',
+        'category' => 'Dinner',
+        'description' => 'Fresh herbs and vegetables.',
+        'ingredients' => 'Pasta and tomatoes',
+        'instructions' => 'Boil pasta and mix with vegetables.',
+        'prep_time_minutes' => 35,
+        'image_path' => 'recipe-images/garden-pasta.jpg',
+        'video_path' => 'recipe-videos/garden-pasta.mp4',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('recipes.show', $recipe))
+        ->assertOk()
+        ->assertSee('data-recipe-video-play', false)
+        ->assertSee('poster="http://localhost:8000/storage/recipe-images/garden-pasta.jpg"', false)
+        ->assertSee('http://localhost:8000/storage/recipe-videos/garden-pasta.mp4', false);
 });
 
 test('authenticated users can browse cooking videos', function () {

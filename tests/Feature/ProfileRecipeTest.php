@@ -54,6 +54,8 @@ test('a user can publish and update their recipe', function () {
         ->post(route('recipes.store'), [
             'title' => 'Garden Pasta',
             'category' => 'Dinner',
+            'method' => 'Boiling',
+            'recipe_type' => 'Pasta Recipes',
             'description' => 'Fresh herbs and vegetables.',
             'ingredients' => "Pasta\nTomatoes",
             'instructions' => 'Boil pasta and mix with vegetables.',
@@ -66,6 +68,8 @@ test('a user can publish and update their recipe', function () {
     $recipe = Recipe::query()->where('title', 'Garden Pasta')->firstOrFail();
 
     $this->assertSame($user->id, $recipe->user_id);
+    $this->assertSame('Boiling', $recipe->method);
+    $this->assertSame('Pasta Recipes', $recipe->recipe_type);
     Storage::disk('public')->assertExists($recipe->image_path);
     Storage::disk('public')->assertExists($recipe->video_path);
 
@@ -73,6 +77,8 @@ test('a user can publish and update their recipe', function () {
         ->put(route('recipes.update', $recipe), [
             'title' => 'Herby Garden Pasta',
             'category' => 'Dinner',
+            'method' => 'Frying',
+            'recipe_type' => 'Pasta Recipes',
             'description' => 'Fresh herbs and vegetables.',
             'ingredients' => "Pasta\nTomatoes",
             'instructions' => 'Boil pasta and mix with vegetables.',
@@ -80,7 +86,12 @@ test('a user can publish and update their recipe', function () {
         ])
         ->assertRedirect(route('profile.show'));
 
-    $this->assertDatabaseHas('recipes', ['id' => $recipe->id, 'title' => 'Herby Garden Pasta']);
+    $this->assertDatabaseHas('recipes', [
+        'id' => $recipe->id,
+        'title' => 'Herby Garden Pasta',
+        'method' => 'Frying',
+        'recipe_type' => 'Pasta Recipes',
+    ]);
 
     $videoPath = $recipe->video_path;
     $this->actingAs($user)
@@ -123,6 +134,8 @@ test('a user can view their recipe on its own information page', function () {
         'user_id' => $user->id,
         'title' => 'Garden Pasta',
         'category' => 'Dinner',
+        'method' => 'Boiling',
+        'recipe_type' => 'Pasta Recipes',
         'description' => 'Fresh herbs and vegetables.',
         'ingredients' => 'Pasta and tomatoes',
         'instructions' => 'Boil pasta and mix with vegetables.',
@@ -135,6 +148,8 @@ test('a user can view their recipe on its own information page', function () {
         ->get(route('recipes.show', $recipe))
         ->assertOk()
         ->assertSee('Garden Pasta')
+        ->assertSee('Pasta Recipes')
+        ->assertSee('Boiling')
         ->assertSee('Pasta and tomatoes')
         ->assertSee('Boil pasta and mix with vegetables.');
 });
@@ -145,6 +160,11 @@ test('recipe creation validates required fields', function () {
         ->assertOk()
         ->assertSee('Post a new recipe')
         ->assertSee('Publish recipe')
+        ->assertSee('name="method"', false)
+        ->assertSee('name="recipe_type"', false)
+        ->assertSee('Choose a course')
+        ->assertSee('Choose a method')
+        ->assertSee('Choose a recipe type')
         ->assertSee('name="photo"', false)
         ->assertSee('name="video"', false)
         ->assertSee('accept="video/mp4,video/quicktime,video/webm"', false)
@@ -153,5 +173,5 @@ test('recipe creation validates required fields', function () {
     $this->from(route('recipes.create'))
         ->post(route('recipes.store'), ['title' => ''])
         ->assertRedirect(route('recipes.create'))
-        ->assertSessionHasErrors(['title', 'category', 'description', 'ingredients', 'instructions', 'prep_time_minutes', 'photo']);
+        ->assertSessionHasErrors(['title', 'category', 'method', 'recipe_type', 'description', 'ingredients', 'instructions', 'prep_time_minutes', 'photo']);
 });

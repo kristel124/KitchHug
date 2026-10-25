@@ -18,11 +18,37 @@ class RecipeController extends Controller
 {
     private const CATEGORIES = ['Breakfast', 'Lunch', 'Dinner', 'Appetizers', 'Dessert', 'Main Course', 'Side Dish', 'Snacks'];
 
+    private const COURSE_CATEGORIES = self::CATEGORIES;
+
+    private const METHOD_CATEGORIES = [
+        'Baking',
+        'Grilling',
+        'Frying',
+        'Boiling',
+        'Steaming',
+        'Roasting',
+    ];
+
+    private const RECIPE_CATEGORIES = [
+        'Chicken Recipes',
+        'Seafood Recipes',
+        'Beef Recipes',
+        'Pasta Recipes',
+        'Dips & Spreads',
+        'Dessert',
+        'Pork Recipes',
+        'Side Dish',
+    ];
+
+    private const MAX_VIDEO_SIZE_KILOBYTES = 204800;
+
     public function create(): View
     {
         return view('recipes.form', [
             'recipe' => new Recipe,
-            'categories' => self::CATEGORIES,
+            'courseCategories' => self::COURSE_CATEGORIES,
+            'methodCategories' => self::METHOD_CATEGORIES,
+            'recipeCategories' => self::RECIPE_CATEGORIES,
         ]);
     }
 
@@ -37,6 +63,8 @@ class RecipeController extends Controller
                 'author_id' => $recipe->user_id,
                 'author' => $recipe->user->name,
                 'category' => $recipe->category,
+                'method' => $recipe->method,
+                'recipe_type' => $recipe->recipe_type,
                 'description' => $recipe->description,
                 'prep_time_minutes' => $recipe->prep_time_minutes,
                 'ingredients' => $recipe->ingredients,
@@ -135,7 +163,14 @@ class RecipeController extends Controller
 
         return view('recipes.form', [
             'recipe' => $recipe,
-            'categories' => self::CATEGORIES,
+            'courseCategories' => array_values(array_unique([
+                ...self::COURSE_CATEGORIES,
+                ...($recipe->category && ! in_array($recipe->category, self::COURSE_CATEGORIES, true)
+                    ? [$recipe->category]
+                    : []),
+            ])),
+            'methodCategories' => self::METHOD_CATEGORIES,
+            'recipeCategories' => self::RECIPE_CATEGORIES,
         ]);
     }
 
@@ -375,18 +410,20 @@ class RecipeController extends Controller
     }
 
     /**
-     * @return array{title: string, category: string, description: string, ingredients: string, instructions: string, prep_time_minutes: int}
+     * @return array{title: string, category: string, method: string, recipe_type: string, description: string, ingredients: string, instructions: string, prep_time_minutes: int}
      */
     private function validatedRecipeData(Request $request, bool $requirePhoto): array
     {
         return $request->validate([
             'title' => ['required', 'string', 'max:120'],
             'category' => ['required', 'string', Rule::in(self::CATEGORIES)],
+            'method' => ['required', 'string', Rule::in(self::METHOD_CATEGORIES)],
+            'recipe_type' => ['required', 'string', Rule::in(self::RECIPE_CATEGORIES)],
             'description' => ['required', 'string', 'max:2000'],
             'ingredients' => ['required', 'string', 'max:10000'],
             'instructions' => ['required', 'string', 'max:20000'],
             'prep_time_minutes' => ['required', 'integer', 'min:1', 'max:1440'],
-            'video' => ['nullable', 'file', 'mimes:mp4,mov,webm', 'max:51200'],
+            'video' => ['nullable', 'file', 'mimes:mp4,mov,webm', 'max:'.self::MAX_VIDEO_SIZE_KILOBYTES],
             'photo' => [$requirePhoto ? 'required' : 'nullable', 'image', 'max:5120'],
         ]);
     }

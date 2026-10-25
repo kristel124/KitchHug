@@ -5,6 +5,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
@@ -70,14 +71,32 @@ test('my profile shows follow counts and accepts a profile photo upload', functi
         ->assertOk()
         ->assertSee('Followers')
         ->assertSee('Following')
-        ->assertSee('Upload');
+        ->assertDontSee('Change photo')
+        ->assertDontSee('name="profile_photo"', false);
 
-    $this->post(route('profile.photo.update'), [
+    $this->actingAs($user)
+        ->get(route('profile.edit'))
+        ->assertOk()
+        ->assertSee('Edit your profile')
+        ->assertSee('name="profile_photo"', false)
+        ->assertSee('name="name"', false)
+        ->assertSee('name="email"', false)
+        ->assertSee('Change password')
+        ->assertSee('name="current_password"', false)
+        ->assertSee('name="password"', false)
+        ->assertSee('name="password_confirmation"', false);
+
+    Livewire::actingAs($user)
+        ->test('pages::settings.profile')
+        ->assertSee('Change')
+        ->assertSee('name="profile_photo"', false);
+
+    $this->actingAs($user)->post(route('profile.photo.update'), [
         'profile_photo' => UploadedFile::fake()->createWithContent(
             'avatar.png',
             base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/f3sAAAAASUVORK5CYII=')
         ),
-    ])->assertRedirect(route('profile.show'));
+    ])->assertRedirect(route('profile.edit'));
 
     $user->refresh();
     expect($user->profile_photo_path)->not->toBeNull();
@@ -87,4 +106,36 @@ test('my profile shows follow counts and accepts a profile photo upload', functi
         ->get(route('profile.show'))
         ->assertOk()
         ->assertSee(Storage::disk('public')->url($user->profile_photo_path));
+});
+
+test('profile edit page can update the account password', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test('pages::settings.profile')
+        ->assertSee('Change password')
+        ->assertSee('Current password')
+        ->assertSee('New password')
+        ->assertSee('Confirm new password')
+        ->set('current_password', 'password')
+        ->set('password', 'new-password-123')
+        ->set('password_confirmation', 'new-password-123')
+        ->call('updatePassword')
+        ->assertHasNoErrors();
+
+    expect(password_verify('new-password-123', $user->refresh()->password))->toBeTrue();
+});
+
+test('profile edit page requires the current password before changing it', function () {
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test('pages::settings.profile')
+        ->set('current_password', 'incorrect-password')
+        ->set('password', 'new-password-123')
+        ->set('password_confirmation', 'new-password-123')
+        ->call('updatePassword')
+        ->assertHasErrors(['current_password']);
+
+    expect(password_verify('password', $user->refresh()->password))->toBeTrue();
 });

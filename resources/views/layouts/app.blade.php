@@ -7,6 +7,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-[#f2eadf] font-sans text-slate-800 antialiased">
-    @yield('content')
+    @hasSection('content')
+        @yield('content')
+    @else
+        {{ $slot }}
+    @endif
 </body>
 </html>

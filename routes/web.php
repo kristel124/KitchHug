@@ -3,12 +3,17 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeFavoriteController;
+use App\Models\Recipe;
+use App\Models\RecipeComment;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return auth()->check()
-        ? redirect()->route('user_homepage')
-        : view('welcome');
+    if (auth()->check()) {
+        return redirect()->route(auth()->user()->isAdmin() ? 'admin.dashboard' : 'user_homepage');
+    }
+
+    return view('welcome');
 })->name('home');
 
 // Login at Register Routes gamit ang tamang view path
@@ -26,7 +31,20 @@ Route::get('/explore/categories/{category}', [RecipeController::class, 'category
     ->name('recipes.public-category');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('/user_homepage', 'user_homepage')->name('user_homepage');
+    Route::get('/user_homepage', function () {
+        if (auth()->user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        return view('user_homepage');
+    })->name('user_homepage');
+    Route::get('/admin', function () {
+        return view('admin.dashboard', [
+            'userCount' => User::count(),
+            'recipeCount' => Recipe::count(),
+            'commentCount' => RecipeComment::count(),
+        ]);
+    })->middleware('can:access-admin-dashboard')->name('admin.dashboard');
     Route::view('/my-recipes', 'my_recipes')->name('my_recipes');
     Route::get('/favorite-recipes', [RecipeFavoriteController::class, 'index'])->name('favorites.index');
     Route::post('/favorite-recipes/toggle', [RecipeFavoriteController::class, 'toggle'])->name('favorites.toggle');
@@ -45,8 +63,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recipes/{recipe}/edit', [RecipeController::class, 'edit'])->name('recipes.edit');
     Route::put('/recipes/{recipe}', [RecipeController::class, 'update'])->name('recipes.update');
     Route::delete('/recipes/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy');
-    // Keep a friendly alias for the same page, but the real redirect target is /user_homepage
-    Route::view('/home', 'user_homepage');
+    Route::redirect('/home', '/user_homepage');
     Route::redirect('/dashboard', '/user_homepage');
 });
 

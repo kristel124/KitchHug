@@ -102,6 +102,56 @@ test('a user can publish and update their recipe', function () {
     Storage::disk('public')->assertMissing($videoPath);
 });
 
+test('a user can replace their recipe photo while editing', function () {
+    Storage::fake('public');
+    $user = User::factory()->create();
+    $oldPhotoPath = 'recipe-images/old-photo.png';
+    Storage::disk('public')->put($oldPhotoPath, 'old photo');
+    $recipe = Recipe::create([
+        'user_id' => $user->id,
+        'title' => 'Garden Pasta',
+        'category' => 'Dinner',
+        'method' => 'Boiling',
+        'recipe_type' => 'Pasta Recipes',
+        'description' => 'Fresh herbs and vegetables.',
+        'ingredients' => "Pasta\nTomatoes",
+        'instructions' => 'Boil pasta and mix with vegetables.',
+        'prep_time_minutes' => 35,
+        'image_path' => $oldPhotoPath,
+        'video_path' => null,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('recipes.edit', $recipe))
+        ->assertOk()
+        ->assertSee('data-photo-preview', false)
+        ->assertSee('Your new photo will preview here.');
+
+    $this->actingAs($user)
+        ->post(route('recipes.update', $recipe), [
+            '_method' => 'PUT',
+            'title' => $recipe->title,
+            'category' => $recipe->category,
+            'method' => $recipe->method,
+            'recipe_type' => $recipe->recipe_type,
+            'description' => $recipe->description,
+            'ingredients' => $recipe->ingredients,
+            'instructions' => $recipe->instructions,
+            'prep_time_minutes' => $recipe->prep_time_minutes,
+            'photo' => UploadedFile::fake()->createWithContent(
+                'new-photo.png',
+                base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/f3sAAAAASUVORK5CYII=')
+            ),
+        ])
+        ->assertRedirect(route('profile.show'));
+
+    $recipe->refresh();
+
+    expect($recipe->image_path)->not->toBe($oldPhotoPath);
+    Storage::disk('public')->assertExists($recipe->image_path);
+    Storage::disk('public')->assertMissing($oldPhotoPath);
+});
+
 test('users cannot edit or delete another users recipe', function () {
     $owner = User::factory()->create();
     $visitor = User::factory()->create();

@@ -17,15 +17,6 @@
                                         {{ $user->initials() }}
                                     @endif
                                 </div>
-                                <form method="POST" action="{{ route('profile.photo.update') }}" enctype="multipart/form-data" class="flex flex-col items-center gap-1">
-                                    @csrf
-                                    <label for="profile_photo" class="cursor-pointer text-xs font-bold text-orange-600 hover:text-orange-700">Change photo</label>
-                                    <input id="profile_photo" name="profile_photo" type="file" accept="image/jpeg,image/png,image/webp" required class="max-w-24 text-[10px] text-slate-400 file:hidden">
-                                    <button type="submit" class="text-[10px] font-semibold text-slate-500 underline decoration-orange-300 underline-offset-2 hover:text-orange-600">Upload</button>
-                                    @error('profile_photo')
-                                        <p class="w-36 text-center text-[10px] font-semibold text-rose-600">{{ $message }}</p>
-                                    @enderror
-                                </form>
                             </div>
 
                             <div class="min-w-0">

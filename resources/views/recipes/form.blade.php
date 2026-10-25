@@ -122,12 +122,15 @@
                     <div class="rounded-3xl border border-dashed border-orange-200 bg-orange-50/40 p-5 sm:p-6">
                         <label for="photo" class="flex items-center gap-2 text-sm font-bold text-slate-700"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-orange-600" aria-hidden="true"><path d="M14 4h-4L8 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-4l-2-3Z"></path><circle cx="12" cy="13" r="3"></circle></svg>Recipe photo @unless ($isEditing)<span class="text-rose-600">(required)</span>@endunless</label>
                         @if ($isEditing)
-                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Current photo for {{ $recipe->title }}" class="mt-3 h-48 w-full rounded-2xl object-cover sm:w-72">
-                            <p class="mt-2 text-xs text-slate-500">Choose a new image only if you want to replace the current photo.</p>
+                            <p class="mt-1 text-xs text-slate-500">Choose a new image to replace the current photo. Your new photo will preview here.</p>
                         @else
                             <p class="mt-1 text-xs text-slate-500">Add a clear photo of your finished dish. JPG, PNG, or WebP up to 5 MB.</p>
                         @endif
                         <input id="photo" name="photo" type="file" accept="image/*" @required(!$isEditing) class="mt-3 block w-full cursor-pointer rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm text-slate-600 file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-orange-100 file:px-4 file:py-2 file:font-bold file:text-orange-700 hover:file:bg-orange-200">
+                        <div class="mt-4 flex flex-wrap items-center gap-4">
+                            <img data-photo-preview data-original-src="{{ $isEditing ? \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) : '' }}" @if ($isEditing) src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" @endif alt="{{ $isEditing ? 'Current photo for '.$recipe->title : 'Selected recipe photo preview' }}" class="{{ $isEditing ? '' : 'hidden' }} h-28 w-36 rounded-2xl border border-orange-100 object-cover shadow-sm sm:h-32 sm:w-44">
+                            <p data-photo-preview-status role="status" class="text-xs font-semibold leading-5 text-slate-500">{{ $isEditing ? 'Current recipe photo' : 'Your selected photo will appear here.' }}</p>
+                        </div>
                         @error('photo') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
                     </div>
 

@@ -41,7 +41,7 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($oldPhotoPath);
         }
 
-        return to_route('profile.show')->with('status', 'Your profile photo was updated.');
+        return to_route('profile.edit')->with('status', 'Your profile photo was updated.');
     }
 
     public function publicProfile(Request $request, User $user): View

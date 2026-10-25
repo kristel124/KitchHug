@@ -31,7 +31,13 @@
 
         <div class="relative flex min-h-svh flex-col items-center justify-center p-6 md:p-10" style="background: transparent !important;">
             <div class="flex w-full max-w-md flex-col gap-6">
-                
+                @if (request()->routeIs('login', 'register'))
+                    <a href="{{ route('home') }}" class="inline-flex w-fit items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-white/70 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                        <span aria-hidden="true">←</span>
+                        {{ __('Back to home') }}
+                    </a>
+                @endif
+
                 <!-- Kitchen Hug Logo -->
                 <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 group focus:outline-none" wire:navigate>
                     <div class="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-all">

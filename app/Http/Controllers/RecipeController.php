@@ -52,7 +52,7 @@ class RecipeController extends Controller
 
         return view('recipes.show', [
             'recipe' => $recipes[$slug] + [
-                'image_url' => null,
+                'image_url' => $recipes[$slug]['image_url'],
                 'video_url' => null,
                 'featured_slug' => $slug,
                 'comment_action' => route('recipes.featured.comments.store', $slug),
@@ -249,7 +249,7 @@ class RecipeController extends Controller
     }
 
     /**
-     * @return array<string, array{title: string, category: string, description: string, prep_time_minutes: int, ingredients: string, instructions: string, emoji: string}>
+     * @return array<string, array{title: string, category: string, description: string, prep_time_minutes: int, ingredients: string, instructions: string, emoji: string, image_url: string}>
      */
     private function featuredRecipes(): array
     {
@@ -262,6 +262,7 @@ class RecipeController extends Controller
                 'ingredients' => "2 chicken breasts\n1 cup breadcrumbs\n1 egg, beaten\n1/2 cup flour\n1 teaspoon garlic powder\nSalt and pepper\n2 tablespoons cooking oil",
                 'instructions' => "1. Season the chicken with salt, pepper, and garlic powder.\n2. Coat each piece in flour, dip in beaten egg, then cover with breadcrumbs.\n3. Heat the oil in a pan over medium heat.\n4. Cook the chicken for 5-7 minutes per side until golden and cooked through.\n5. Rest briefly before serving.",
                 'emoji' => '🍗',
+                'image_url' => 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=80',
             ],
             'fluffy-pancakes' => [
                 'title' => 'Fluffy Pancakes',
@@ -271,6 +272,7 @@ class RecipeController extends Controller
                 'ingredients' => "1 cup all-purpose flour\n1 tablespoon sugar\n1 teaspoon baking powder\n1 egg\n3/4 cup milk\n2 tablespoons melted butter\nA pinch of salt",
                 'instructions' => "1. Whisk together the flour, sugar, baking powder, and salt.\n2. In a separate bowl, whisk the egg, milk, and melted butter.\n3. Stir the wet ingredients into the dry ingredients until just combined.\n4. Pour small portions onto a warm, lightly buttered pan.\n5. Flip when bubbles appear and cook until golden on both sides.",
                 'emoji' => '🥞',
+                'image_url' => 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=900&q=80',
             ],
             'garlic-cream-pasta' => [
                 'title' => 'Garlic Cream Pasta',
@@ -280,6 +282,7 @@ class RecipeController extends Controller
                 'ingredients' => "250 g pasta\n2 tablespoons butter\n3 cloves garlic, minced\n1 cup cream\n1/2 cup grated parmesan\nSalt and black pepper\nFresh parsley",
                 'instructions' => "1. Cook the pasta in salted water according to the package directions; reserve a little pasta water.\n2. Melt the butter in a pan and gently cook the garlic until fragrant.\n3. Stir in the cream and simmer for 2-3 minutes.\n4. Add the parmesan and stir until smooth.\n5. Toss with the drained pasta, loosening the sauce with pasta water if needed. Season and top with parsley.",
                 'emoji' => '🍝',
+                'image_url' => 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=900&q=80',
             ],
             'fresh-garden-salad' => [
                 'title' => 'Fresh Garden Salad',
@@ -289,6 +292,7 @@ class RecipeController extends Controller
                 'ingredients' => "4 cups mixed lettuce\n1 cucumber, sliced\n1 cup cherry tomatoes, halved\n1/2 red onion, thinly sliced\n2 tablespoons olive oil\n1 tablespoon lemon juice\nSalt and black pepper",
                 'instructions' => "1. Wash and dry the lettuce and vegetables.\n2. Combine the lettuce, cucumber, tomatoes, and red onion in a large bowl.\n3. Whisk together the olive oil, lemon juice, salt, and pepper.\n4. Drizzle the dressing over the salad and toss just before serving.",
                 'emoji' => '🥗',
+                'image_url' => 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=900&q=80',
             ],
         ];
     }

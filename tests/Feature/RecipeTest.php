@@ -11,6 +11,17 @@ test('example', function () {
     $response->assertStatus(200);
 });
 
+test('welcome page shows featured recipe cards below the hero', function () {
+    $this->get(route('home'))
+        ->assertOk()
+        ->assertSee('Explore Recipes')
+        ->assertSee('Crispy Chicken')
+        ->assertSee('Fluffy Pancakes')
+        ->assertSee('Garlic Cream Pasta')
+        ->assertSee('Fresh Garden Salad')
+        ->assertSee(route('recipes.featured', 'crispy-chicken'));
+});
+
 test('each recipe category has a page', function () {
     $this->actingAs(User::factory()->make());
 
@@ -49,9 +60,23 @@ test('featured recipe cards open a page with recipe information', function () {
     $this->get(route('recipes.featured', 'crispy-chicken'))
         ->assertOk()
         ->assertSee('Crispy Chicken')
+        ->assertSee('https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&amp;fit=crop&amp;w=900&amp;q=80', false)
         ->assertSee('Ingredients')
         ->assertSee('Instructions')
         ->assertSee('breadcrumbs');
+});
+
+test('guests can view featured recipe information but must sign in or register to comment', function () {
+    $this->get(route('recipes.featured', 'crispy-chicken'))
+        ->assertOk()
+        ->assertSee('Crispy Chicken')
+        ->assertSee('Ingredients')
+        ->assertSee('Instructions')
+        ->assertSee('Want to share your thoughts?')
+        ->assertSee(route('login'))
+        ->assertSee(route('register'))
+        ->assertDontSee('Post comment')
+        ->assertSee(route('home'));
 });
 
 test('authenticated users can browse cooking videos', function () {

@@ -7,7 +7,7 @@
         <main>
             <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0]">
                 <div class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
-                    <a href="{{ route('user_homepage') }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back to recipes</a>
+                    <a href="{{ auth()->check() ? route('user_homepage') : route('home') }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back to recipes</a>
                     <div class="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center">
                         @if ($recipe['image_url'])
                             <img src="{{ $recipe['image_url'] }}" alt="Recipe photo for {{ $recipe['title'] }}" class="h-48 w-full rounded-3xl object-cover shadow-sm sm:h-56 sm:w-72">
@@ -33,15 +33,25 @@
                     @if (session('status'))
                         <p role="status" class="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">{{ session('status') }}</p>
                     @endif
-                    <form method="POST" action="{{ $recipe['comment_action'] }}" class="mt-5">
-                        @csrf
-                        <label for="body" class="text-sm font-bold text-slate-700">Add your comment</label>
-                        <textarea id="body" name="body" rows="4" maxlength="2000" required class="mt-2 w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100" placeholder="Share what you think about this recipe...">{{ old('body') }}</textarea>
-                        @error('body')
-                            <p class="mt-2 text-sm font-semibold text-rose-600">{{ $message }}</p>
-                        @enderror
-                        <button type="submit" class="mt-3 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Post comment</button>
-                    </form>
+                    @auth
+                        <form method="POST" action="{{ $recipe['comment_action'] }}" class="mt-5">
+                            @csrf
+                            <label for="body" class="text-sm font-bold text-slate-700">Add your comment</label>
+                            <textarea id="body" name="body" rows="4" maxlength="2000" required class="mt-2 w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100" placeholder="Share what you think about this recipe...">{{ old('body') }}</textarea>
+                            @error('body')
+                                <p class="mt-2 text-sm font-semibold text-rose-600">{{ $message }}</p>
+                            @enderror
+                            <button type="submit" class="mt-3 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Post comment</button>
+                        </form>
+                    @else
+                        <p class="mt-5 rounded-2xl bg-orange-50 p-4 text-sm leading-6 text-slate-600">
+                            Want to share your thoughts?
+                            <a href="{{ route('login') }}" class="font-bold text-orange-600 transition hover:text-orange-700">Log in</a>
+                            or
+                            <a href="{{ route('register') }}" class="font-bold text-orange-600 transition hover:text-orange-700">create an account</a>
+                            to comment.
+                        </p>
+                    @endauth
 
                     <div class="mt-6 space-y-4 border-t border-orange-100 pt-5">
                         @forelse ($comments as $comment)

@@ -9,7 +9,9 @@ uses(RefreshDatabase::class);
 test('login screen can be rendered', function () {
     $response = $this->get(route('login'));
 
-    $response->assertOk();
+    $response->assertOk()
+        ->assertSee('Back to home')
+        ->assertSee(route('home'));
 });
 
 test('users can authenticate using the login screen', function () {

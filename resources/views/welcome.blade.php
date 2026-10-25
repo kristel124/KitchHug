@@ -86,18 +86,31 @@
     <!-- ================= HERO SECTION ================= -->
     <main id="main-content" class="grow">
 
-        <section class="relative overflow-hidden bg-gradient-to-b from-orange-100/70 via-orange-50/50 to-transparent py-12 lg:py-20">
+        <section id="categories" data-carousel class="relative isolate overflow-hidden bg-orange-50 py-12 lg:py-20">
+            <div role="region" aria-roledescription="carousel" aria-label="Featured recipe backgrounds"
+                 class="absolute inset-0">
+                <article data-carousel-slide role="group" aria-roledescription="slide" aria-label="1 of 3" class="absolute inset-0">
+                    <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&amp;fit=crop&amp;w=1920&amp;q=85"
+                         alt="Colorful fresh salad with vegetables and greens" class="h-full w-full object-cover" loading="eager" width="1920" height="1080">
+                </article>
+                <article data-carousel-slide role="group" aria-roledescription="slide" aria-label="2 of 3" class="absolute inset-0 hidden">
+                    <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&amp;fit=crop&amp;w=1920&amp;q=85"
+                         alt="A cozy homemade meal served on a rustic table" class="h-full w-full object-cover" loading="lazy" width="1920" height="1080">
+                </article>
+                <article data-carousel-slide role="group" aria-roledescription="slide" aria-label="3 of 3" class="absolute inset-0 hidden">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&amp;fit=crop&amp;w=1920&amp;q=85"
+                         alt="Freshly baked pizza topped with colorful ingredients" class="h-full w-full object-cover" loading="lazy" width="1920" height="1080">
+                </article>
+            </div>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-orange-50/95 via-orange-50/80 to-orange-50/40"></div>
+            <div class="pointer-events-none absolute inset-0 bg-white/10"></div>
 
-            <!-- Decorative Ambient Glows -->
-            <div class="absolute -top-24 -right-24 w-96 h-96 bg-orange-300/30 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute top-1/2 -left-24 w-80 h-80 bg-amber-200/40 rounded-full blur-3xl pointer-events-none"></div>
-
-            <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
 
                     <!-- Hero Content -->
-                    <div class="lg:col-span-7 max-w-2xl">
+                    <div class="lg:col-span-8 max-w-3xl">
 
                         <div class="inline-flex items-center gap-2 px-4 py-2 mb-6 bg-white/80 border border-orange-200/60 rounded-full text-xs sm:text-sm font-bold text-orange-700 shadow-sm backdrop-blur-sm">
                             <span role="img" aria-label="Fork and knife">🍴</span>
@@ -140,57 +153,62 @@
 
                     </div>
 
-                    <!-- Hero Illustration -->
-                    <div class="lg:col-span-5 relative flex justify-center lg:justify-end">
-
-                        <div class="relative w-full max-w-md">
-
-                            <!-- Decorative Layer Cards -->
-                            <div class="absolute inset-0 bg-gradient-to-tr from-orange-400 to-amber-300 rounded-[2.5rem] rotate-3 opacity-20 transform scale-95"></div>
-
-                            <div class="relative bg-white/80 rounded-[2.5rem] p-6 sm:p-8 shadow-2xl shadow-orange-900/10 border border-white/80 backdrop-blur-md">
-
-                                <img
-                                    src="https://cdni.iconscout.com/illustration/premium/thumb/female-chef-cooking-illustration-download-in-svg-png-gif-file-formats--woman-cook-kitchen-flat-illustrations-pack-people-3802381.png"
-                                    alt="Illustration of a cheerful female chef preparing meals in a modern kitchen"
-                                    class="w-full h-72 sm:h-80 object-contain drop-shadow-md"
-                                    loading="eager"
-                                    width="400"
-                                    height="320"
-                                >
-
-                            </div>
-
-                            <!-- Floating Recipe Card Badge -->
-                            <div class="absolute -bottom-6 -left-4 sm:-left-6 bg-white/95 rounded-2xl shadow-xl shadow-slate-900/10 p-4 border border-orange-100 flex items-center gap-3.5 backdrop-blur-sm">
-
-                                <div class="w-12 h-12 rounded-xl bg-orange-100 text-orange-600 flex items-center justify-center text-2xl shadow-inner shrink-0">
-                                    ❤️
-                                </div>
-
-                                <div>
-                                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                                        Today's Featured
-                                    </p>
-
-                                    <p class="font-extrabold text-slate-900 text-sm sm:text-base">
-                                        Made with Love
-                                    </p>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
                 </div>
 
+            </div>
+
+            <div class="absolute bottom-5 right-5 z-20 flex items-center gap-3 sm:bottom-7 sm:right-8">
+            </div>
+        </section>
+
+        <!-- ================= FEATURED RECIPES ================= -->
+        <section id="explore" class="bg-white py-16 lg:py-20 border-y border-orange-100/50">
+            @php
+                $featuredRecipes = [
+                    ['name' => 'Crispy Chicken', 'slug' => 'crispy-chicken', 'category' => 'Main Course', 'time' => '30 mins', 'rating' => '4.9', 'image' => 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=80', 'description' => 'Juicy chicken coated in a crisp, savory crust.'],
+                    ['name' => 'Fluffy Pancakes', 'slug' => 'fluffy-pancakes', 'category' => 'Breakfast', 'time' => '15 mins', 'rating' => '4.8', 'image' => 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=900&q=80', 'description' => 'Soft, golden pancakes made for a cozy breakfast.'],
+                    ['name' => 'Garlic Cream Pasta', 'slug' => 'garlic-cream-pasta', 'category' => 'Pasta', 'time' => '25 mins', 'rating' => '4.9', 'image' => 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=900&q=80', 'description' => 'Tender pasta tossed in a creamy garlic and parmesan sauce.'],
+                    ['name' => 'Fresh Garden Salad', 'slug' => 'fresh-garden-salad', 'category' => 'Healthy', 'time' => '10 mins', 'rating' => '4.7', 'image' => 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=900&q=80', 'description' => 'Crisp seasonal vegetables with a bright homemade dressing.'],
+                ];
+            @endphp
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col gap-3 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Made for your table</span>
+                        <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Explore Recipes</h2>
+                        <p class="mt-2 text-slate-500">Find a new favorite to make and share.</p>
+                    </div>
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 text-sm font-bold text-orange-600 transition hover:text-orange-700">
+                        Create your recipe box <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+
+                <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                    @foreach ($featuredRecipes as $recipe)
+                        <a href="{{ route('recipes.featured', $recipe['slug']) }}"
+                           class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
+                            <div class="relative h-44 overflow-hidden">
+                                <img src="{{ $recipe['image'] }}" alt="{{ $recipe['name'] }} recipe photo" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                                <span class="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-bold text-slate-700 shadow-sm">⭐ {{ $recipe['rating'] }}</span>
+                            </div>
+                            <div class="p-5">
+                                <div class="flex items-center justify-between gap-3">
+                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe['category'] }}</span>
+                                    <span class="shrink-0 text-xs font-semibold text-slate-400">⏱ {{ $recipe['time'] }}</span>
+                                </div>
+                                <h3 class="mt-2 text-lg font-extrabold text-slate-900 transition-colors group-hover:text-orange-500">{{ $recipe['name'] }}</h3>
+                                <p class="mt-2 min-h-12 text-sm leading-6 text-slate-500">{{ $recipe['description'] }}</p>
+                                <p class="mt-4 border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
             </div>
         </section>
 
         <!-- ================= FEATURES ================= -->
-        <section id="explore" class="bg-white py-20 lg:py-28 border-y border-orange-100/50">
+        <section id="why-kitchen-hug" class="bg-white py-20 lg:py-28 border-b border-orange-100/50">
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
@@ -217,8 +235,10 @@
                     <!-- Card 1 -->
                     <div class="group p-8 bg-orange-50/30 border border-orange-100 rounded-3xl hover:bg-white hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 hover:-translate-y-1 transition-all duration-300">
 
-                        <div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
-                            📖
+                        <div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 7v14m0-14C10.5 5.7 8.7 5 6.5 5 5.6 5 4.8 5.1 4 5.4v14c.8-.3 1.6-.4 2.5-.4 2.2 0 4 .7 5.5 2m0-14c1.5-1.3 3.3-2 5.5-2 .9 0 1.7.1 2.5.4v14c-.8-.3-1.6-.4-2.5-.4-2.2 0-4 .7-5.5 2"/>
+                            </svg>
                         </div>
 
                         <h3 class="mt-6 text-xl font-bold text-slate-900">
@@ -235,8 +255,11 @@
                     <!-- Card 2 -->
                     <div class="group p-8 bg-orange-50/30 border border-orange-100 rounded-3xl hover:bg-white hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 hover:-translate-y-1 transition-all duration-300">
 
-                        <div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
-                            🔎
+                        <div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="10.8" cy="10.8" r="6.8" stroke-width="1.8"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="m16 16 4.5 4.5"/>
+                            </svg>
                         </div>
 
                         <h3 class="mt-6 text-xl font-bold text-slate-900">
@@ -253,8 +276,10 @@
                     <!-- Card 3 -->
                     <div class="group p-8 bg-orange-50/30 border border-orange-100 rounded-3xl hover:bg-white hover:border-orange-200 hover:shadow-xl hover:shadow-orange-500/5 hover:-translate-y-1 transition-all duration-300">
 
-                        <div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center text-2xl group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
-                            ❤️
+                        <div class="w-14 h-14 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/>
+                            </svg>
                         </div>
 
                         <h3 class="mt-6 text-xl font-bold text-slate-900">
@@ -335,6 +360,29 @@
         </div>
 
     </footer>
+
+    <script>
+        (() => {
+            const carousel = document.querySelector('[data-carousel]');
+            if (!carousel) return;
+
+            const slides = Array.from(carousel.querySelectorAll('[data-carousel-slide]'));
+            let currentIndex = 0;
+
+            const showSlide = (index) => {
+                currentIndex = (index + slides.length) % slides.length;
+                slides.forEach((slide, slideIndex) => {
+                    slide.classList.toggle('hidden', slideIndex !== currentIndex);
+                    slide.setAttribute('aria-hidden', String(slideIndex !== currentIndex));
+                });
+            };
+
+            showSlide(0);
+            window.setInterval(() => {
+                showSlide(currentIndex + 1);
+            }, 4000);
+        })();
+    </script>
 
 </body>
 </html>

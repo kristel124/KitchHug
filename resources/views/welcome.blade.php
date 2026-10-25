@@ -32,61 +32,12 @@
         Skip to main content
     </a>
 
-    <!-- ================= NAVIGATION ================= -->
-    <header class="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-orange-100/60 transition-all">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="h-20 flex items-center justify-between gap-4">
-
-                <!-- Logo -->
-                <a href="#" class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-orange-500 rounded-2xl p-1 shrink-0">
-                    <div class="w-11 h-11 rounded-2xl bg-orange-500 flex items-center justify-center text-white text-xl shadow-md shadow-orange-500/20 group-hover:scale-105 group-hover:bg-orange-600 transition-all duration-300">
-                        <span role="img" aria-label="Cooking pot">🍳</span>
-                    </div>
-
-                    <div class="leading-none">
-                        <span class="text-2xl font-black tracking-tight text-slate-900">
-                            Kitch<span class="text-orange-500">Hug</span>
-                        </span>
-                        <span class="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mt-1">
-                            Made with love
-                        </span>
-                    </div>
-                </a>
-
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold">
-                    <a href="#explore" class="text-orange-500 hover:text-orange-600 transition-colors">
-                        Explore Recipes
-                    </a>
-                    <a href="#categories" class="text-slate-600 hover:text-orange-500 transition-colors">
-                        Categories
-                    </a>
-                    <a href="#about" class="text-slate-600 hover:text-orange-500 transition-colors">
-                        About Us
-                    </a>
-                </nav>
-
-                <!-- Authentication CTA -->
-                <div class="flex items-center gap-2 sm:gap-3 shrink-0">
-                    <a href="{{ route('login') }}"
-                       class="px-3 sm:px-5 py-2.5 text-xs sm:text-sm font-bold text-slate-700 rounded-xl hover:bg-orange-100/50 hover:text-orange-600 transition-all focus:outline-none focus:ring-2 focus:ring-orange-500">
-                        Log In
-                    </a>
-
-                    <a href="{{ route('register') }}"
-                       class="px-3 sm:px-5 py-2.5 text-xs sm:text-sm font-bold text-white bg-orange-500 rounded-xl shadow-sm shadow-orange-500/30 hover:bg-orange-600 hover:shadow-md hover:shadow-orange-500/40 transition-all focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                        Get Started
-                    </a>
-                </div>
-
-            </div>
-        </div>
-    </header>
+    @include('partials.public_header')
 
     <!-- ================= HERO SECTION ================= -->
     <main id="main-content" class="grow">
 
-        <section id="categories" data-carousel class="relative isolate overflow-hidden bg-orange-50 py-12 lg:py-20">
+        <section data-carousel class="relative isolate overflow-hidden bg-orange-50 py-12 lg:py-20">
             <div role="region" aria-roledescription="carousel" aria-label="Featured recipe backgrounds"
                  class="absolute inset-0">
                 <article data-carousel-slide role="group" aria-roledescription="slide" aria-label="1 of 3" class="absolute inset-0">

@@ -2,12 +2,16 @@
 
 @section('content')
     <div class="min-h-screen bg-[#FAF6F0] text-slate-800 antialiased">
-        @include('partials.kitchhug_header')
+        @if (auth()->check())
+            @include('partials.kitchhug_header')
+        @else
+            @include('partials.public_header')
+        @endif
 
         <main>
             <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0]">
                 <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-                    <a href="{{ route('user_homepage') }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Home</a>
+                    <a href="{{ auth()->check() ? route('user_homepage') : route('home') }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Home</a>
                     <p class="mt-6 text-xs font-extrabold uppercase tracking-[0.2em] text-orange-500">Find your next favorite</p>
                     <h1 class="mt-2 text-3xl font-black text-slate-900 sm:text-4xl">{{ $title }}</h1>
                     <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">Browse simple, satisfying {{ strtolower($title) }} ideas for your table.</p>
@@ -25,8 +29,8 @@
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     @foreach ($recipes as $recipe)
                         <article class="group overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                            <div class="relative flex h-48 items-center justify-center bg-gradient-to-br {{ $recipe['color'] }} text-7xl">
-                                {{ $recipe['emoji'] }}
+                            <div class="relative h-48 overflow-hidden bg-gradient-to-br {{ $recipe['color'] }}">
+                                <img src="{{ $recipe['image_url'] }}" alt="{{ $recipe['name'] }} recipe" class="h-full w-full object-cover" loading="lazy">
                                 <span class="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm">⏱ {{ $recipe['time'] }}</span>
                             </div>
                             <div class="p-5">

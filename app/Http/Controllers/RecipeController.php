@@ -180,65 +180,65 @@ class RecipeController extends Controller
             'chicken' => [
                 'title' => 'Chicken Recipes',
                 'recipes' => [
-                    ['name' => 'Lemon Herb Roast Chicken', 'time' => '50 mins', 'rating' => '4.9', 'emoji' => '🍗', 'color' => 'from-orange-100 to-amber-50', 'description' => 'Golden roasted chicken with bright lemon, garlic, and garden herbs.'],
-                    ['name' => 'Creamy Tuscan Chicken', 'time' => '35 mins', 'rating' => '4.8', 'emoji' => '🍲', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Tender chicken in a silky tomato cream sauce with spinach.'],
-                    ['name' => 'Crispy Chicken Tenders', 'time' => '25 mins', 'rating' => '4.7', 'emoji' => '🍗', 'color' => 'from-amber-100 to-yellow-50', 'description' => 'Crunchy, seasoned chicken tenders with a quick honey mustard dip.'],
+                    ['name' => 'Lemon Herb Roast Chicken', 'time' => '50 mins', 'rating' => '4.9', 'emoji' => '🍗', 'color' => 'from-orange-100 to-amber-50', 'description' => 'Golden roasted chicken with bright lemon, garlic, and garden herbs.', 'image_url' => 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Creamy Tuscan Chicken', 'time' => '35 mins', 'rating' => '4.8', 'emoji' => '🍲', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Tender chicken in a silky tomato cream sauce with spinach.', 'image_url' => 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Crispy Chicken Tenders', 'time' => '25 mins', 'rating' => '4.7', 'emoji' => '🍗', 'color' => 'from-amber-100 to-yellow-50', 'description' => 'Crunchy, seasoned chicken tenders with a quick honey mustard dip.', 'image_url' => 'https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
             'seafood' => [
                 'title' => 'Seafood Recipes',
                 'recipes' => [
-                    ['name' => 'Garlic Butter Shrimp', 'time' => '20 mins', 'rating' => '4.9', 'emoji' => '🍤', 'color' => 'from-orange-100 to-amber-50', 'description' => 'Juicy shrimp tossed in a quick garlic butter and lemon sauce.'],
-                    ['name' => 'Honey Glazed Salmon', 'time' => '30 mins', 'rating' => '4.8', 'emoji' => '🐟', 'color' => 'from-rose-100 to-amber-50', 'description' => 'Oven-baked salmon with a sweet-savory glaze and crisp edges.'],
-                    ['name' => 'Crispy Fish Tacos', 'time' => '35 mins', 'rating' => '4.7', 'emoji' => '🌮', 'color' => 'from-lime-100 to-emerald-50', 'description' => 'Flaky fish, crunchy slaw, and tangy crema tucked into warm tortillas.'],
+                    ['name' => 'Garlic Butter Shrimp', 'time' => '20 mins', 'rating' => '4.9', 'emoji' => '🍤', 'color' => 'from-orange-100 to-amber-50', 'description' => 'Juicy shrimp tossed in a quick garlic butter and lemon sauce.', 'image_url' => 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Honey Glazed Salmon', 'time' => '30 mins', 'rating' => '4.8', 'emoji' => '🐟', 'color' => 'from-rose-100 to-amber-50', 'description' => 'Oven-baked salmon with a sweet-savory glaze and crisp edges.', 'image_url' => 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Crispy Fish Tacos', 'time' => '35 mins', 'rating' => '4.7', 'emoji' => '🌮', 'color' => 'from-lime-100 to-emerald-50', 'description' => 'Flaky fish, crunchy slaw, and tangy crema tucked into warm tortillas.', 'image_url' => 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
             'beef' => [
                 'title' => 'Beef Recipes',
                 'recipes' => [
-                    ['name' => 'Slow-Cooked Beef Stew', 'time' => '2 hrs', 'rating' => '4.9', 'emoji' => '🥘', 'color' => 'from-amber-100 to-orange-50', 'description' => 'Fork-tender beef simmered with vegetables in a rich savory broth.'],
-                    ['name' => 'Weeknight Beef Stir-Fry', 'time' => '25 mins', 'rating' => '4.8', 'emoji' => '🥩', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Sizzling strips of beef with crisp vegetables and a ginger sauce.'],
-                    ['name' => 'Classic Beef Burgers', 'time' => '30 mins', 'rating' => '4.7', 'emoji' => '🍔', 'color' => 'from-yellow-100 to-amber-50', 'description' => 'Juicy, well-seasoned patties ready for all your favorite toppings.'],
+                    ['name' => 'Slow-Cooked Beef Stew', 'time' => '2 hrs', 'rating' => '4.9', 'emoji' => '🥘', 'color' => 'from-amber-100 to-orange-50', 'description' => 'Fork-tender beef simmered with vegetables in a rich savory broth.', 'image_url' => 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Weeknight Beef Stir-Fry', 'time' => '25 mins', 'rating' => '4.8', 'emoji' => '🥩', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Sizzling strips of beef with crisp vegetables and a ginger sauce.', 'image_url' => 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Classic Beef Burgers', 'time' => '30 mins', 'rating' => '4.7', 'emoji' => '🍔', 'color' => 'from-yellow-100 to-amber-50', 'description' => 'Juicy, well-seasoned patties ready for all your favorite toppings.', 'image_url' => 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
             'pasta' => [
                 'title' => 'Pasta Recipes',
                 'recipes' => [
-                    ['name' => 'Garlic Cream Fettuccine', 'time' => '30 mins', 'rating' => '4.9', 'emoji' => '🍝', 'color' => 'from-rose-100 to-amber-50', 'description' => 'Silky parmesan cream sauce with roasted garlic and fresh herbs.'],
-                    ['name' => 'Roasted Tomato Penne', 'time' => '35 mins', 'rating' => '4.8', 'emoji' => '🍅', 'color' => 'from-orange-100 to-rose-50', 'description' => 'Sweet roasted tomatoes and basil folded through tender penne.'],
-                    ['name' => 'Lemony Pesto Orzo', 'time' => '20 mins', 'rating' => '4.7', 'emoji' => '🍋', 'color' => 'from-lime-100 to-yellow-50', 'description' => 'Bright pesto orzo with lemon, parmesan, and toasted pine nuts.'],
+                    ['name' => 'Garlic Cream Fettuccine', 'time' => '30 mins', 'rating' => '4.9', 'emoji' => '🍝', 'color' => 'from-rose-100 to-amber-50', 'description' => 'Silky parmesan cream sauce with roasted garlic and fresh herbs.', 'image_url' => 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Roasted Tomato Penne', 'time' => '35 mins', 'rating' => '4.8', 'emoji' => '🍅', 'color' => 'from-orange-100 to-rose-50', 'description' => 'Sweet roasted tomatoes and basil folded through tender penne.', 'image_url' => 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Lemony Pesto Orzo', 'time' => '20 mins', 'rating' => '4.7', 'emoji' => '🍋', 'color' => 'from-lime-100 to-yellow-50', 'description' => 'Bright pesto orzo with lemon, parmesan, and toasted pine nuts.', 'image_url' => 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
             'dips-spreads' => [
                 'title' => 'Dips & Spreads',
                 'recipes' => [
-                    ['name' => 'Creamy Hummus', 'time' => '10 mins', 'rating' => '4.9', 'emoji' => '🥣', 'color' => 'from-amber-100 to-lime-50', 'description' => 'Smooth chickpeas blended with tahini, lemon, and a hint of garlic.'],
-                    ['name' => 'Whipped Feta Dip', 'time' => '10 mins', 'rating' => '4.8', 'emoji' => '🧀', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Tangy feta whipped until fluffy and finished with herbs and honey.'],
-                    ['name' => 'Garden Guacamole', 'time' => '15 mins', 'rating' => '4.7', 'emoji' => '🥑', 'color' => 'from-emerald-100 to-lime-50', 'description' => 'Fresh avocado with lime, cilantro, and a little crunch from red onion.'],
+                    ['name' => 'Creamy Hummus', 'time' => '10 mins', 'rating' => '4.9', 'emoji' => '🥣', 'color' => 'from-amber-100 to-lime-50', 'description' => 'Smooth chickpeas blended with tahini, lemon, and a hint of garlic.', 'image_url' => 'https://images.unsplash.com/photo-1577906096429-f73c2c312435?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Whipped Feta Dip', 'time' => '10 mins', 'rating' => '4.8', 'emoji' => '🧀', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Tangy feta whipped until fluffy and finished with herbs and honey.', 'image_url' => 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Garden Guacamole', 'time' => '15 mins', 'rating' => '4.7', 'emoji' => '🥑', 'color' => 'from-emerald-100 to-lime-50', 'description' => 'Fresh avocado with lime, cilantro, and a little crunch from red onion.', 'image_url' => 'https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
             'dessert' => [
                 'title' => 'Dessert',
                 'recipes' => [
-                    ['name' => 'Warm Apple Crumble', 'time' => '45 mins', 'rating' => '4.9', 'emoji' => '🥧', 'color' => 'from-amber-100 to-orange-50', 'description' => 'Soft cinnamon apples under a golden, buttery oat topping.'],
-                    ['name' => 'Chocolate Fudge Brownies', 'time' => '40 mins', 'rating' => '4.8', 'emoji' => '🍫', 'color' => 'from-rose-100 to-amber-50', 'description' => 'Rich, fudgy brownies with a crackly top and plenty of chocolate.'],
-                    ['name' => 'Berry Yogurt Parfaits', 'time' => '15 mins', 'rating' => '4.7', 'emoji' => '🍓', 'color' => 'from-pink-100 to-rose-50', 'description' => 'Layers of juicy berries, creamy yogurt, and crunchy granola.'],
+                    ['name' => 'Warm Apple Crumble', 'time' => '45 mins', 'rating' => '4.9', 'emoji' => '🥧', 'color' => 'from-amber-100 to-orange-50', 'description' => 'Soft cinnamon apples under a golden, buttery oat topping.', 'image_url' => 'https://images.unsplash.com/photo-1562007908-17c67e878c88?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Chocolate Fudge Brownies', 'time' => '40 mins', 'rating' => '4.8', 'emoji' => '🍫', 'color' => 'from-rose-100 to-amber-50', 'description' => 'Rich, fudgy brownies with a crackly top and plenty of chocolate.', 'image_url' => 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Berry Yogurt Parfaits', 'time' => '15 mins', 'rating' => '4.7', 'emoji' => '🍓', 'color' => 'from-pink-100 to-rose-50', 'description' => 'Layers of juicy berries, creamy yogurt, and crunchy granola.', 'image_url' => 'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
             'pork' => [
                 'title' => 'Pork Recipes',
                 'recipes' => [
-                    ['name' => 'Maple Glazed Pork Chops', 'time' => '30 mins', 'rating' => '4.9', 'emoji' => '🥩', 'color' => 'from-amber-100 to-orange-50', 'description' => 'Pan-seared chops finished with a sweet maple and mustard glaze.'],
-                    ['name' => 'Slow Cooker Pulled Pork', 'time' => '6 hrs', 'rating' => '4.8', 'emoji' => '🍖', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Tender, smoky pulled pork made for sandwiches and easy dinners.'],
-                    ['name' => 'Ginger Pork Lettuce Cups', 'time' => '25 mins', 'rating' => '4.7', 'emoji' => '🥬', 'color' => 'from-lime-100 to-emerald-50', 'description' => 'Savory ginger pork wrapped in crisp lettuce with a bright crunch.'],
+                    ['name' => 'Maple Glazed Pork Chops', 'time' => '30 mins', 'rating' => '4.9', 'emoji' => '🥩', 'color' => 'from-amber-100 to-orange-50', 'description' => 'Pan-seared chops finished with a sweet maple and mustard glaze.', 'image_url' => 'https://images.unsplash.com/photo-1432139555190-58524dae6a55?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Slow Cooker Pulled Pork', 'time' => '6 hrs', 'rating' => '4.8', 'emoji' => '🍖', 'color' => 'from-rose-100 to-orange-50', 'description' => 'Tender, smoky pulled pork made for sandwiches and easy dinners.', 'image_url' => 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Ginger Pork Lettuce Cups', 'time' => '25 mins', 'rating' => '4.7', 'emoji' => '🥬', 'color' => 'from-lime-100 to-emerald-50', 'description' => 'Savory ginger pork wrapped in crisp lettuce with a bright crunch.', 'image_url' => 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
             'side-dish' => [
                 'title' => 'Side Dish',
                 'recipes' => [
-                    ['name' => 'Crispy Garlic Potatoes', 'time' => '40 mins', 'rating' => '4.9', 'emoji' => '🥔', 'color' => 'from-amber-100 to-yellow-50', 'description' => 'Golden oven-roasted potatoes tossed with garlic and rosemary.'],
-                    ['name' => 'Fresh Garden Salad', 'time' => '10 mins', 'rating' => '4.8', 'emoji' => '🥗', 'color' => 'from-emerald-100 to-lime-50', 'description' => 'Crisp seasonal vegetables with a light homemade dressing.'],
-                    ['name' => 'Parmesan Roasted Broccoli', 'time' => '25 mins', 'rating' => '4.7', 'emoji' => '🥦', 'color' => 'from-lime-100 to-emerald-50', 'description' => 'Tender broccoli with crisp edges, parmesan, and a squeeze of lemon.'],
+                    ['name' => 'Crispy Garlic Potatoes', 'time' => '40 mins', 'rating' => '4.9', 'emoji' => '🥔', 'color' => 'from-amber-100 to-yellow-50', 'description' => 'Golden oven-roasted potatoes tossed with garlic and rosemary.', 'image_url' => 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Fresh Garden Salad', 'time' => '10 mins', 'rating' => '4.8', 'emoji' => '🥗', 'color' => 'from-emerald-100 to-lime-50', 'description' => 'Crisp seasonal vegetables with a light homemade dressing.', 'image_url' => 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=900&q=80'],
+                    ['name' => 'Parmesan Roasted Broccoli', 'time' => '25 mins', 'rating' => '4.7', 'emoji' => '🥦', 'color' => 'from-lime-100 to-emerald-50', 'description' => 'Tender broccoli with crisp edges, parmesan, and a squeeze of lemon.', 'image_url' => 'https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?auto=format&fit=crop&w=900&q=80'],
                 ],
             ],
         ];

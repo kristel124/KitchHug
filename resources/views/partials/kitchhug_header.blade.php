@@ -90,7 +90,7 @@
                     <div class="absolute left-0 top-full z-50 mt-2 max-h-80 w-56 overflow-y-auto rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
 
                         @foreach($recipeCategories as $slug => $label)
-                            <a href="{{ route('recipes.category', $slug) }}"
+                            <a href="{{ auth()->check() ? route('recipes.category', $slug) : route('recipes.public-category', $slug) }}"
                                class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500">
 
                                 {{ $label }}

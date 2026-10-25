@@ -19,12 +19,11 @@ test('welcome page shows featured recipe cards below the hero', function () {
         ->assertSee('Fluffy Pancakes')
         ->assertSee('Garlic Cream Pasta')
         ->assertSee('Fresh Garden Salad')
-        ->assertSee(route('recipes.featured', 'crispy-chicken'));
+        ->assertSee(route('recipes.featured', 'crispy-chicken'))
+        ->assertSee(route('recipes.public-category', 'chicken'));
 });
 
 test('each recipe category has a page', function () {
-    $this->actingAs(User::factory()->make());
-
     $categories = [
         'chicken' => 'Chicken Recipes',
         'seafood' => 'Seafood Recipes',
@@ -37,17 +36,31 @@ test('each recipe category has a page', function () {
     ];
 
     foreach ($categories as $slug => $title) {
-        $this->get(route('recipes.category', $slug))
+        $this->get(route('recipes.public-category', $slug))
             ->assertOk()
             ->assertSee($title)
-            ->assertSee('3 recipes');
+            ->assertSee('3 recipes')
+            ->assertSee('Recipe collection')
+            ->assertSee('Made with love')
+            ->assertSee('Get Started')
+            ->assertSee('<img src="https://images.unsplash.com/', false);
     }
 });
 
 test('unknown recipe categories return not found', function () {
-    $this->actingAs(User::factory()->make());
+    $this->get(route('recipes.public-category', 'not-a-category'))->assertNotFound();
+});
 
-    $this->get(route('recipes.category', 'not-a-category'))->assertNotFound();
+test('signed-in recipe categories remain behind authentication', function () {
+    $this->get('/recipes/chicken')->assertRedirect(route('login'));
+
+    $this->actingAs(User::factory()->make())
+        ->get(route('recipes.category', 'chicken'))
+        ->assertOk()
+        ->assertSee('Chicken Recipes');
+
+    $this->get(route('recipes.public-category', 'chicken'))
+        ->assertRedirect(route('home'));
 });
 
 test('featured recipe cards open a page with recipe information', function () {

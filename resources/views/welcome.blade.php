@@ -135,25 +135,107 @@
                     </a>
                 </div>
 
-                <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                    @foreach ($featuredRecipes as $recipe)
-                        <a href="{{ route('recipes.featured', $recipe['slug']) }}"
-                           class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
-                            <div class="relative h-44 overflow-hidden">
-                                <img src="{{ $recipe['image'] }}" alt="{{ $recipe['name'] }} recipe photo" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                                <span class="absolute right-3 top-3 rounded-full bg-white/95 px-2.5 py-1 text-xs font-bold text-slate-700 shadow-sm">⭐ {{ $recipe['rating'] }}</span>
+                <div data-community-media-tabs class="mt-8">
+                    <div class="border-b border-orange-100">
+                        <div class="flex gap-8" role="tablist" aria-label="Home recipe media">
+                            <button id="home-images-tab" type="button" role="tab" aria-controls="home-images-panel" aria-selected="true" tabindex="0" data-community-media-tab="images" class="border-b-2 border-orange-500 px-1 pb-3 text-sm font-semibold text-orange-700">Images</button>
+                            <button id="home-videos-tab" type="button" role="tab" aria-controls="home-videos-panel" aria-selected="false" tabindex="-1" data-community-media-tab="videos" class="border-b-2 border-transparent px-1 pb-3 text-sm font-semibold text-slate-500 transition hover:text-slate-800">Videos</button>
+                        </div>
+                    </div>
+
+                    <div id="home-images-panel" role="tabpanel" aria-labelledby="home-images-tab" data-community-media-panel="images">
+                        <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                            @foreach ($featuredRecipes as $recipe)
+                                <a href="{{ route('recipes.featured', $recipe['slug']) }}"
+                                   class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                    <div class="relative h-44 overflow-hidden">
+                                        <img src="{{ $recipe['image'] }}" alt="{{ $recipe['name'] }} recipe photo" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                                        <span class="absolute right-3 top-3 rounded-md bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm">Rating {{ $recipe['rating'] }}</span>
+                                    </div>
+                                    <div class="p-5">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe['category'] }}</span>
+                                            <span class="shrink-0 text-xs font-semibold text-slate-500">{{ $recipe['time'] }}</span>
+                                        </div>
+                                        <h3 class="mt-2 text-lg font-extrabold text-slate-900 transition-colors group-hover:text-orange-500">{{ $recipe['name'] }}</h3>
+                                        <p class="mt-2 min-h-12 text-sm leading-6 text-slate-500">{{ $recipe['description'] }}</p>
+                                        <p class="mt-4 border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+
+                        @if ($homeImageRecipes->isNotEmpty())
+                            <h3 class="mt-10 border-b border-orange-100 pb-3 text-xl font-bold text-slate-900">Images shared by home cooks</h3>
+                            <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                                @foreach ($homeImageRecipes as $communityRecipe)
+                                    <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
+                                        <a href="{{ route('recipes.show', $communityRecipe) }}" class="group block">
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->image_path) }}" alt="Recipe photo for {{ $communityRecipe->title }}" class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                                            <div class="p-4">
+                                                <p class="text-xs font-semibold uppercase tracking-wide text-orange-700">{{ $communityRecipe->category }}</p>
+                                                <h4 class="mt-2 font-bold text-slate-900 group-hover:text-orange-600">{{ $communityRecipe->title }}</h4>
+                                                <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ $communityRecipe->description }}</p>
+                                            </div>
+                                        </a>
+                                        <div class="px-4 pb-4">
+                                            <a href="{{ route('users.show', $communityRecipe->user) }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-orange-700">
+                                                <span class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-xs font-bold text-orange-800">
+                                                    @if ($communityRecipe->user->profile_photo_path)
+                                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->user->profile_photo_path) }}" alt="{{ $communityRecipe->user->name }} profile photo" class="h-full w-full object-cover">
+                                                    @else
+                                                        {{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($communityRecipe->user->name, 0, 1)) }}
+                                                    @endif
+                                                </span>
+                                                {{ $communityRecipe->user->name }}
+                                            </a>
+                                        </div>
+                                        @include('partials.recipe-comment-preview', ['recipe' => $communityRecipe])
+                                        @include('partials.recipe-post-actions', ['recipe' => $communityRecipe])
+                                    </article>
+                                @endforeach
                             </div>
-                            <div class="p-5">
-                                <div class="flex items-center justify-between gap-3">
-                                    <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe['category'] }}</span>
-                                    <span class="shrink-0 text-xs font-semibold text-slate-400">⏱ {{ $recipe['time'] }}</span>
-                                </div>
-                                <h3 class="mt-2 text-lg font-extrabold text-slate-900 transition-colors group-hover:text-orange-500">{{ $recipe['name'] }}</h3>
-                                <p class="mt-2 min-h-12 text-sm leading-6 text-slate-500">{{ $recipe['description'] }}</p>
-                                <p class="mt-4 border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
+                        @endif
+                    </div>
+
+                    <div id="home-videos-panel" role="tabpanel" aria-labelledby="home-videos-tab" data-community-media-panel="videos" class="pt-8" hidden>
+                        @if ($homeVideoRecipes->isEmpty())
+                            <div class="rounded-3xl border border-slate-200 bg-slate-50 px-6 py-10 text-center">
+                                <h3 class="text-lg font-bold text-slate-900">No recipe videos yet</h3>
+                                <p class="mt-2 text-sm text-slate-500">Videos shared with recipes will appear here.</p>
                             </div>
-                        </a>
-                    @endforeach
+                        @else
+                            <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                                @foreach ($homeVideoRecipes as $communityRecipe)
+                                    <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                                        <div class="bg-slate-950">
+                                            <video controls preload="metadata" data-recipe-video-player class="aspect-video w-full" aria-label="Recipe video for {{ $communityRecipe->title }}">
+                                                <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->video_path) }}">
+                                                Your browser does not support video playback.
+                                            </video>
+                                        </div>
+                                        <div class="p-5">
+                                            <p class="text-xs font-semibold uppercase tracking-wide text-orange-700">{{ $communityRecipe->category }}</p>
+                                            <h3 class="mt-2 text-lg font-bold text-slate-900"><a href="{{ route('recipes.show', $communityRecipe) }}" class="hover:text-orange-600">{{ $communityRecipe->title }}</a></h3>
+                                            <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{{ $communityRecipe->description }}</p>
+                                            <a href="{{ route('users.show', $communityRecipe->user) }}" class="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-orange-700">
+                                                <span class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-xs font-bold text-orange-800">
+                                                    @if ($communityRecipe->user->profile_photo_path)
+                                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->user->profile_photo_path) }}" alt="{{ $communityRecipe->user->name }} profile photo" class="h-full w-full object-cover">
+                                                    @else
+                                                        {{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($communityRecipe->user->name, 0, 1)) }}
+                                                    @endif
+                                                </span>
+                                                {{ $communityRecipe->user->name }}
+                                            </a>
+                                        </div>
+                                        @include('partials.recipe-comment-preview', ['recipe' => $communityRecipe])
+                                        @include('partials.recipe-post-actions', ['recipe' => $communityRecipe])
+                                    </article>
+                                @endforeach
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </section>

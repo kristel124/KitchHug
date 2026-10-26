@@ -71,16 +71,56 @@
                 @else
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach ($recipes as $recipe)
-                            <article class="overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm">
+                            <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
                                 <a href="{{ route('recipes.show', $recipe) }}" class="group block">
-                                    <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Recipe photo for {{ $recipe->title }}" class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                                    <div class="p-5">
-                                        <span class="text-[11px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe->category }}</span>
-                                        <h3 class="mt-2 text-xl font-extrabold text-slate-900 group-hover:text-orange-500">{{ $recipe->title }}</h3>
-                                        <p class="mt-2 text-sm leading-6 text-slate-500">{{ $recipe->description }}</p>
-                                        <p class="mt-4 text-xs font-semibold text-slate-400">⏱ {{ $recipe->prep_time_minutes }} min · Shared {{ $recipe->created_at->format('M j, Y') }}</p>
+                                    <div class="relative h-48 overflow-hidden bg-slate-100">
+                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Recipe photo for {{ $recipe->title }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
+                                        <span class="absolute bottom-3 left-3 rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-800">{{ $recipe->category }}</span>
+                                        @if ($recipe->video_path)
+                                            <span class="absolute right-3 top-3 rounded-md bg-slate-950/75 px-2.5 py-1 text-[11px] font-semibold text-white">Video</span>
+                                        @endif
                                     </div>
                                 </a>
+                                <div class="p-5">
+                                    <a href="{{ route('recipes.show', $recipe) }}" class="group block">
+                                        <h3 class="text-lg font-bold leading-snug text-slate-900 group-hover:text-orange-600">{{ $recipe->title }}</h3>
+                                        <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{{ $recipe->description }}</p>
+                                    </a>
+                                    <div class="mt-4 flex flex-wrap gap-2">
+                                        @if ($recipe->recipe_type)
+                                            <span class="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600">{{ $recipe->recipe_type }}</span>
+                                        @endif
+                                        @if ($recipe->method)
+                                            <span class="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600">{{ $recipe->method }}</span>
+                                        @endif
+                                    </div>
+                                    <div class="mt-4 flex items-center justify-between border-t border-slate-100 pt-4">
+                                        <span class="text-xs font-medium text-slate-500">{{ $recipe->prep_time_minutes }} min · {{ $recipe->created_at->format('M j, Y') }}</span>
+                                        <a href="{{ route('recipes.show', $recipe) }}" class="text-sm font-semibold text-orange-700 hover:text-orange-800">View recipe <span aria-hidden="true">→</span></a>
+                                    </div>
+                                    @if ($recipe->video_path)
+                                        <div class="mt-4 overflow-hidden rounded-xl bg-slate-950">
+                                            <video controls preload="metadata" data-recipe-video-player class="max-h-64 w-full" aria-label="Recipe video for {{ $recipe->title }}">
+                                                <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->video_path) }}">
+                                                Your browser does not support video playback.
+                                            </video>
+                                        </div>
+                                    @endif
+                                    @include('partials.recipe-post-actions', ['recipe' => $recipe])
+                                    <details class="mt-4 border-t border-slate-100 pt-3">
+                                        <summary class="cursor-pointer text-sm font-semibold text-slate-700 hover:text-orange-700">Ingredients and instructions</summary>
+                                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                                            <div>
+                                                <h4 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Ingredients</h4>
+                                                <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->ingredients }}</p>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Instructions</h4>
+                                                <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->instructions }}</p>
+                                            </div>
+                                        </div>
+                                    </details>
+                                </div>
                             </article>
                         @endforeach
                     </div>

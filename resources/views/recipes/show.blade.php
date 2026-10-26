@@ -5,31 +5,11 @@
         @include('partials.kitchhug_header')
 
         <main>
-            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0]">
-                <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:grid-cols-2 lg:px-8">
-                    <div id="recipe-scroll-area" class="min-w-0 lg:col-span-1 lg:pr-2">
+            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0] lg:h-[calc(100dvh-5rem)] lg:overflow-hidden">
+                <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:h-full lg:grid-cols-2 lg:overflow-hidden lg:px-8">
+                    <div id="recipe-scroll-area" class="min-w-0 lg:col-span-1 lg:h-full lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
                         <a href="{{ $recipe['back_url'] ?? (auth()->check() ? route('user_homepage') : route('home')) }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back to recipes</a>
-                        <div class="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
-                            @if ($recipe['image_url'])
-                                @if ($recipe['video_url'])
-                                    <div class="relative h-48 w-full shrink-0 overflow-hidden rounded-3xl bg-slate-900 shadow-sm sm:h-56 sm:w-72">
-                                        <video controls preload="none" poster="{{ $recipe['image_url'] }}" class="h-full w-full object-cover" aria-label="Recipe video for {{ $recipe['title'] }}">
-                                            <source src="{{ $recipe['video_url'] }}">
-                                            Your browser does not support video playback.
-                                        </video>
-                                        <button type="button" data-recipe-video-play class="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-orange-500/95 text-white shadow-lg transition hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-orange-200" aria-label="Play recipe video">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ml-1 h-7 w-7" aria-hidden="true">
-                                                <path d="M8 5.5a1 1 0 0 1 1.5-.86l10 6.5a1 1 0 0 1 0 1.72l-10 6.5A1 1 0 0 1 8 18.5z"></path>
-                                            </svg>
-                                        </button>
-                                        <p data-recipe-video-error role="status" class="absolute inset-x-2 bottom-2 hidden rounded-lg bg-rose-700/95 px-3 py-2 text-center text-xs font-semibold text-white"></p>
-                                    </div>
-                                @else
-                                    <img src="{{ $recipe['image_url'] }}" alt="Recipe photo for {{ $recipe['title'] }}" class="h-48 w-full rounded-3xl object-cover shadow-sm sm:h-56 sm:w-72">
-                                @endif
-                            @else
-                                <div class="flex h-48 w-full items-center justify-center rounded-3xl bg-gradient-to-br from-orange-100 to-amber-50 text-8xl sm:h-56 sm:w-72" aria-hidden="true">{{ $recipe['emoji'] }}</div>
-                            @endif
+                        <div class="mt-6">
                             <div>
                                 <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-500">{{ $recipe['category'] }}</p>
                                 <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">{{ $recipe['title'] }}</h1>
@@ -47,21 +27,82 @@
                                 @endif
                                 <p class="mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">{{ $recipe['description'] }}</p>
                                 <p class="mt-4 text-sm font-bold text-slate-500">⏱ {{ $recipe['prep_time'] ?? ($recipe['prep_time_minutes'].' minutes') }}</p>
-                                @if ($recipe['is_curated'] ?? false)
+                                <div class="mt-4 flex flex-wrap items-center gap-3">
+                                    @if (isset($recipe['id']))
+                                        @auth
+                                            @if (auth()->id() === $recipe['author_id'])
+                                                <span class="inline-flex items-center gap-2 px-4 py-3 text-sm font-bold text-rose-700">
+                                                    <span aria-hidden="true">♥</span>
+                                                    <span>{{ $recipe['reaction_count'] }} {{ \Illuminate\Support\Str::plural('heart', $recipe['reaction_count']) }}</span>
+                                                </span>
+                                            @else
+                                                <form method="POST" action="{{ route('recipes.reactions.toggle', $recipe['id']) }}">
+                                                    @csrf
+                                                    <button type="submit" aria-label="{{ $recipe['is_liked'] ? 'Remove heart reaction' : 'React with a heart' }}" aria-pressed="{{ $recipe['is_liked'] ? 'true' : 'false' }}" class="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition {{ $recipe['is_liked'] ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-white text-slate-700 shadow-sm hover:bg-rose-50 hover:text-rose-700' }}">
+                                                        <span aria-hidden="true">{{ $recipe['is_liked'] ? '♥' : '♡' }}</span>
+                                                        <span>{{ $recipe['reaction_count'] }} {{ \Illuminate\Support\Str::plural('heart', $recipe['reaction_count']) }}</span>
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        @else
+                                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-rose-50 hover:text-rose-700">
+                                                <span aria-hidden="true">♡</span>
+                                                <span>{{ $recipe['reaction_count'] }} {{ \Illuminate\Support\Str::plural('heart', $recipe['reaction_count']) }} · Log in to react</span>
+                                            </a>
+                                        @endauth
+                                    @endif
+                                    <div>
+                                        <button type="button" data-share-recipe data-share-url="{{ $recipe['share_url'] }}" data-share-title="{{ $recipe['title'] }}" data-share-text="{{ $recipe['description'] }}" class="rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">Share post</button>
+                                        <span data-share-status role="status" aria-live="polite" class="ml-2 text-xs text-slate-500"></span>
+                                    </div>
+                                </div>
+                                @if (($recipe['is_curated'] ?? false) || isset($recipe['id']))
                                     @auth
                                         <form method="POST" action="{{ route('favorites.toggle') }}" class="mt-5">
                                             @csrf
-                                            <input type="hidden" name="category" value="{{ $recipe['category_slug'] }}">
-                                            <input type="hidden" name="recipe_slug" value="{{ $recipe['recipe_slug'] }}">
+                                            @if ($recipe['is_curated'] ?? false)
+                                                <input type="hidden" name="category" value="{{ $recipe['category_slug'] }}">
+                                                <input type="hidden" name="recipe_slug" value="{{ $recipe['recipe_slug'] }}">
+                                            @else
+                                                <input type="hidden" name="recipe_id" value="{{ $recipe['id'] }}">
+                                            @endif
                                             <button type="submit" class="rounded-xl px-5 py-3 text-sm font-bold transition {{ $recipe['is_favorite'] ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-orange-500 text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600' }}">
-                                                {{ $recipe['is_favorite'] ? '♥ Remove from Favorites' : '♡ Save to Favorites' }}
+                                                {{ $recipe['is_favorite'] ? '♥ Saved to Favorites' : '♡ Save Recipe' }}
                                             </button>
+                                            @if (isset($recipe['favorite_count']))
+                                                <span class="ml-2 text-sm text-slate-500">{{ $recipe['favorite_count'] }} {{ \Illuminate\Support\Str::plural('save', $recipe['favorite_count']) }}</span>
+                                            @endif
                                         </form>
                                     @else
                                         <a href="{{ route('login') }}" class="mt-5 inline-flex rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-600">♡ Log in to Save</a>
                                     @endauth
                                 @endif
                             </div>
+
+                            @if ($recipe['image_url'] || $recipe['video_url'])
+                                <div class="mt-6 grid gap-5 {{ $recipe['image_url'] && $recipe['video_url'] ? 'md:grid-cols-2' : 'grid-cols-1' }}">
+                                    @if ($recipe['image_url'])
+                                        <section aria-labelledby="recipe-photo-heading" class="overflow-hidden rounded-3xl border border-orange-100 bg-white p-4 shadow-sm sm:p-5">
+                                            <h2 id="recipe-photo-heading" class="text-base font-bold text-slate-900">Recipe photo</h2>
+                                            <img src="{{ $recipe['image_url'] }}" alt="Recipe photo for {{ $recipe['title'] }}" class="mt-3 max-h-[28rem] w-full rounded-2xl bg-slate-100 object-contain">
+                                        </section>
+                                    @endif
+
+                                    @if ($recipe['video_url'])
+                                        <section aria-labelledby="recipe-video-heading" class="overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+                                            <h2 id="recipe-video-heading" class="text-base font-bold text-slate-900">Recipe video</h2>
+                                            <div class="mt-3 overflow-hidden rounded-2xl bg-slate-950">
+                                                <video controls preload="metadata" data-recipe-video-player class="aspect-video w-full" aria-label="Recipe video for {{ $recipe['title'] }}">
+                                                    <source src="{{ $recipe['video_url'] }}">
+                                                    Your browser does not support video playback.
+                                                </video>
+                                            </div>
+                                        </section>
+                                    @endif
+                                </div>
+                            @elseif (! $recipe['image_url'])
+                                <div class="mt-6 flex h-48 w-full items-center justify-center rounded-3xl bg-gradient-to-br from-orange-100 to-amber-50 text-8xl sm:h-56" aria-hidden="true">{{ $recipe['emoji'] }}</div>
+                            @endif
                         </div>
 
                         <div class="mt-8 space-y-6 pb-6">
@@ -84,7 +125,7 @@
                         </div>
                     </div>
 
-                    <aside class="h-fit min-w-0 rounded-3xl border border-orange-100 bg-white p-5 shadow-sm lg:col-span-1 lg:self-start">
+                    <aside id="comments" data-recipe-comments-panel class="h-fit min-w-0 rounded-3xl border border-orange-100 bg-white p-5 shadow-sm lg:sticky lg:top-0 lg:col-span-1 lg:max-h-full lg:self-start lg:overflow-y-auto lg:overscroll-contain">
                         <div class="flex items-center justify-between gap-3">
                             <h2 class="text-xl font-black text-slate-900">Comments</h2>
                             <span class="rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-600">{{ $comments->count() }}</span>

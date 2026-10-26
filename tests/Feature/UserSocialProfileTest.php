@@ -20,6 +20,7 @@ test('user names link to public profiles with shared recipes and follow counts',
         'instructions' => 'Roast until cooked.',
         'prep_time_minutes' => 50,
         'image_path' => 'recipe-images/chicken.jpg',
+        'video_path' => 'recipe-videos/chicken.mp4',
     ]);
 
     $this->actingAs(User::factory()->create())
@@ -32,6 +33,10 @@ test('user names link to public profiles with shared recipes and follow counts',
         ->assertOk()
         ->assertSee('Recipe Author')
         ->assertSee('Herb Chicken')
+        ->assertSee('data-recipe-video-player', false)
+        ->assertSee(Storage::disk('public')->url($recipe->video_path))
+        ->assertSee('Chicken and herbs')
+        ->assertSee('Roast until cooked.')
         ->assertSee('Recipes shared')
         ->assertSee('Followers')
         ->assertSee('Following');
@@ -118,12 +123,12 @@ test('profile edit page can update the account password', function () {
         ->assertSee('New password')
         ->assertSee('Confirm new password')
         ->set('current_password', 'password')
-        ->set('password', 'new-password-123')
-        ->set('password_confirmation', 'new-password-123')
+        ->set('password', 'New-pass1!')
+        ->set('password_confirmation', 'New-pass1!')
         ->call('updatePassword')
         ->assertHasNoErrors();
 
-    expect(password_verify('new-password-123', $user->refresh()->password))->toBeTrue();
+    expect(password_verify('New-pass1!', $user->refresh()->password))->toBeTrue();
 });
 
 test('profile edit page requires the current password before changing it', function () {
@@ -132,8 +137,8 @@ test('profile edit page requires the current password before changing it', funct
     Livewire::actingAs($user)
         ->test('pages::settings.profile')
         ->set('current_password', 'incorrect-password')
-        ->set('password', 'new-password-123')
-        ->set('password_confirmation', 'new-password-123')
+        ->set('password', 'New-pass1!')
+        ->set('password_confirmation', 'New-pass1!')
         ->call('updatePassword')
         ->assertHasErrors(['current_password']);
 

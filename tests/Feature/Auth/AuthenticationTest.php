@@ -2,7 +2,10 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
 use Laravel\Fortify\Features;
+use Laravel\Passkeys\Passkey;
+use Laravel\Passkeys\Passkeys;
 
 uses(RefreshDatabase::class);
 
@@ -27,6 +30,28 @@ test('users can authenticate using the login screen', function () {
         ->assertRedirect(route('user_homepage', absolute: false));
 
     $this->assertAuthenticated();
+});
+
+test('users cannot authenticate when another account uses the same email ignoring case', function () {
+    $user = User::factory()->create(['email' => 'same@example.com']);
+    User::factory()->create(['email' => 'SAME@example.com']);
+
+    $this->post(route('login.store'), [
+        'email' => $user->email,
+        'password' => 'password',
+    ])
+        ->assertSessionHasErrorsIn('email');
+
+    $this->assertGuest();
+});
+
+test('users cannot authenticate with a passkey when another account uses the same email', function () {
+    $user = User::factory()->create(['email' => 'same@example.com']);
+    User::factory()->create(['email' => 'SAME@example.com']);
+    $passkey = new Passkey;
+    $passkey->setRelation('user', $user);
+
+    expect(Passkeys::allowsLogin(Request::create('/passkeys/login'), $passkey))->toBeFalse();
 });
 
 test('authenticated users visiting the welcome page are redirected to their homepage', function () {

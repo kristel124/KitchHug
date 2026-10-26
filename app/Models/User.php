@@ -97,6 +97,14 @@ class User extends Authenticatable implements PasskeyUser
         return (bool) $this->is_admin;
     }
 
+    public function hasUniqueEmail(): bool
+    {
+        return static::query()
+            ->whereRaw('LOWER(email) = ?', [Str::lower($this->email)])
+            ->limit(2)
+            ->count() === 1;
+    }
+
     /**
      * Get the user's initials
      */

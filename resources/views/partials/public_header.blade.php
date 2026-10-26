@@ -40,6 +40,25 @@
                 <a href="{{ route('home') }}#about" class="text-slate-600 transition-colors hover:text-orange-500">About Us</a>
             </nav>
 
+            <form action="{{ route('search.index') }}" method="GET" role="search" class="ml-auto hidden w-52 shrink-0 sm:block">
+                <label class="relative block">
+                    <span class="sr-only">Search recipes or cooks</span>
+                    <input
+                        type="search"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Search recipes or cooks..."
+                        class="block h-10 w-full rounded-full border border-orange-100 bg-orange-50/50 py-2 pl-4 pr-11 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-2 focus:ring-orange-100"
+                    >
+                    <button type="submit" aria-label="Search" class="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-orange-500 transition hover:bg-orange-100 focus:outline-none focus:ring-2 focus:ring-orange-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="m16 16 4 4"></path>
+                        </svg>
+                    </button>
+                </label>
+            </form>
+
             <div class="flex shrink-0 items-center gap-2 sm:gap-3">
                 <a href="{{ route('login') }}" class="rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 transition-all hover:bg-orange-100/50 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 sm:px-5 sm:text-sm">
                     Log In

@@ -41,7 +41,6 @@
                 passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
                 viewable
             />
-
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"

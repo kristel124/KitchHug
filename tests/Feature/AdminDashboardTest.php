@@ -43,8 +43,8 @@ test('public registration cannot grant admin privileges', function () {
     $this->post(route('register.store'), [
         'name' => 'New User',
         'email' => 'new-user@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => 'Admin-pass1!',
+        'password_confirmation' => 'Admin-pass1!',
         'is_admin' => true,
     ])->assertSessionHasNoErrors();
 

@@ -2,8 +2,11 @@
 
 use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Fortify\Features;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::resetPasswords());
@@ -20,8 +23,11 @@ test('reset password link can be requested', function () {
 
     $user = User::factory()->create();
 
-    $this->post(route('password.request'), ['email' => $user->email]);
+    $response = $this->post(route('password.request'), ['email' => $user->email]);
 
+    $response
+        ->assertSessionHasNoErrors()
+        ->assertSessionHas('status', trans('passwords.sent'));
     Notification::assertSentTo($user, ResetPassword::class);
 });
 
@@ -52,13 +58,43 @@ test('password can be reset with valid token', function () {
         $response = $this->post(route('password.update'), [
             'token' => $notification->token,
             'email' => $user->email,
-            'password' => 'password',
-            'password_confirmation' => 'password',
+            'password' => 'New-pass1!',
+            'password_confirmation' => 'New-pass1!',
         ]);
 
         $response
             ->assertSessionHasNoErrors()
             ->assertRedirect(route('login', absolute: false));
+
+        $this->assertGuest();
+
+        $this->post(route('login.store'), [
+            'email' => $user->email,
+            'password' => 'New-pass1!',
+        ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect(route('user_homepage', absolute: false));
+
+        $this->assertAuthenticatedAs($user);
+
+        return true;
+    });
+});
+
+test('password cannot be reset to the account email address', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    $this->post(route('password.request'), ['email' => $user->email]);
+
+    Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+        $this->post(route('password.update'), [
+            'token' => $notification->token,
+            'email' => $user->email,
+            'password' => $user->email,
+            'password_confirmation' => $user->email,
+        ])->assertSessionHasErrors('password');
 
         return true;
     });

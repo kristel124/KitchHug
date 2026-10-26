@@ -41,9 +41,94 @@ test('profile shows only the signed in user recipes and offers account actions',
         ->assertOk()
         ->assertSee('My Tomato Soup')
         ->assertSee('Edit profile')
+        ->assertSee('View public profile')
+        ->assertSee(route('users.show', $user))
         ->assertSee('Share a recipe')
+        ->assertSee('data-recipe-video-player', false)
         ->assertSee('<video controls', false)
         ->assertDontSee('Someone Else Recipe');
+});
+
+test('profile recipes can be filtered and sorted', function () {
+    $user = User::factory()->create();
+    $lunchRecipe = Recipe::create([
+        'user_id' => $user->id,
+        'title' => 'Apple Salad',
+        'category' => 'Lunch',
+        'method' => 'Boiling',
+        'recipe_type' => 'Side Dish',
+        'description' => 'A bright salad.',
+        'ingredients' => 'Apples',
+        'instructions' => 'Mix together.',
+        'prep_time_minutes' => 15,
+        'image_path' => 'recipe-images/apple-salad.jpg',
+    ]);
+    Recipe::create([
+        'user_id' => $user->id,
+        'title' => 'Dinner Soup',
+        'category' => 'Dinner',
+        'method' => 'Boiling',
+        'recipe_type' => 'Chicken Recipes',
+        'description' => 'A warm soup.',
+        'ingredients' => 'Chicken',
+        'instructions' => 'Simmer.',
+        'prep_time_minutes' => 40,
+        'image_path' => 'recipe-images/dinner-soup.jpg',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('profile.show', ['category' => 'Lunch', 'method' => 'Boiling', 'recipe_type' => 'Side Dish', 'sort' => 'title']))
+        ->assertOk()
+        ->assertSee('Apple Salad')
+        ->assertDontSee('Dinner Soup')
+        ->assertSee('All courses')
+        ->assertSee('All methods')
+        ->assertSee('All recipe types')
+        ->assertSee('data-profile-recipe-view="grid"', false)
+        ->assertSee('data-profile-recipe-view="list"', false)
+        ->assertSee(route('recipes.show', $lunchRecipe));
+});
+
+test('profile recipe sort options return recipes in the selected order', function () {
+    $user = User::factory()->create();
+    $older = Recipe::create([
+        'user_id' => $user->id,
+        'title' => 'Zulu Soup',
+        'category' => 'Dinner',
+        'description' => 'Older recipe.',
+        'ingredients' => 'Soup',
+        'instructions' => 'Cook.',
+        'prep_time_minutes' => 30,
+        'image_path' => 'recipe-images/zulu-soup.jpg',
+        'created_at' => now()->subDay(),
+        'updated_at' => now()->subDay(),
+    ]);
+    $newer = Recipe::create([
+        'user_id' => $user->id,
+        'title' => 'Alpha Pasta',
+        'category' => 'Lunch',
+        'description' => 'Newer recipe.',
+        'ingredients' => 'Pasta',
+        'instructions' => 'Boil.',
+        'prep_time_minutes' => 20,
+        'image_path' => 'recipe-images/alpha-pasta.jpg',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('profile.show', ['sort' => 'newest']))
+        ->assertOk()
+        ->assertSeeInOrder(['Alpha Pasta', 'Zulu Soup']);
+
+    $this->get(route('profile.show', ['sort' => 'oldest']))
+        ->assertOk()
+        ->assertSeeInOrder(['Zulu Soup', 'Alpha Pasta']);
+
+    $this->get(route('profile.show', ['sort' => 'title']))
+        ->assertOk()
+        ->assertSeeInOrder(['Alpha Pasta', 'Zulu Soup'])
+        ->assertSee('data-profile-sort-select', false);
 });
 
 test('a user can publish and update their recipe', function () {
@@ -215,6 +300,10 @@ test('recipe creation validates required fields', function () {
         ->assertSee('Choose a course')
         ->assertSee('Choose a method')
         ->assertSee('Choose a recipe type')
+        ->assertSee('Images and videos')
+        ->assertSee('>Images</h3>', false)
+        ->assertSee('>Videos</h3>', false)
+        ->assertSee('Add one image and, if you like, one video.')
         ->assertSee('name="photo"', false)
         ->assertSee('name="video"', false)
         ->assertSee('accept="video/mp4,video/quicktime,video/webm"', false)

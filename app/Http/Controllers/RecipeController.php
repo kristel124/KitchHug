@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Recipe;
 use App\Models\RecipeComment;
+use App\Models\RecipeFavorite;
 use App\Models\User;
+use App\Notifications\RecipeActivityNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
@@ -55,10 +57,17 @@ class RecipeController extends Controller
     public function show(Recipe $recipe): View
     {
         $recipe->loadMissing('user');
+        $user = auth()->user();
+        $recipe->loadCount('reactions');
+        $isLiked = $user instanceof User && $recipe->reactions()->where('user_id', $user->id)->exists();
+        $isFavorite = $user instanceof User && $user->recipeFavorites()
+            ->where('recipe_id', $recipe->id)
+            ->exists();
 
         return view('recipes.show', [
             'recipe' => [
                 'id' => $recipe->id,
+                'share_url' => route('recipes.show', $recipe),
                 'title' => $recipe->title,
                 'author_id' => $recipe->user_id,
                 'author' => $recipe->user->name,
@@ -71,6 +80,11 @@ class RecipeController extends Controller
                 'instructions' => $recipe->instructions,
                 'image_url' => Storage::disk('public')->url($recipe->image_path),
                 'video_url' => $recipe->video_path ? Storage::disk('public')->url($recipe->video_path) : null,
+                'is_favorite' => $isFavorite,
+                'favorite_count' => RecipeFavorite::query()->where('recipe_id', $recipe->id)->count(),
+                'reaction_count' => $recipe->reactions_count,
+                'is_liked' => $isLiked,
+                'is_curated' => false,
                 'emoji' => null,
                 'comment_action' => route('recipes.comments.store', $recipe),
             ],
@@ -88,6 +102,7 @@ class RecipeController extends Controller
                 'image_url' => $recipes[$slug]['image_url'],
                 'video_url' => null,
                 'featured_slug' => $slug,
+                'share_url' => route('recipes.featured', $slug),
                 'comment_action' => route('recipes.featured.comments.store', $slug),
             ],
             'comments' => RecipeComment::query()
@@ -107,10 +122,16 @@ class RecipeController extends Controller
             'body' => ['required', 'string', 'max:2000'],
         ]);
 
-        $recipe->comments()->create([
+        $comment = $recipe->comments()->create([
             'user_id' => $user->id,
             'body' => $data['body'],
         ]);
+
+        $recipeOwner = $recipe->user;
+
+        if ($recipeOwner !== null && ! $recipeOwner->is($user)) {
+            $recipeOwner->notify(new RecipeActivityNotification('recipe_comment', $user, $recipe, $comment));
+        }
 
         return to_route('recipes.show', $recipe)->with('status', 'Your comment was posted.');
     }
@@ -152,7 +173,11 @@ class RecipeController extends Controller
             ? $this->storeRecipeVideo($request)
             : null;
 
-        $user->recipes()->create($data);
+        $recipe = $user->recipes()->create($data);
+
+        $user->followers()->get()->each(
+            fn (User $follower) => $follower->notify(new RecipeActivityNotification('new_recipe', $user, $recipe))
+        );
 
         return to_route('profile.show')->with('status', 'Your recipe was published.');
     }
@@ -233,6 +258,12 @@ class RecipeController extends Controller
         return view('recipes.category', $categories[$category] + [
             'category_slug' => $category,
             'favorite_slugs' => $favoriteSlugs,
+            'communityRecipes' => Recipe::query()
+                ->withReactionSummary(auth()->id())
+                ->with('user')
+                ->whereRaw('LOWER(recipe_type) = ?', [Str::lower($categories[$category]['title'])])
+                ->latest()
+                ->get(),
         ]);
     }
 
@@ -254,6 +285,7 @@ class RecipeController extends Controller
         return view('recipes.show', [
             'recipe' => [
                 'title' => $recipe['name'],
+                'share_url' => route('recipes.curated.show', [$category, $recipeSlug]),
                 'author' => 'KitchHug Kitchen',
                 'category' => $categories[$category]['title'],
                 'description' => $recipe['description'],

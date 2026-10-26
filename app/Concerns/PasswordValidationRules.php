@@ -2,6 +2,7 @@
 
 namespace App\Concerns;
 
+use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Validation\Rules\Password;
 
@@ -10,11 +11,21 @@ trait PasswordValidationRules
     /**
      * Get the validation rules used to validate passwords.
      *
-     * @return array<int, Password|ValidationRule|array<mixed>|string>
+     * @return array<int, Closure|Password|ValidationRule|array<mixed>|string>
      */
-    protected function passwordRules(): array
+    protected function passwordRules(?string $email = null): array
     {
-        return ['required', 'string', Password::default(), 'confirmed'];
+        $rules = ['required', 'string', Password::default(), 'confirmed'];
+
+        if ($email !== null) {
+            $rules[] = function (string $attribute, mixed $value, Closure $fail) use ($email): void {
+                if (is_string($value) && strcasecmp($value, $email) === 0) {
+                    $fail('The password must be different from your email address.');
+                }
+            };
+        }
+
+        return $rules;
     }
 
     /**

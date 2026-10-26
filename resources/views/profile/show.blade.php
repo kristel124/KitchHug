@@ -27,7 +27,7 @@
 
                                 <dl class="mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:max-w-lg sm:gap-6">
                                     <div>
-                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $recipes->count() }}</dd>
+                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $totalRecipeCount }}</dd>
                                         <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Recipes</dt>
                                     </div>
                                     <div>
@@ -42,8 +42,9 @@
                             </div>
                         </div>
 
-                        <div class="mt-6 grid grid-cols-2 gap-3 border-t border-orange-100 pt-5">
+                        <div class="mt-6 grid grid-cols-1 gap-3 border-t border-orange-100 pt-5 sm:grid-cols-3">
                             <a href="{{ route('profile.edit') }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-100">Edit profile</a>
+                            <a href="{{ route('users.show', $user) }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-50">View public profile</a>
                             <a href="{{ route('recipes.create') }}" class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Share a recipe</a>
                         </div>
                     </div>
@@ -55,69 +56,143 @@
                     <div role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">{{ session('status') }}</div>
                 @endif
 
-                <div class="mb-6 flex items-end justify-between gap-4">
+                <div class="mb-6 flex flex-wrap items-end justify-between gap-4">
                     <div>
                         <p class="text-[11px] font-extrabold uppercase tracking-widest text-orange-500">From your kitchen</p>
                         <h2 class="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">Your recipes</h2>
                     </div>
-                    <span class="rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-bold text-slate-600 shadow-sm">{{ $recipes->count() }} {{ \Illuminate\Support\Str::plural('recipe', $recipes->count()) }}</span>
+                    <span class="rounded-full border border-orange-100 bg-white px-4 py-2 text-sm font-bold text-slate-600 shadow-sm">{{ $recipes->count() }} of {{ $totalRecipeCount }} {{ \Illuminate\Support\Str::plural('recipe', $totalRecipeCount) }}</span>
                 </div>
 
-                @if ($recipes->isEmpty())
+                @if ($totalRecipeCount === 0)
                     <div class="rounded-3xl border border-dashed border-orange-200 bg-white px-6 py-14 text-center">
-                        <div class="text-5xl" aria-hidden="true">🥣</div>
                         <h3 class="mt-4 text-xl font-black text-slate-900">Your recipe collection starts here</h3>
                         <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">Share a favorite dish with the KitchHug community. Add the ingredients and steps so other home cooks can make it too.</p>
                         <a href="{{ route('recipes.create') }}" class="mt-6 inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600">＋ Post your first recipe</a>
                     </div>
                 @else
-                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <form method="GET" action="{{ route('profile.show') }}" class="mb-6 grid gap-3 rounded-2xl border border-orange-100 bg-white p-4 shadow-sm sm:grid-cols-2 lg:grid-cols-6">
+                        <label class="sm:col-span-2 lg:col-span-1">
+                            <span class="mb-1 block text-xs font-bold text-slate-600">Find a recipe</span>
+                            <input type="search" name="search" value="{{ $search }}" placeholder="Search by title..." class="w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-3 py-2.5 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-100">
+                        </label>
+                        <label>
+                            <span class="mb-1 block text-xs font-bold text-slate-600">Course</span>
+                            <select name="category" class="w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-3 py-2.5 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-100">
+                                <option value="">All courses</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category }}" @selected(($filters['category'] ?? '') === $category)>{{ $category }}</option>
+                                @endforeach
+                            </select>
+                        </label>
+                        <label>
+                            <span class="mb-1 block text-xs font-bold text-slate-600">Method</span>
+                            <select name="method" class="w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-3 py-2.5 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-100">
+                                <option value="">All methods</option>
+                                @foreach ($methods as $method)
+                                    <option value="{{ $method }}" @selected(($filters['method'] ?? '') === $method)>{{ $method }}</option>
+                                @endforeach
+                            </select>
+                        </label>
+                        <label>
+                            <span class="mb-1 block text-xs font-bold text-slate-600">Recipe type</span>
+                            <select name="recipe_type" class="w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-3 py-2.5 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-100">
+                                <option value="">All recipe types</option>
+                                @foreach ($recipeTypes as $recipeType)
+                                    <option value="{{ $recipeType }}" @selected(($filters['recipe_type'] ?? '') === $recipeType)>{{ $recipeType }}</option>
+                                @endforeach
+                            </select>
+                        </label>
+                        <label>
+                            <span class="mb-1 block text-xs font-bold text-slate-600">Sort by</span>
+                            <select name="sort" data-profile-sort-select class="w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-3 py-2.5 text-sm outline-none focus:border-orange-300 focus:ring-2 focus:ring-orange-100">
+                                <option value="newest" @selected(($filters['sort'] ?? 'newest') === 'newest')>Newest first</option>
+                                <option value="oldest" @selected(($filters['sort'] ?? '') === 'oldest')>Oldest first</option>
+                                <option value="title" @selected(($filters['sort'] ?? '') === 'title')>Title A–Z</option>
+                            </select>
+                        </label>
+                        <div class="flex items-end gap-2">
+                            <button type="submit" class="flex-1 rounded-xl bg-orange-500 px-4 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600">Apply</button>
+                            <a href="{{ route('profile.show') }}" class="rounded-xl border border-orange-200 px-4 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-orange-50">Clear</a>
+                        </div>
+                    </form>
+
+                    @if ($recipes->isEmpty())
+                        <div class="rounded-3xl border border-dashed border-orange-200 bg-white px-6 py-12 text-center">
+                            <h3 class="text-xl font-black text-slate-900">No recipes match these filters</h3>
+                            <p class="mt-2 text-sm text-slate-500">Try another search or clear the filters to see all your recipes.</p>
+                            <a href="{{ route('profile.show') }}" class="mt-5 inline-flex rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Clear filters</a>
+                        </div>
+                    @else
+                    <div class="mb-4 flex justify-end gap-2" role="group" aria-label="Recipe display options">
+                        <button type="button" data-profile-recipe-view="grid" aria-pressed="true" class="rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-sm font-bold text-orange-700">Grid</button>
+                        <button type="button" data-profile-recipe-view="list" aria-pressed="false" class="rounded-lg border border-orange-100 bg-white px-3 py-2 text-sm font-bold text-slate-600 hover:bg-orange-50">List</button>
+                    </div>
+                    <div data-profile-recipes-grid class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                         @foreach ($recipes as $recipe)
-                            <article class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                                <div class="relative h-56 overflow-hidden">
+                            <article data-profile-recipe-card class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
+                                <div data-profile-recipe-image class="relative h-52 overflow-hidden bg-slate-100">
                                     <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Recipe photo for {{ $recipe->title }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
-                                    <span class="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-extrabold uppercase tracking-wider text-orange-600 shadow-sm">{{ $recipe->category }}</span>
-                                    <span class="absolute right-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-xs font-bold text-slate-700 shadow-sm">⏱ {{ $recipe->prep_time_minutes }} min</span>
-                                </div>
-                                <div class="p-6">
-                                <div class="flex flex-wrap items-start justify-between gap-4">
-                                    <div>
-                                        <h3 class="text-xl font-extrabold text-slate-900"><a href="{{ route('recipes.show', $recipe) }}" class="transition hover:text-orange-500">{{ $recipe->title }}</a></h3>
-                                        <p class="mt-2 text-xs font-semibold text-slate-400">Shared {{ $recipe->created_at->format('M j, Y') }}</p>
+                                    <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/70 to-transparent px-4 pb-4 pt-12">
+                                        <span class="inline-flex rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-800">{{ $recipe->category }}</span>
                                     </div>
-                                    <div class="flex shrink-0 items-center gap-2">
-                                        <a href="{{ route('recipes.edit', $recipe) }}" class="rounded-lg border border-orange-100 px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-orange-50 hover:text-orange-600">Edit</a>
+                                    @if ($recipe->video_path)
+                                        <span class="absolute right-3 top-3 rounded-md bg-slate-950/75 px-2.5 py-1 text-[11px] font-semibold text-white">Video</span>
+                                    @endif
+                                </div>
+                                <div data-profile-recipe-content class="p-5">
+                                    <div class="flex items-start justify-between gap-3">
+                                        <div class="min-w-0">
+                                            <h3 class="text-lg font-bold leading-snug text-slate-900"><a href="{{ route('recipes.show', $recipe) }}" class="transition hover:text-orange-600">{{ $recipe->title }}</a></h3>
+                                            <p class="mt-1.5 text-xs font-medium text-slate-500">Published {{ $recipe->created_at->format('M j, Y') }}</p>
+                                        </div>
+                                        <span class="shrink-0 rounded-md bg-orange-50 px-2.5 py-1.5 text-xs font-semibold text-orange-800">{{ $recipe->prep_time_minutes }} min</span>
+                                    </div>
+                                    <p class="mt-3 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-slate-600">{{ $recipe->description }}</p>
+                                    <div class="mt-4 flex flex-wrap gap-2">
+                                        @if ($recipe->recipe_type)
+                                            <span class="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600">{{ $recipe->recipe_type }}</span>
+                                        @endif
+                                        @if ($recipe->method)
+                                            <span class="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600">{{ $recipe->method }}</span>
+                                        @endif
+                                    </div>
+                                    <a href="{{ route('recipes.show', $recipe) }}" class="mt-5 inline-flex items-center text-sm font-semibold text-orange-700 hover:text-orange-800">View recipe <span class="ml-1" aria-hidden="true">→</span></a>
+                                    @include('partials.recipe-post-actions', ['recipe' => $recipe])
+                                    @if ($recipe->video_path)
+                                        <div class="mt-4 overflow-hidden rounded-xl bg-slate-950">
+                                            <video controls preload="metadata" data-recipe-video-player class="max-h-64 w-full" aria-label="Recipe video for {{ $recipe->title }}">
+                                                <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->video_path) }}">
+                                                Your browser does not support video playback.
+                                            </video>
+                                        </div>
+                                    @endif
+                                    <details class="mt-4 border-t border-slate-100 pt-3">
+                                        <summary class="cursor-pointer text-sm font-semibold text-slate-700 hover:text-orange-700">Ingredients and instructions</summary>
+                                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+                                            <div>
+                                                <h4 class="text-xs font-bold uppercase tracking-wide text-slate-500">Ingredients</h4>
+                                                <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->ingredients }}</p>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-xs font-bold uppercase tracking-wide text-slate-500">Instructions</h4>
+                                                <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->instructions }}</p>
+                                            </div>
+                                        </div>
+                                    </details>
+                                    <div class="mt-5 flex items-center justify-end gap-2 border-t border-slate-100 pt-4">
+                                        <a href="{{ route('recipes.edit', $recipe) }}" class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-orange-300 hover:bg-orange-50">Edit</a>
                                         <form method="POST" action="{{ route('recipes.destroy', $recipe) }}" onsubmit="return confirm('Delete this recipe? This cannot be undone.')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="rounded-lg border border-rose-100 px-3 py-2 text-xs font-bold text-rose-600 transition hover:bg-rose-50">Delete</button>
+                                            <button type="submit" class="rounded-lg border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50">Delete</button>
                                         </form>
                                     </div>
-                                </div>
-                                <p class="mt-4 text-sm leading-6 text-slate-600">{{ $recipe->description }}</p>
-                                @if ($recipe->video_path)
-                                    <video controls preload="metadata" class="mt-4 max-h-72 w-full rounded-2xl bg-slate-900" aria-label="Recipe video for {{ $recipe->title }}">
-                                        <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->video_path) }}">
-                                        Your browser does not support video playback.
-                                    </video>
-                                @endif
-                                <details class="mt-4 border-t border-slate-100 pt-4">
-                                    <summary class="cursor-pointer text-sm font-bold text-orange-600">Ingredients and instructions</summary>
-                                    <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                                        <div>
-                                            <h4 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Ingredients</h4>
-                                            <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->ingredients }}</p>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-xs font-extrabold uppercase tracking-widest text-slate-500">Instructions</h4>
-                                            <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->instructions }}</p>
-                                        </div>
-                                    </div>
-                                </details>
                                 </div>
                             </article>
                         @endforeach
                     </div>
+                    @endif
                 @endif
             </section>
         </main>

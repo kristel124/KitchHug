@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Fortify\Features;
 use Livewire\Livewire;
+
+uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->skipUnlessFortifyHas(Features::twoFactorAuthentication());
@@ -87,13 +90,29 @@ test('password can be updated', function () {
 
     $response = Livewire::test('pages::settings.security')
         ->set('current_password', 'password')
-        ->set('password', 'new-password')
-        ->set('password_confirmation', 'new-password')
+        ->set('password', 'New-pass1!')
+        ->set('password_confirmation', 'New-pass1!')
         ->call('updatePassword');
 
     $response->assertHasNoErrors();
 
-    expect(Hash::check('new-password', $user->refresh()->password))->toBeTrue();
+    expect(Hash::check('New-pass1!', $user->refresh()->password))->toBeTrue();
+});
+
+test('security settings rejects a password that matches the email address', function () {
+    $user = User::factory()->create([
+        'email' => 'test@example.com',
+        'password' => Hash::make('password'),
+    ]);
+
+    $this->actingAs($user);
+
+    Livewire::test('pages::settings.security')
+        ->set('current_password', 'password')
+        ->set('password', $user->email)
+        ->set('password_confirmation', $user->email)
+        ->call('updatePassword')
+        ->assertHasErrors(['password']);
 });
 
 test('correct password must be provided to update password', function () {
@@ -105,8 +124,8 @@ test('correct password must be provided to update password', function () {
 
     $response = Livewire::test('pages::settings.security')
         ->set('current_password', 'wrong-password')
-        ->set('password', 'new-password')
-        ->set('password_confirmation', 'new-password')
+        ->set('password', 'New-pass1!')
+        ->set('password_confirmation', 'New-pass1!')
         ->call('updatePassword');
 
     $response->assertHasErrors(['current_password']);

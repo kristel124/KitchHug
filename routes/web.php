@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RecipeBrowseController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RecipeFavoriteController;
+use App\Http\Controllers\RecipeReactionController;
+use App\Http\Controllers\SearchController;
 use App\Models\Recipe;
 use App\Models\RecipeComment;
 use App\Models\User;
@@ -13,7 +17,29 @@ Route::get('/', function () {
         return redirect()->route(auth()->user()->isAdmin() ? 'admin.dashboard' : 'user_homepage');
     }
 
-    return view('welcome');
+    return view('welcome', [
+        'homeImageRecipes' => Recipe::query()
+            ->withReactionSummary(auth()->id())
+            ->with([
+                'user',
+                'comments' => fn ($query) => $query->with('user')->latest()->limit(2),
+            ])
+            ->withCount('comments')
+            ->latest()
+            ->take(12)
+            ->get(),
+        'homeVideoRecipes' => Recipe::query()
+            ->withReactionSummary(auth()->id())
+            ->with([
+                'user',
+                'comments' => fn ($query) => $query->with('user')->latest()->limit(2),
+            ])
+            ->withCount('comments')
+            ->whereNotNull('video_path')
+            ->latest()
+            ->take(12)
+            ->get(),
+    ]);
 })->name('home');
 
 // Login at Register Routes gamit ang tamang view path
@@ -22,6 +48,11 @@ Route::view('/register', 'pages.auth.register')->name('register');
 
 Route::get('/recipes/featured/{slug}', [RecipeController::class, 'featured'])->name('recipes.featured');
 Route::get('/users/{user}', [ProfileController::class, 'publicProfile'])->name('users.show');
+Route::get('/search', [SearchController::class, 'index'])->name('search.index');
+Route::get('/recipes/method/{method}', [RecipeBrowseController::class, 'byMethod'])
+    ->name('recipes.by-method');
+Route::get('/recipes/course/{course}', [RecipeBrowseController::class, 'byCourse'])
+    ->name('recipes.by-course');
 Route::get('/explore/categories/{category}/{recipeSlug}', [RecipeController::class, 'categoryRecipe'])
     ->whereIn('category', ['chicken', 'seafood', 'beef', 'pasta', 'dips-spreads', 'dessert', 'pork', 'side-dish'])
     ->name('recipes.curated.show');
@@ -36,7 +67,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return redirect()->route('admin.dashboard');
         }
 
-        return view('user_homepage');
+        return view('user_homepage', [
+            'imageRecipes' => Recipe::query()
+                ->withReactionSummary(auth()->id())
+                ->with([
+                    'user',
+                    'comments' => fn ($query) => $query->with('user')->latest()->limit(2),
+                ])
+                ->withCount('comments')
+                ->latest()
+                ->take(12)
+                ->get(),
+            'videoRecipes' => Recipe::query()
+                ->withReactionSummary(auth()->id())
+                ->with([
+                    'user',
+                    'comments' => fn ($query) => $query->with('user')->latest()->limit(2),
+                ])
+                ->withCount('comments')
+                ->whereNotNull('video_path')
+                ->latest()
+                ->take(12)
+                ->get(),
+        ]);
     })->name('user_homepage');
     Route::get('/admin', function () {
         return view('admin.dashboard', [
@@ -48,10 +101,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/my-recipes', 'my_recipes')->name('my_recipes');
     Route::get('/favorite-recipes', [RecipeFavoriteController::class, 'index'])->name('favorites.index');
     Route::post('/favorite-recipes/toggle', [RecipeFavoriteController::class, 'toggle'])->name('favorites.toggle');
+    Route::post('/recipes/{recipe}/heart', [RecipeReactionController::class, 'toggle'])->whereNumber('recipe')->name('recipes.reactions.toggle');
     Route::view('/videos', 'videos')->name('videos');
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
     Route::post('/users/{user}/follow', [ProfileController::class, 'toggleFollow'])->name('users.follow');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/open', [NotificationController::class, 'open'])->whereUuid('notification')->name('notifications.open');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
     Route::get('/recipes/create', [RecipeController::class, 'create'])->name('recipes.create');
     Route::post('/recipes', [RecipeController::class, 'store'])->name('recipes.store');
     Route::post('/recipes/featured/{slug}/comments', [RecipeController::class, 'storeFeaturedComment'])->name('recipes.featured.comments.store');

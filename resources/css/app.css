@@ -61,6 +61,31 @@ select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
+[data-profile-recipes-grid].is-list {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+[data-profile-recipes-grid].is-list [data-profile-recipe-card] {
+    display: grid;
+    grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
+}
+
+[data-profile-recipes-grid].is-list [data-profile-recipe-image] {
+    height: 100%;
+    min-height: 12rem;
+}
+
+@media (max-width: 639px) {
+    [data-profile-recipes-grid].is-list [data-profile-recipe-card] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    [data-profile-recipes-grid].is-list [data-profile-recipe-image] {
+        height: 12rem;
+        min-height: 0;
+    }
+}
+
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */

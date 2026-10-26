@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class RecipeFavorite extends Model
 {
-    protected $fillable = ['user_id', 'category', 'recipe_slug'];
+    protected $fillable = ['user_id', 'recipe_id', 'category', 'recipe_slug'];
+
+    /**
+     * @return BelongsTo<Recipe, $this>
+     */
+    public function recipe(): BelongsTo
+    {
+        return $this->belongsTo(Recipe::class);
+    }
 
     /**
      * @return BelongsTo<User, $this>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Recipe;
 use App\Models\RecipeFavorite;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,6 +39,48 @@ test('signed-in users can save and remove curated recipe favorites', function ()
         'category' => 'chicken',
         'recipe_slug' => 'lemon-herb-roast-chicken',
     ])->assertRedirect();
+
+    expect(RecipeFavorite::query()->where('user_id', $user->id)->count())->toBe(0);
+});
+
+test('users can save other cooks recipes and find them from the header favorites page', function () {
+    $author = User::factory()->create(['name' => 'Recipe Owner']);
+    $user = User::factory()->create();
+    $recipe = Recipe::create([
+        'user_id' => $author->id,
+        'title' => 'Community Stew',
+        'category' => 'Dinner',
+        'description' => 'A hearty community recipe.',
+        'ingredients' => 'Beans and vegetables',
+        'instructions' => 'Simmer until tender.',
+        'prep_time_minutes' => 45,
+        'image_path' => 'recipe-images/community-stew.jpg',
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('recipes.show', $recipe))
+        ->assertOk()
+        ->assertSee('name="recipe_id"', false)
+        ->assertSee('Save Recipe');
+
+    $this->post(route('favorites.toggle'), ['recipe_id' => $recipe->id])
+        ->assertRedirect()
+        ->assertSessionHas('status', 'Recipe added to favorites.');
+
+    $this->get(route('favorites.index'))
+        ->assertOk()
+        ->assertSee('Community Stew')
+        ->assertSee(route('recipes.show', $recipe))
+        ->assertSee('href="'.route('favorites.index').'"', false)
+        ->assertSee('>1</span>', false);
+
+    $this->get(route('recipes.show', $recipe))
+        ->assertOk()
+        ->assertSee('♥ Saved to Favorites');
+
+    $this->post(route('favorites.toggle'), ['recipe_id' => $recipe->id])
+        ->assertRedirect()
+        ->assertSessionHas('status', 'Recipe removed from favorites.');
 
     expect(RecipeFavorite::query()->where('user_id', $user->id)->count())->toBe(0);
 });

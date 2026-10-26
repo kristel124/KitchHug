@@ -18,6 +18,8 @@ new #[Layout('layouts.app')] #[Title('Profile settings')] class extends Componen
 
     public string $name = '';
     public string $email = '';
+    public string $profile_current_password = '';
+    public bool $confirmingProfileUpdate = false;
     public string $current_password = '';
     public string $password = '';
     public string $password_confirmation = '';
@@ -36,10 +38,14 @@ new #[Layout('layouts.app')] #[Title('Profile settings')] class extends Componen
      */
     public function updateProfileInformation(): void
     {
+        $this->validateProfileInformationChange();
+        $this->confirmingProfileUpdate = true;
+    }
+
+    public function confirmProfileInformationUpdate(): void
+    {
         $user = Auth::user();
-
-        $validated = $this->validate($this->profileRules($user->id));
-
+        $validated = $this->validateProfileInformationChange();
         $user->fill($validated);
 
         if ($user->isDirty('email')) {
@@ -47,8 +53,35 @@ new #[Layout('layouts.app')] #[Title('Profile settings')] class extends Componen
         }
 
         $user->save();
+        $this->confirmingProfileUpdate = false;
+        $this->reset('profile_current_password');
 
         Flux::toast(variant: 'success', text: __('Profile updated.'));
+    }
+
+    public function cancelProfileInformationUpdate(): void
+    {
+        $this->confirmingProfileUpdate = false;
+        $this->reset('profile_current_password');
+    }
+
+    /**
+     * @return array{name: string, email: string}
+     */
+    private function validateProfileInformationChange(): array
+    {
+        $user = Auth::user();
+
+        $validated = $this->validate([
+            ...$this->profileRules($user->id),
+            'profile_current_password' => $this->currentPasswordRules(),
+        ], [], [
+            'profile_current_password' => 'current password',
+        ]);
+
+        unset($validated['profile_current_password']);
+
+        return $validated;
     }
 
     /**
@@ -59,7 +92,7 @@ new #[Layout('layouts.app')] #[Title('Profile settings')] class extends Componen
         try {
             $validated = $this->validate([
                 'current_password' => $this->currentPasswordRules(),
-                'password' => $this->passwordRules(),
+                'password' => $this->passwordRules(Auth::user()->email),
             ]);
         } catch (ValidationException $exception) {
             $this->reset('current_password', 'password', 'password_confirmation');
@@ -226,12 +259,42 @@ new #[Layout('layouts.app')] #[Title('Profile settings')] class extends Componen
                             @endif
                         </div>
 
+                        <div>
+                            <label for="profile_current_password" class="block text-sm font-bold text-slate-700">Current password</label>
+                            <p class="mt-1 text-xs text-slate-500">Confirm your identity before changing your name or email.</p>
+                            <input id="profile_current_password" name="profile_current_password" wire:model="profile_current_password" type="password" required autocomplete="current-password" class="mt-2 w-full rounded-2xl border border-orange-100 bg-[#FFFCF8] px-4 py-3 text-sm text-slate-800 outline-none transition hover:border-orange-200 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100/70">
+                            @error('profile_current_password') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
+                        </div>
+
                         <div class="flex justify-end border-t border-orange-100 pt-5">
                             <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-orange-500/20 transition hover:-translate-y-0.5 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-4 focus:ring-orange-200" data-test="update-profile-button">
                                 Save changes <span aria-hidden="true">→</span>
                             </button>
                         </div>
                     </form>
+
+                    @if ($confirmingProfileUpdate)
+                        <div class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/50 p-4" role="presentation">
+                            <section role="alertdialog" aria-modal="true" aria-labelledby="confirm-profile-update-heading" aria-describedby="confirm-profile-update-description" class="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+                                <h3 id="confirm-profile-update-heading" class="text-xl font-black text-slate-900">Confirm profile changes</h3>
+                                <p id="confirm-profile-update-description" class="mt-2 text-sm leading-6 text-slate-600">Please review the personal information you’re about to save.</p>
+                                <dl class="mt-5 space-y-3 rounded-2xl bg-orange-50/70 p-4 text-sm">
+                                    <div>
+                                        <dt class="font-semibold text-slate-500">Name</dt>
+                                        <dd class="mt-1 break-words font-bold text-slate-900">{{ $name }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt class="font-semibold text-slate-500">Email address</dt>
+                                        <dd class="mt-1 break-words font-bold text-slate-900">{{ $email }}</dd>
+                                    </div>
+                                </dl>
+                                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                                    <button type="button" wire:click="cancelProfileInformationUpdate" class="rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50">Cancel</button>
+                                    <button type="button" wire:click="confirmProfileInformationUpdate" wire:loading.attr="disabled" class="rounded-xl bg-orange-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-700 disabled:opacity-60">Confirm and save</button>
+                                </div>
+                            </section>
+                        </div>
+                    @endif
                 </section>
 
                 <section class="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-7">

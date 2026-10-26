@@ -119,34 +119,44 @@
                         @error('description') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="rounded-3xl border border-dashed border-orange-200 bg-orange-50/40 p-5 sm:p-6">
-                        <label for="photo" class="flex items-center gap-2 text-sm font-bold text-slate-700"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-orange-600" aria-hidden="true"><path d="M14 4h-4L8 7H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-4l-2-3Z"></path><circle cx="12" cy="13" r="3"></circle></svg>Recipe photo @unless ($isEditing)<span class="text-rose-600">(required)</span>@endunless</label>
-                        @if ($isEditing)
-                            <p class="mt-1 text-xs text-slate-500">Choose a new image to replace the current photo. Your new photo will preview here.</p>
-                        @else
-                            <p class="mt-1 text-xs text-slate-500">Add a clear photo of your finished dish. JPG, PNG, or WebP up to 5 MB.</p>
-                        @endif
-                        <input id="photo" name="photo" type="file" accept="image/*" @required(!$isEditing) class="mt-3 block w-full cursor-pointer rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm text-slate-600 file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-orange-100 file:px-4 file:py-2 file:font-bold file:text-orange-700 hover:file:bg-orange-200">
-                        <div class="mt-4 flex flex-wrap items-center gap-4">
-                            <img data-photo-preview data-original-src="{{ $isEditing ? \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) : '' }}" @if ($isEditing) src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" @endif alt="{{ $isEditing ? 'Current photo for '.$recipe->title : 'Selected recipe photo preview' }}" class="{{ $isEditing ? '' : 'hidden' }} h-28 w-36 rounded-2xl border border-orange-100 object-cover shadow-sm sm:h-32 sm:w-44">
-                            <p data-photo-preview-status role="status" class="text-xs font-semibold leading-5 text-slate-500">{{ $isEditing ? 'Current recipe photo' : 'Your selected photo will appear here.' }}</p>
+                    <section aria-labelledby="recipe-media-heading" class="rounded-3xl border border-slate-200 bg-slate-50/50 p-5 sm:p-6">
+                        <div class="mb-5">
+                            <h2 id="recipe-media-heading" class="text-xl font-black text-slate-900">Images and videos</h2>
+                            <p class="mt-1 text-sm text-slate-500">These separate media sections belong to this recipe. Add one image and, if you like, one video.</p>
                         </div>
-                        @error('photo') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
-                    </div>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div class="rounded-2xl border border-dashed border-orange-200 bg-orange-50/40 p-4 sm:p-5">
+                                <h3 class="text-sm font-bold text-slate-800">Images</h3>
+                                <label for="photo" class="mt-2 block text-sm font-medium text-slate-700">Recipe image @unless ($isEditing)<span class="text-rose-600">(required)</span>@endunless</label>
+                                @if ($isEditing)
+                                    <p class="mt-1 text-xs text-slate-500">Choose a new image to replace the current one. It will preview here.</p>
+                                @else
+                                    <p class="mt-1 text-xs text-slate-500">Add one clear image of your finished dish. JPG, PNG, or WebP up to 5 MB.</p>
+                                @endif
+                                <input id="photo" name="photo" type="file" accept="image/*" @required(!$isEditing) class="mt-3 block w-full cursor-pointer rounded-2xl border border-orange-100 bg-white px-4 py-3 text-sm text-slate-600 file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-orange-100 file:px-4 file:py-2 file:font-bold file:text-orange-700 hover:file:bg-orange-200">
+                                <div class="mt-4 flex flex-wrap items-center gap-4">
+                                    <img data-photo-preview data-original-src="{{ $isEditing ? \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) : '' }}" @if ($isEditing) src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" @endif alt="{{ $isEditing ? 'Current photo for '.$recipe->title : 'Selected recipe photo preview' }}" class="{{ $isEditing ? '' : 'hidden' }} h-28 w-36 rounded-2xl border border-orange-100 object-cover shadow-sm sm:h-32 sm:w-44">
+                                    <p data-photo-preview-status role="status" class="text-xs font-semibold leading-5 text-slate-500">{{ $isEditing ? 'Current recipe image' : 'Your selected image will appear here.' }}</p>
+                                </div>
+                                @error('photo') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
+                            </div>
 
-                    <div class="rounded-3xl border border-dashed border-slate-200 bg-slate-50/70 p-5 sm:p-6">
-                        <label for="video" class="flex items-center gap-2 text-sm font-bold text-slate-700"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5 text-slate-600" aria-hidden="true"><rect x="3" y="5" width="13" height="14" rx="2"></rect><path d="m16 10 5-3v10l-5-3z"></path></svg>Recipe video <span class="font-normal text-slate-400">(optional)</span></label>
-                        @if ($isEditing && $recipe->video_path)
-                            <video controls preload="metadata" class="mt-3 max-h-72 w-full rounded-2xl bg-slate-900" aria-label="Current video for {{ $recipe->title }}">
-                                <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->video_path) }}">
-                                Your browser does not support video playback.
-                            </video>
-                            <p class="mt-2 text-xs text-slate-500">Choose another video to replace this one.</p>
-                        @endif
-                        <p class="mt-1 text-xs text-slate-500">Upload a video of your recipe if you have one. MP4, MOV, or WebM up to 200 MB.</p>
-                        <input id="video" name="video" type="file" accept="video/mp4,video/quicktime,video/webm" class="mt-3 block w-full cursor-pointer rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:font-bold file:text-slate-700 hover:file:bg-slate-200">
-                        @error('video') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
-                    </div>
+                            <div class="rounded-2xl border border-dashed border-slate-200 bg-white p-4 sm:p-5">
+                                <h3 class="text-sm font-bold text-slate-800">Videos</h3>
+                                <label for="video" class="mt-2 block text-sm font-medium text-slate-700">Recipe video <span class="font-normal text-slate-400">(optional)</span></label>
+                                @if ($isEditing && $recipe->video_path)
+                                    <video controls preload="metadata" class="mt-3 max-h-72 w-full rounded-2xl bg-slate-900" aria-label="Current video for {{ $recipe->title }}">
+                                        <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->video_path) }}">
+                                        Your browser does not support video playback.
+                                    </video>
+                                    <p class="mt-2 text-xs text-slate-500">Choose another video to replace this one.</p>
+                                @endif
+                                <p class="mt-1 text-xs text-slate-500">Add one video if you have one. MP4, MOV, or WebM up to 200 MB.</p>
+                                <input id="video" name="video" type="file" accept="video/mp4,video/quicktime,video/webm" class="mt-3 block w-full cursor-pointer rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600 file:mr-4 file:cursor-pointer file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:font-bold file:text-slate-700 hover:file:bg-slate-200">
+                                @error('video') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+                    </section>
 
                     <div class="flex items-start gap-4 border-b border-orange-100 pb-8">
                         <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-lg font-black text-emerald-700">4</span>

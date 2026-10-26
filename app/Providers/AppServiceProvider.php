@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
+use App\Auth\UniqueEmailUserProvider;
 use App\Models\User;
 use Carbon\CarbonImmutable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Passkeys\Passkey;
+use Laravel\Passkeys\Passkeys;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +30,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Auth::provider('unique-email', fn ($app, array $config): UniqueEmailUserProvider => new UniqueEmailUserProvider(
+            $app['hash'],
+            $config['model'],
+        ));
+
+        Passkeys::authorizeLoginUsing(
+            fn (Request $request, User $user, Passkey $passkey): bool => $user->hasUniqueEmail(),
+        );
+
         Gate::define('access-admin-dashboard', fn (User $user): bool => $user->isAdmin());
 
         $this->configureDefaults();
@@ -41,14 +55,18 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        Password::defaults(fn (): ?Password => app()->isProduction()
-            ? Password::min(12)
-                ->mixedCase()
-                ->letters()
-                ->numbers()
-                ->symbols()
-                ->uncompromised()
-            : null,
-        );
+        Password::defaults(function (): Password {
+            $password = Password::min(8)->max(12)->symbols();
+
+            if (app()->isProduction()) {
+                $password
+                    ->mixedCase()
+                    ->letters()
+                    ->numbers()
+                    ->uncompromised();
+            }
+
+            return $password;
+        });
     }
 }

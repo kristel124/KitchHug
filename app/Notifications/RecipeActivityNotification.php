@@ -60,6 +60,18 @@ class RecipeActivityNotification extends Notification
                 'actor' => $actor,
                 'url' => route('users.show', $this->actor),
             ],
+            'recipe_deleted' => [
+                'activity' => $this->activity,
+                'message' => 'Your recipe "'.$this->recipe->title.'" was removed by an admin for violating our community guidelines.',
+                'actor' => $actor,
+                'url' => route('notifications.index'),
+            ],
+            'comment_deleted' => [
+                'activity' => $this->activity,
+                'message' => 'Your comment on "'.$this->recipe->title.'" was removed by an admin for violating our community guidelines.',
+                'actor' => $actor,
+                'url' => route('notifications.index'),
+            ],
             default => throw new \LogicException('Unsupported recipe activity notification.'),
         };
     }

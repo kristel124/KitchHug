@@ -5,8 +5,8 @@
         @include('partials.kitchhug_header')
 
         <main>
-            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0] lg:h-[calc(100dvh-5rem)] lg:overflow-hidden">
-                <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:h-full lg:grid-cols-2 lg:overflow-hidden lg:px-8">
+            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0] lg:h-[calc(100dvh-5rem)]">
+                <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:h-full lg:grid-cols-2 lg:px-8">
                     <div id="recipe-scroll-area" class="min-w-0 lg:col-span-1 lg:h-full lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
                         <a href="{{ $recipe['back_url'] ?? (auth()->check() ? route('user_homepage') : route('home')) }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back to recipes</a>
                         <div class="mt-6">

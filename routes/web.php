@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\CommentController as AdminCommentController;
+use App\Http\Controllers\Admin\RecipeController as AdminRecipeController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeBrowseController;
@@ -92,12 +95,71 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ]);
     })->name('user_homepage');
     Route::get('/admin', function () {
+        // Merge recent recipes and comments into a unified activity feed
+        $recentRecipes = Recipe::query()
+            ->with('user')
+            ->latest()
+            ->take(20)
+            ->get()
+            ->map(fn ($recipe) => [
+                'type' => 'recipe',
+                'user' => $recipe->user,
+                'label' => 'shared a recipe',
+                'detail' => $recipe->title,
+                'happened_at' => $recipe->created_at,
+            ]);
+
+        $recentComments = RecipeComment::query()
+            ->with(['user', 'recipe'])
+            ->latest()
+            ->take(20)
+            ->get()
+            ->map(fn ($comment) => [
+                'type' => 'comment',
+                'user' => $comment->user,
+                'label' => 'commented on a recipe',
+                'detail' => $comment->recipe?->title ?? 'a recipe',
+                'happened_at' => $comment->created_at,
+            ]);
+
+        $activityLog = $recentRecipes
+            ->concat($recentComments)
+            ->sortByDesc('happened_at')
+            ->take(20)
+            ->values();
+
         return view('admin.dashboard', [
             'userCount' => User::count(),
             'recipeCount' => Recipe::count(),
             'commentCount' => RecipeComment::count(),
+            'activePostersRate' => User::count() > 0
+                ? round((User::has('recipes')->count() / User::count()) * 100)
+                : 0,
+            'activityLog' => $activityLog,
         ]);
     })->middleware('can:access-admin-dashboard')->name('admin.dashboard');
+
+    Route::get('/admin/users', [AdminUserController::class, 'index'])
+        ->middleware('can:access-admin-dashboard')
+        ->name('admin.users.index');
+    Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])
+        ->middleware('can:access-admin-dashboard')
+        ->name('admin.users.destroy');
+    Route::get('/admin/recipes', [AdminRecipeController::class, 'index'])
+        ->middleware('can:access-admin-dashboard')
+        ->name('admin.recipes.index');
+    Route::get('/admin/recipes/{recipe}', [AdminRecipeController::class, 'show'])
+        ->middleware('can:access-admin-dashboard')
+        ->name('admin.recipes.show');
+    Route::delete('/admin/recipes/{recipe}', [AdminRecipeController::class, 'destroy'])
+        ->middleware('can:access-admin-dashboard')
+        ->name('admin.recipes.destroy');
+    Route::get('/admin/comments', [AdminCommentController::class, 'index'])
+        ->middleware('can:access-admin-dashboard')
+        ->name('admin.comments.index');
+    Route::delete('/admin/comments/{comment}', [AdminCommentController::class, 'destroy'])
+        ->middleware('can:access-admin-dashboard')
+        ->name('admin.comments.destroy');
     Route::view('/my-recipes', 'my_recipes')->name('my_recipes');
     Route::get('/favorite-recipes', [RecipeFavoriteController::class, 'index'])->name('favorites.index');
     Route::post('/favorite-recipes/toggle', [RecipeFavoriteController::class, 'toggle'])->name('favorites.toggle');

@@ -51,6 +51,9 @@ Route::view('/register', 'pages.auth.register')->name('register');
 
 Route::get('/recipes/featured/{slug}', [RecipeController::class, 'featured'])->name('recipes.featured');
 Route::get('/users/{user}', [ProfileController::class, 'publicProfile'])->name('users.show');
+Route::get('/users/{user}/followers', [ProfileController::class, 'followers'])->name('users.followers');
+Route::get('/users/{user}/following', [ProfileController::class, 'following'])->name('users.following');
+Route::get('/recipes/{recipe}/hearts', [RecipeReactionController::class, 'index'])->whereNumber('recipe')->name('recipes.reactions.index');
 Route::get('/search', [SearchController::class, 'index'])->name('search.index');
 Route::get('/recipes/method/{method}', [RecipeBrowseController::class, 'byMethod'])
     ->name('recipes.by-method');

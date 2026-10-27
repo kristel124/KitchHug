@@ -321,21 +321,26 @@
             {{-- USER PROFILE DROPDOWN --}}
             <details class="group relative shrink-0">
 
-                <summary class="flex h-10 cursor-pointer list-none items-center gap-2 rounded-xl border border-orange-100 bg-white px-2 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-orange-50 [&::-webkit-details-marker]:hidden">
+                <summary class="flex h-10 cursor-pointer list-none items-center gap-1.5 rounded-xl px-1 text-sm font-bold text-slate-700 transition hover:opacity-80 [&::-webkit-details-marker]:hidden">
 
-                    <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-900 text-white">
-                        {{ Auth::user()->initials() }}
-                    </span>
-
-                    <span class="hidden max-w-28 truncate sm:block">
-                        {{ Auth::user()->name }}
+                    <span class="relative flex shrink-0">
+                        <span class="flex size-9 items-center justify-center overflow-hidden rounded-full bg-slate-700 text-sm font-black text-white ring-2 ring-white shadow">
+                            @if (Auth::user()->profile_photo_path)
+                                <img src="{{ Storage::url(Auth::user()->profile_photo_path) }}"
+                                     alt="{{ Auth::user()->name }}"
+                                     class="h-full w-full object-cover">
+                            @else
+                                {{ Auth::user()->initials() }}
+                            @endif
+                        </span>
+                        <span class="absolute -bottom-0.5 -right-0.5 size-2.5 rounded-full bg-green-400 ring-2 ring-white"></span>
                     </span>
 
                     <span class="text-xs text-slate-400 transition-transform group-open:rotate-180" aria-hidden="true">
                         ⌄
                     </span>
 
-                </summary>
+                </summary></summary>
 
                 <div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
 
@@ -355,13 +360,6 @@
                        class="mt-1 block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-orange-50 hover:text-orange-600">
 
                         My Profile
-
-                    </a>
-
-                    <a href="{{ route('profile.edit') }}"
-                       class="block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-orange-50 hover:text-orange-600">
-
-                        Account Settings
 
                     </a>
 

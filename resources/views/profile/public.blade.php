@@ -7,7 +7,7 @@
         <main>
             <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0]">
                 <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-                    <a href="{{ url()->previous() }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back</a>
+                    <a href="javascript:history.back()" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back</a>
                     @if (session('status'))
                         <p role="status" class="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">{{ session('status') }}</p>
                     @endif
@@ -27,7 +27,9 @@
                             </div>
                         </div>
                         @if ($isOwnProfile)
-                            <a href="{{ route('profile.show') }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-50">Manage my profile</a>
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('profile.show') }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-50">Manage my profile</a>
+                            </div>
                         @elseif (auth()->check())
                             <form method="POST" action="{{ route('users.follow', $user) }}">
                                 @csrf
@@ -45,14 +47,16 @@
                             <dt class="text-xs font-bold uppercase tracking-widest text-slate-400">Recipes shared</dt>
                             <dd class="mt-1 text-2xl font-black text-slate-900">{{ $recipes->count() }}</dd>
                         </div>
-                        <div class="rounded-2xl border border-orange-100 bg-white/80 p-4">
-                            <dt class="text-xs font-bold uppercase tracking-widest text-slate-400">Followers</dt>
-                            <dd class="mt-1 text-2xl font-black text-slate-900">{{ $followersCount }}</dd>
-                        </div>
-                        <div class="rounded-2xl border border-orange-100 bg-white/80 p-4">
-                            <dt class="text-xs font-bold uppercase tracking-widest text-slate-400">Following</dt>
-                            <dd class="mt-1 text-2xl font-black text-slate-900">{{ $followingCount }}</dd>
-                        </div>
+                        <button type="button" onclick="openFollowModal({{ $user->id }}, 'followers')"
+                                class="group rounded-2xl border border-orange-100 bg-white/80 p-4 text-left transition hover:border-orange-300 hover:bg-white">
+                            <dt class="text-xs font-bold uppercase tracking-widest text-slate-400 transition group-hover:text-orange-500">Followers</dt>
+                            <dd class="mt-1 text-2xl font-black text-slate-900 transition group-hover:text-orange-600">{{ $followersCount }}</dd>
+                        </button>
+                        <button type="button" onclick="openFollowModal({{ $user->id }}, 'following')"
+                                class="group rounded-2xl border border-orange-100 bg-white/80 p-4 text-left transition hover:border-orange-300 hover:bg-white">
+                            <dt class="text-xs font-bold uppercase tracking-widest text-slate-400 transition group-hover:text-orange-500">Following</dt>
+                            <dd class="mt-1 text-2xl font-black text-slate-900 transition group-hover:text-orange-600">{{ $followingCount }}</dd>
+                        </button>
                     </dl>
                 </div>
             </section>
@@ -130,4 +134,6 @@
 
         @include('partials.kitchhug_footer')
     </div>
+
+    @include('profile.partials.follow-modal')
 @endsection

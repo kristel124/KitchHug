@@ -62,13 +62,13 @@ class RecipeActivityNotification extends Notification
             ],
             'recipe_deleted' => [
                 'activity' => $this->activity,
-                'message' => 'Your recipe "'.$this->recipe->title.'" was removed by an admin for violating our community guidelines.',
+                'message' => 'Your recipe "'.$this->recipe->title.'" was removed for violating our community guidelines.',
                 'actor' => $actor,
                 'url' => route('notifications.index'),
             ],
             'comment_deleted' => [
                 'activity' => $this->activity,
-                'message' => 'Your comment on "'.$this->recipe->title.'" was removed by an admin for violating our community guidelines.',
+                'message' => 'Your comment on "'.$this->recipe->title.'" was removed for violating our community guidelines.',
                 'actor' => $actor,
                 'url' => route('notifications.index'),
             ],

@@ -30,14 +30,14 @@
                                         <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $totalRecipeCount }}</dd>
                                         <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Recipes</dt>
                                     </div>
-                                    <div>
-                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $followersCount }}</dd>
-                                        <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Followers</dt>
-                                    </div>
-                                    <div>
-                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $followingCount }}</dd>
-                                        <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Following</dt>
-                                    </div>
+                                    <button type="button" onclick="openFollowModal({{ $user->id }}, 'followers')" class="group text-left">
+                                        <dd class="text-lg font-black text-slate-900 transition group-hover:text-orange-600 sm:text-xl">{{ $followersCount }}</dd>
+                                        <dt class="text-[10px] font-bold text-slate-500 transition group-hover:text-orange-500 sm:text-xs">Followers</dt>
+                                    </button>
+                                    <button type="button" onclick="openFollowModal({{ $user->id }}, 'following')" class="group text-left">
+                                        <dd class="text-lg font-black text-slate-900 transition group-hover:text-orange-600 sm:text-xl">{{ $followingCount }}</dd>
+                                        <dt class="text-[10px] font-bold text-slate-500 transition group-hover:text-orange-500 sm:text-xs">Following</dt>
+                                    </button>
                                 </dl>
                             </div>
                         </div>
@@ -199,4 +199,6 @@
 
         @include('partials.kitchhug_footer')
     </div>
+
+    @include('profile.partials.follow-modal')
 @endsection

@@ -96,6 +96,48 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function followers(Request $request, User $user): View
+    {
+        $viewer = $request->user();
+        $followers = $user->followers()->latest('user_follows.created_at')->get();
+
+        if ($request->wantsJson() || $request->headers->get('X-Requested-With') === 'fetch') {
+            return view('profile.partials.follow-list', [
+                'people' => $followers,
+                'viewer' => $viewer,
+            ]);
+        }
+
+        return view('profile.followers', [
+            'user' => $user,
+            'people' => $followers,
+            'tab' => 'followers',
+            'viewer' => $viewer,
+            'isOwnProfile' => $viewer instanceof User && $viewer->id === $user->id,
+        ]);
+    }
+
+    public function following(Request $request, User $user): View
+    {
+        $viewer = $request->user();
+        $following = $user->following()->latest('user_follows.created_at')->get();
+
+        if ($request->wantsJson() || $request->headers->get('X-Requested-With') === 'fetch') {
+            return view('profile.partials.follow-list', [
+                'people' => $following,
+                'viewer' => $viewer,
+            ]);
+        }
+
+        return view('profile.followers', [
+            'user' => $user,
+            'people' => $following,
+            'tab' => 'following',
+            'viewer' => $viewer,
+            'isOwnProfile' => $viewer instanceof User && $viewer->id === $user->id,
+        ]);
+    }
+
     public function toggleFollow(Request $request, User $user): RedirectResponse
     {
         $follower = $request->user();
@@ -105,7 +147,7 @@ class ProfileController extends Controller
         if ($follower->following()->whereKey($user->id)->exists()) {
             $follower->following()->detach($user->id);
 
-            return back()->with('status', 'You unfollowed '.$user->name.'.');
+            return back();
         }
 
         $changes = $follower->following()->syncWithoutDetaching([$user->id]);
@@ -114,6 +156,6 @@ class ProfileController extends Controller
             $user->notify(new RecipeActivityNotification('new_follower', $follower));
         }
 
-        return back()->with('status', 'You are now following '.$user->name.'.');
+        return back();
     }
 }

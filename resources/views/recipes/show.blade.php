@@ -30,53 +30,92 @@
                                 <div class="mt-4 flex flex-wrap items-center gap-3">
                                     @if (isset($recipe['id']))
                                         @auth
-                                            @if (auth()->id() === $recipe['author_id'])
-                                                <span class="inline-flex items-center gap-2 px-4 py-3 text-sm font-bold text-rose-700">
-                                                    <span aria-hidden="true">♥</span>
+                                            {{-- Toggle heart reaction (all authenticated users, including owner) --}}
+                                            <form method="POST" action="{{ route('recipes.reactions.toggle', $recipe['id']) }}">
+                                                @csrf
+                                                <button type="submit" aria-label="{{ $recipe['is_liked'] ? 'Remove heart reaction' : 'React with a heart' }}" aria-pressed="{{ $recipe['is_liked'] ? 'true' : 'false' }}" class="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition {{ $recipe['is_liked'] ? 'border border-rose-200 bg-rose-100 text-rose-700 hover:bg-rose-200' : 'border border-orange-100 bg-white text-slate-700 shadow-sm hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700' }}">
+                                                    @if ($recipe['is_liked'])
+                                                        {{-- Filled heart when liked --}}
+                                                        <svg aria-hidden="true" viewBox="0 0 32 32" fill="currentColor" class="size-5">
+                                                            <path d="M16 28S4 20.5 4 11.5A7.5 7.5 0 0 1 16 6.257 7.5 7.5 0 0 1 28 11.5C28 20.5 16 28 16 28Z"/>
+                                                        </svg>
+                                                    @else
+                                                        {{-- Outline heart --}}
+                                                        <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" class="size-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M16 28S4 20.5 4 11.5A7.5 7.5 0 0 1 16 6.257 7.5 7.5 0 0 1 28 11.5C28 20.5 16 28 16 28Z"/>
+                                                        </svg>
+                                                    @endif
                                                     <span>{{ $recipe['reaction_count'] }} {{ \Illuminate\Support\Str::plural('heart', $recipe['reaction_count']) }}</span>
-                                                </span>
-                                            @else
-                                                <form method="POST" action="{{ route('recipes.reactions.toggle', $recipe['id']) }}">
-                                                    @csrf
-                                                    <button type="submit" aria-label="{{ $recipe['is_liked'] ? 'Remove heart reaction' : 'React with a heart' }}" aria-pressed="{{ $recipe['is_liked'] ? 'true' : 'false' }}" class="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition {{ $recipe['is_liked'] ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-white text-slate-700 shadow-sm hover:bg-rose-50 hover:text-rose-700' }}">
-                                                        <span aria-hidden="true">{{ $recipe['is_liked'] ? '♥' : '♡' }}</span>
-                                                        <span>{{ $recipe['reaction_count'] }} {{ \Illuminate\Support\Str::plural('heart', $recipe['reaction_count']) }}</span>
-                                                    </button>
-                                                </form>
-                                            @endif
+                                                </button>
+                                            </form>
                                         @else
+                                            {{-- Guest: link to login to react --}}
                                             <a href="{{ route('login') }}" class="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-700 shadow-sm transition hover:bg-rose-50 hover:text-rose-700">
-                                                <span aria-hidden="true">♡</span>
+                                                {{-- Outline heart --}}
+                                                <svg aria-hidden="true" viewBox="0 0 32 32" fill="none" class="size-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M16 28S4 20.5 4 11.5A7.5 7.5 0 0 1 16 6.257 7.5 7.5 0 0 1 28 11.5C28 20.5 16 28 16 28Z"/>
+                                                </svg>
                                                 <span>{{ $recipe['reaction_count'] }} {{ \Illuminate\Support\Str::plural('heart', $recipe['reaction_count']) }} · Log in to react</span>
                                             </a>
                                         @endauth
                                     @endif
-                                    <div>
-                                        <button type="button" data-share-recipe data-share-url="{{ $recipe['share_url'] }}" data-share-title="{{ $recipe['title'] }}" data-share-text="{{ $recipe['description'] }}" class="rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">Share post</button>
-                                        <span data-share-status role="status" aria-live="polite" class="ml-2 text-xs text-slate-500"></span>
-                                    </div>
+                                    {{-- Share post button — forward arrow icon --}}
+                                    <button type="button" data-share-recipe data-share-url="{{ $recipe['share_url'] }}" data-share-title="{{ $recipe['title'] }}" data-share-text="{{ $recipe['description'] }}" class="inline-flex items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
+                                        {{-- Forward/share arrow --}}
+                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                                            <path d="M21.707 11.293 13.414 3l-1.414 1.414 6.293 6.293H3v2h15.293l-6.293 6.293 1.414 1.414 8.293-8.121Z"/>
+                                        </svg>
+                                        Share post
+                                    </button>
+                                    {{-- Comment button — scrolls to the comments panel --}}
+                                    <a href="#comments" class="inline-flex items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
+                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M8.25 6.75h7.5M8.25 9.75h4.5M5.25 3.75h13.5A2.25 2.25 0 0 1 21 6v8.25a2.25 2.25 0 0 1-2.25 2.25H8.25L3.75 21v-4.5A2.25 2.25 0 0 1 3 14.25V6a2.25 2.25 0 0 1 2.25-2.25Z"/>
+                                        </svg>
+                                        Comment
+                                    </a>
+                                    <span data-share-status role="status" aria-live="polite" class="text-xs text-slate-500"></span>
+                                    @if (($recipe['is_curated'] ?? false) || isset($recipe['id']))
+                                        @auth
+                                            <form method="POST" action="{{ route('favorites.toggle') }}">
+                                                @csrf
+                                                @if ($recipe['is_curated'] ?? false)
+                                                    <input type="hidden" name="category" value="{{ $recipe['category_slug'] }}">
+                                                    <input type="hidden" name="recipe_slug" value="{{ $recipe['recipe_slug'] }}">
+                                                @else
+                                                    <input type="hidden" name="recipe_id" value="{{ $recipe['id'] }}">
+                                                @endif
+                                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition {{ $recipe['is_favorite'] ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-orange-500 text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600' }}">
+                                                    @if ($recipe['is_favorite'])
+                                                        {{-- Filled bookmark when saved --}}
+                                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                                                            <path d="M5 2a2 2 0 0 0-2 2v18l9-4 9 4V4a2 2 0 0 0-2-2H5Z"/>
+                                                        </svg>
+                                                        Saved
+                                                    @else
+                                                        {{-- Outline bookmark when not saved --}}
+                                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                            <path d="M5 2a2 2 0 0 0-2 2v18l9-4 9 4V4a2 2 0 0 0-2-2H5Z"/>
+                                                        </svg>
+                                                        Save Recipe
+                                                    @endif
+                                                </button>
+                                                @if (isset($recipe['favorite_count']))
+                                                    <span class="ml-1 text-sm text-slate-500">{{ $recipe['favorite_count'] }} {{ \Illuminate\Support\Str::plural('save', $recipe['favorite_count']) }}</span>
+                                                @endif
+                                            </form>
+                                        @else
+                                            {{-- Guest: link to login to save --}}
+                                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-600">
+                                                {{-- Outline bookmark --}}
+                                                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path d="M5 2a2 2 0 0 0-2 2v18l9-4 9 4V4a2 2 0 0 0-2-2H5Z"/>
+                                                </svg>
+                                                Log in to Save
+                                            </a>
+                                        @endauth
+                                    @endif
                                 </div>
-                                @if (($recipe['is_curated'] ?? false) || isset($recipe['id']))
-                                    @auth
-                                        <form method="POST" action="{{ route('favorites.toggle') }}" class="mt-5">
-                                            @csrf
-                                            @if ($recipe['is_curated'] ?? false)
-                                                <input type="hidden" name="category" value="{{ $recipe['category_slug'] }}">
-                                                <input type="hidden" name="recipe_slug" value="{{ $recipe['recipe_slug'] }}">
-                                            @else
-                                                <input type="hidden" name="recipe_id" value="{{ $recipe['id'] }}">
-                                            @endif
-                                            <button type="submit" class="rounded-xl px-5 py-3 text-sm font-bold transition {{ $recipe['is_favorite'] ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-orange-500 text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600' }}">
-                                                {{ $recipe['is_favorite'] ? '♥ Saved to Favorites' : '♡ Save Recipe' }}
-                                            </button>
-                                            @if (isset($recipe['favorite_count']))
-                                                <span class="ml-2 text-sm text-slate-500">{{ $recipe['favorite_count'] }} {{ \Illuminate\Support\Str::plural('save', $recipe['favorite_count']) }}</span>
-                                            @endif
-                                        </form>
-                                    @else
-                                        <a href="{{ route('login') }}" class="mt-5 inline-flex rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-600">♡ Log in to Save</a>
-                                    @endauth
-                                @endif
                             </div>
 
                             @if ($recipe['image_url'] || $recipe['video_url'])

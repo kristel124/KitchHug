@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\Admin\RecipeController as AdminRecipeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
@@ -182,11 +183,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('recipes.category');
     Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->whereNumber('recipe')->name('recipes.show');
     Route::post('/recipes/{recipe}/comments', [RecipeController::class, 'storeComment'])->whereNumber('recipe')->name('recipes.comments.store');
+    Route::post('/recipes/{recipe}/comments/{comment}/replies', [RecipeController::class, 'replyComment'])->whereNumber('recipe')->whereNumber('comment')->name('recipes.comments.reply');
+    Route::patch('/recipes/{recipe}/comments/{comment}', [RecipeController::class, 'updateComment'])->whereNumber('recipe')->whereNumber('comment')->name('recipes.comments.update');
+    Route::delete('/recipes/{recipe}/comments/{comment}', [RecipeController::class, 'destroyComment'])->whereNumber('recipe')->whereNumber('comment')->name('recipes.comments.destroy');
     Route::get('/recipes/{recipe}/edit', [RecipeController::class, 'edit'])->name('recipes.edit');
     Route::put('/recipes/{recipe}', [RecipeController::class, 'update'])->name('recipes.update');
     Route::delete('/recipes/{recipe}', [RecipeController::class, 'destroy'])->name('recipes.destroy');
     Route::redirect('/home', '/user_homepage');
     Route::redirect('/dashboard', '/user_homepage');
+    Route::post('/ai/chat', [AiChatController::class, 'chat'])->name('ai.chat');
 });
 
 require __DIR__.'/settings.php';

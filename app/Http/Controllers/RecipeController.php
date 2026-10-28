@@ -88,7 +88,7 @@ class RecipeController extends Controller
                 'emoji' => null,
                 'comment_action' => route('recipes.comments.store', $recipe),
             ],
-            'comments' => $recipe->comments()->with('user')->latest()->get(),
+            'comments' => $recipe->comments()->with(['user', 'replies.user'])->whereNull('parent_id')->latest()->get(),
         ]);
     }
 
@@ -159,6 +159,50 @@ class RecipeController extends Controller
         return $isFeatured
             ? to_route('recipes.featured', $slug)->with('status', 'Your comment was posted.')
             : back()->with('status', 'Your comment was posted.');
+    }
+
+    public function replyComment(Request $request, Recipe $recipe, RecipeComment $comment): RedirectResponse
+    {
+        $user = $request->user();
+        abort_unless($user instanceof User, 403);
+
+        $data = $request->validate([
+            'body' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $recipe->comments()->create([
+            'user_id' => $user->id,
+            'parent_id' => $comment->id,
+            'body' => $data['body'],
+        ]);
+
+        return to_route('recipes.show', $recipe)->with('status', 'Your reply was posted.');
+    }
+
+    public function updateComment(Request $request, Recipe $recipe, RecipeComment $comment): RedirectResponse
+    {
+        $user = $request->user();
+        abort_unless($user instanceof User, 403);
+        abort_unless($comment->user_id === $user->id, 403);
+
+        $data = $request->validate([
+            'body' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $comment->update(['body' => $data['body']]);
+
+        return to_route('recipes.show', $recipe)->with('status', 'Your comment was updated.');
+    }
+
+    public function destroyComment(Request $request, Recipe $recipe, RecipeComment $comment): RedirectResponse
+    {
+        $user = $request->user();
+        abort_unless($user instanceof User, 403);
+        abort_unless($comment->user_id === $user->id, 403);
+
+        $comment->delete();
+
+        return to_route('recipes.show', $recipe)->with('status', 'Comment deleted.');
     }
 
     public function store(Request $request): RedirectResponse

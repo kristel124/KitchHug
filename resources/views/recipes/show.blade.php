@@ -5,9 +5,9 @@
         @include('partials.kitchhug_header')
 
         <main>
-            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0] lg:h-[calc(100dvh-5rem)]">
-                <div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-6 px-4 py-6 sm:px-6 lg:h-full lg:grid-cols-2 lg:px-8">
-                    <div id="recipe-scroll-area" class="min-w-0 lg:col-span-1 lg:h-full lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
+            <section class="border-b border-orange-100 bg-gradient-to-b from-orange-100/80 to-[#FAF6F0]">
+                <div class="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+                    <div id="recipe-scroll-area" class="min-w-0">
                         <a href="{{ $recipe['back_url'] ?? (auth()->check() ? route('user_homepage') : route('home')) }}" class="text-sm font-bold text-orange-600 transition hover:text-orange-700">← Back to recipes</a>
                         <div class="mt-6">
                             <div>
@@ -60,50 +60,52 @@
                                         @endauth
                                     @endif
                                     {{-- Share post button — forward arrow icon --}}
-                                    <button type="button" data-share-recipe data-share-url="{{ $recipe['share_url'] }}" data-share-title="{{ $recipe['title'] }}" data-share-text="{{ $recipe['description'] }}" class="inline-flex items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
-                                        {{-- Forward/share arrow --}}
-                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                                            <path d="M21.707 11.293 13.414 3l-1.414 1.414 6.293 6.293H3v2h15.293l-6.293 6.293 1.414 1.414 8.293-8.121Z"/>
-                                        </svg>
-                                        Share post
-                                    </button>
-                                    {{-- Comment button — scrolls to the comments panel --}}
-                                    <a href="#comments" class="inline-flex items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
+                                    <div class="flex items-center gap-2">
+                                        <button type="button" data-share-recipe data-share-url="{{ $recipe['share_url'] }}" data-share-title="{{ $recipe['title'] }}" data-share-text="{{ $recipe['description'] }}" class="inline-flex items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
+                                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                                                <path d="M21.707 11.293 13.414 3l-1.414 1.414 6.293 6.293H3v2h15.293l-6.293 6.293 1.414 1.414 8.293-8.121Z"/>
+                                            </svg>
+                                            Share post
+                                        </button>
+                                        <span data-share-status role="status" aria-live="polite" class="text-xs text-slate-500"></span>
+                                    </div>
+                                    {{-- Comment button — smooth scrolls to the comments section below --}}
+                                    <a href="#comments" onclick="document.getElementById('comments').scrollIntoView({behavior:'smooth'});return false;" class="inline-flex items-center gap-2 rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
                                         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <path d="M8.25 6.75h7.5M8.25 9.75h4.5M5.25 3.75h13.5A2.25 2.25 0 0 1 21 6v8.25a2.25 2.25 0 0 1-2.25 2.25H8.25L3.75 21v-4.5A2.25 2.25 0 0 1 3 14.25V6a2.25 2.25 0 0 1 2.25-2.25Z"/>
                                         </svg>
                                         Comment
                                     </a>
-                                    <span data-share-status role="status" aria-live="polite" class="text-xs text-slate-500"></span>
                                     @if (($recipe['is_curated'] ?? false) || isset($recipe['id']))
                                         @auth
-                                            <form method="POST" action="{{ route('favorites.toggle') }}">
-                                                @csrf
-                                                @if ($recipe['is_curated'] ?? false)
-                                                    <input type="hidden" name="category" value="{{ $recipe['category_slug'] }}">
-                                                    <input type="hidden" name="recipe_slug" value="{{ $recipe['recipe_slug'] }}">
-                                                @else
-                                                    <input type="hidden" name="recipe_id" value="{{ $recipe['id'] }}">
-                                                @endif
-                                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition {{ $recipe['is_favorite'] ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-orange-500 text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600' }}">
-                                                    @if ($recipe['is_favorite'])
-                                                        {{-- Filled bookmark when saved --}}
-                                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                                                            <path d="M5 2a2 2 0 0 0-2 2v18l9-4 9 4V4a2 2 0 0 0-2-2H5Z"/>
-                                                        </svg>
-                                                        Saved
+                                            {{-- Save button + count grouped so they never split across lines --}}
+                                            <div class="flex items-center gap-2">
+                                                <form method="POST" action="{{ route('favorites.toggle') }}">
+                                                    @csrf
+                                                    @if ($recipe['is_curated'] ?? false)
+                                                        <input type="hidden" name="category" value="{{ $recipe['category_slug'] }}">
+                                                        <input type="hidden" name="recipe_slug" value="{{ $recipe['recipe_slug'] }}">
                                                     @else
-                                                        {{-- Outline bookmark when not saved --}}
-                                                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                            <path d="M5 2a2 2 0 0 0-2 2v18l9-4 9 4V4a2 2 0 0 0-2-2H5Z"/>
-                                                        </svg>
-                                                        Save Recipe
+                                                        <input type="hidden" name="recipe_id" value="{{ $recipe['id'] }}">
                                                     @endif
-                                                </button>
+                                                    <button type="submit" class="inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition {{ $recipe['is_favorite'] ? 'bg-rose-100 text-rose-700 hover:bg-rose-200' : 'bg-orange-500 text-white shadow-lg shadow-orange-500/20 hover:bg-orange-600' }}">
+                                                        @if ($recipe['is_favorite'])
+                                                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                                                                <path d="M5 2a2 2 0 0 0-2 2v18l9-4 9 4V4a2 2 0 0 0-2-2H5Z"/>
+                                                            </svg>
+                                                            Saved
+                                                        @else
+                                                            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" class="size-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                                <path d="M5 2a2 2 0 0 0-2 2v18l9-4 9 4V4a2 2 0 0 0-2-2H5Z"/>
+                                                            </svg>
+                                                            Save Recipe
+                                                        @endif
+                                                    </button>
+                                                </form>
                                                 @if (isset($recipe['favorite_count']))
-                                                    <span class="ml-1 text-sm text-slate-500">{{ $recipe['favorite_count'] }} {{ \Illuminate\Support\Str::plural('save', $recipe['favorite_count']) }}</span>
+                                                    <span class="text-sm text-slate-500">{{ $recipe['favorite_count'] }} {{ \Illuminate\Support\Str::plural('save', $recipe['favorite_count']) }}</span>
                                                 @endif
-                                            </form>
+                                            </div>
                                         @else
                                             {{-- Guest: link to login to save --}}
                                             <a href="{{ route('login') }}" class="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/20 transition hover:bg-orange-600">
@@ -162,50 +164,160 @@
                                 </div>
                             @endif
                         </div>
+
+                        {{-- Comments section --}}
+                        <section id="comments" class="mt-10 pb-16">
+                            <div class="rounded-3xl border border-orange-100 bg-white p-6 shadow-sm">
+                                {{-- Header: title + count badge --}}
+                                <div class="flex items-center justify-between">
+                                    <h2 class="text-xl font-black text-slate-900">Comments</h2>
+                                    <span class="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-600">{{ $comments->count() }}</span>
+                                </div>
+
+                                {{-- Post a comment --}}
+                                @auth
+                                    <form method="POST" action="{{ $recipe['comment_action'] }}" class="mt-5">
+                                        @csrf
+                                        <label for="body" class="text-sm font-bold text-slate-700">Add your comment</label>
+                                        <textarea id="body" name="body" rows="4" maxlength="2000" required class="mt-2 w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100" placeholder="Share what you think about this recipe...">{{ old('body') }}</textarea>
+                                        @error('body')
+                                            <p class="mt-2 text-sm font-semibold text-rose-600">{{ $message }}</p>
+                                        @enderror
+                                        <button type="submit" class="mt-3 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Post comment</button>
+                                    </form>
+                                @else
+                                    <p class="mt-5 text-sm leading-6 text-slate-600">
+                                        Want to share your thoughts?
+                                        <a href="{{ route('login') }}" class="font-bold text-orange-600 transition hover:text-orange-700">Log in</a>
+                                        or
+                                        <a href="{{ route('register') }}" class="font-bold text-orange-600 transition hover:text-orange-700">create an account</a>
+                                        to comment.
+                                    </p>
+                                @endauth
+
+                                {{-- Divider --}}
+                                <div class="mt-6 border-t border-orange-100"></div>
+
+                                {{-- Comment list --}}
+                                <div class="mt-5 space-y-4">
+                                    @forelse ($comments as $comment)
+                                        <article class="rounded-2xl bg-[#FFFCF8] p-4" x-data="{ editing: false, replying: false }">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-black text-orange-700">
+                                                        {{ strtoupper(substr($comment->user->name, 0, 1)) }}
+                                                    </span>
+                                                    <div>
+                                                        <h3 class="text-sm font-extrabold text-slate-800">{{ $comment->user->name }}</h3>
+                                                        <time class="text-xs font-medium text-slate-400" datetime="{{ $comment->created_at->toISOString() }}">{{ $comment->created_at->diffForHumans() }}</time>
+                                                    </div>
+                                                </div>
+                                                @auth
+                                                    @if (auth()->id() === $comment->user_id)
+                                                        {{-- Edit / Delete actions for comment owner --}}
+                                                        <div class="flex items-center gap-2">
+                                                            <button type="button" @click="editing = !editing; replying = false" class="text-xs font-semibold text-slate-400 transition hover:text-orange-600">Edit</button>
+                                                            <form method="POST" action="{{ route('recipes.comments.destroy', [$recipe['id'], $comment->id]) }}" onsubmit="return confirm('Delete this comment?')">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="text-xs font-semibold text-slate-400 transition hover:text-rose-600">Delete</button>
+                                                            </form>
+                                                        </div>
+                                                    @endif
+                                                @endauth
+                                            </div>
+
+                                            {{-- Comment body / inline edit form --}}
+                                            <div x-show="!editing" class="mt-2">
+                                                <p class="whitespace-pre-line break-words text-sm leading-6 text-slate-600">{{ $comment->body }}</p>
+                                            </div>
+                                            <form x-show="editing" method="POST" action="{{ route('recipes.comments.update', [$recipe['id'], $comment->id]) }}" class="mt-2" x-cloak>
+                                                @csrf
+                                                @method('PATCH')
+                                                <textarea name="body" rows="3" maxlength="2000" required class="w-full rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100">{{ $comment->body }}</textarea>
+                                                <div class="mt-2 flex gap-2">
+                                                    <button type="submit" class="rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-orange-600">Save</button>
+                                                    <button type="button" @click="editing = false" class="rounded-xl border border-orange-100 px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-orange-50">Cancel</button>
+                                                </div>
+                                            </form>
+
+                                            {{-- Reply button + inline reply form --}}
+                                            @auth
+                                                <div class="mt-3 flex items-center gap-3">
+                                                    <button type="button" @click="replying = !replying; editing = false" class="inline-flex items-center gap-1 text-xs font-semibold text-slate-400 transition hover:text-orange-600">
+                                                        <svg viewBox="0 0 24 24" fill="none" class="size-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                                            <path d="M9 15 3 9l6-6M3 9h13a5 5 0 0 1 0 10h-1"/>
+                                                        </svg>
+                                                        Reply
+                                                    </button>
+                                                    @if ($comment->replies->count() > 0)
+                                                        <span class="text-xs text-slate-400">{{ $comment->replies->count() }} {{ Str::plural('reply', $comment->replies->count()) }}</span>
+                                                    @endif
+                                                </div>
+
+                                                <form x-show="replying" method="POST" action="{{ route('recipes.comments.reply', [$recipe['id'], $comment->id]) }}" class="mt-3" x-cloak>
+                                                    @csrf
+                                                    <textarea name="body" rows="2" maxlength="2000" required class="w-full rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100" placeholder="Write a reply..."></textarea>
+                                                    <div class="mt-2 flex gap-2">
+                                                        <button type="submit" class="rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-orange-600">Post reply</button>
+                                                        <button type="button" @click="replying = false" class="rounded-xl border border-orange-100 px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-orange-50">Cancel</button>
+                                                    </div>
+                                                </form>
+                                            @endauth
+
+                                            {{-- Nested replies --}}
+                                            @if ($comment->replies->count() > 0)
+                                                <div class="mt-4 space-y-3 border-l-2 border-orange-100 pl-4">
+                                                    @foreach ($comment->replies as $reply)
+                                                        <article class="rounded-xl bg-white p-3" x-data="{ editing: false }">
+                                                            <div class="flex items-start justify-between gap-2">
+                                                                <div class="flex items-center gap-2">
+                                                                    <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-100 text-xs font-black text-orange-700">
+                                                                        {{ strtoupper(substr($reply->user->name, 0, 1)) }}
+                                                                    </span>
+                                                                    <div>
+                                                                        <h4 class="text-sm font-extrabold text-slate-800">{{ $reply->user->name }}</h4>
+                                                                        <time class="text-xs font-medium text-slate-400" datetime="{{ $reply->created_at->toISOString() }}">{{ $reply->created_at->diffForHumans() }}</time>
+                                                                    </div>
+                                                                </div>
+                                                                @auth
+                                                                    @if (auth()->id() === $reply->user_id)
+                                                                        <div class="flex items-center gap-2">
+                                                                            <button type="button" @click="editing = !editing" class="text-xs font-semibold text-slate-400 transition hover:text-orange-600">Edit</button>
+                                                                            <form method="POST" action="{{ route('recipes.comments.destroy', [$recipe['id'], $reply->id]) }}" onsubmit="return confirm('Delete this reply?')">
+                                                                                @csrf
+                                                                                @method('DELETE')
+                                                                                <button type="submit" class="text-xs font-semibold text-slate-400 transition hover:text-rose-600">Delete</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    @endif
+                                                                @endauth
+                                                            </div>
+                                                            <div x-show="!editing" class="mt-2">
+                                                                <p class="whitespace-pre-line break-words text-sm leading-6 text-slate-600">{{ $reply->body }}</p>
+                                                            </div>
+                                                            <form x-show="editing" method="POST" action="{{ route('recipes.comments.update', [$recipe['id'], $reply->id]) }}" class="mt-2" x-cloak>
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <textarea name="body" rows="2" maxlength="2000" required class="w-full rounded-xl border border-orange-100 bg-white px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100">{{ $reply->body }}</textarea>
+                                                                <div class="mt-2 flex gap-2">
+                                                                    <button type="submit" class="rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white transition hover:bg-orange-600">Save</button>
+                                                                    <button type="button" @click="editing = false" class="rounded-xl border border-orange-100 px-4 py-2 text-xs font-bold text-slate-600 transition hover:bg-orange-50">Cancel</button>
+                                                                </div>
+                                                            </form>
+                                                        </article>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </article>
+                                    @empty
+                                        <p class="text-sm leading-6 text-orange-600">No comments yet. Be the first to share your thoughts.</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                        </section>
                     </div>
 
-                    <aside id="comments" data-recipe-comments-panel class="h-fit min-w-0 rounded-3xl border border-orange-100 bg-white p-5 shadow-sm lg:sticky lg:top-0 lg:col-span-1 lg:max-h-full lg:self-start lg:overflow-y-auto lg:overscroll-contain">
-                        <div class="flex items-center justify-between gap-3">
-                            <h2 class="text-xl font-black text-slate-900">Comments</h2>
-                            <span class="rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-600">{{ $comments->count() }}</span>
-                        </div>
-                        @if (session('status'))
-                            <p role="status" class="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">{{ session('status') }}</p>
-                        @endif
-                        @auth
-                            <form method="POST" action="{{ $recipe['comment_action'] }}" class="mt-5">
-                                @csrf
-                                <label for="body" class="text-sm font-bold text-slate-700">Add your comment</label>
-                                <textarea id="body" name="body" rows="4" maxlength="2000" required class="mt-2 w-full rounded-xl border border-orange-100 bg-[#FFFCF8] px-4 py-3 text-sm leading-6 text-slate-700 outline-none transition focus:border-orange-300 focus:ring-2 focus:ring-orange-100" placeholder="Share what you think about this recipe...">{{ old('body') }}</textarea>
-                                @error('body')
-                                    <p class="mt-2 text-sm font-semibold text-rose-600">{{ $message }}</p>
-                                @enderror
-                                <button type="submit" class="mt-3 w-full rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Post comment</button>
-                            </form>
-                        @else
-                            <p class="mt-5 rounded-2xl bg-orange-50 p-4 text-sm leading-6 text-slate-600">
-                                Want to share your thoughts?
-                                <a href="{{ route('login') }}" class="font-bold text-orange-600 transition hover:text-orange-700">Log in</a>
-                                or
-                                <a href="{{ route('register') }}" class="font-bold text-orange-600 transition hover:text-orange-700">create an account</a>
-                                to comment.
-                            </p>
-                        @endauth
-
-                        <div class="mt-6 space-y-4 border-t border-orange-100 pt-5">
-                            @forelse ($comments as $comment)
-                                <article class="rounded-2xl bg-[#FFFCF8] p-4">
-                                    <div class="flex flex-wrap items-center justify-between gap-2">
-                                        <h3 class="text-sm font-extrabold text-slate-800">{{ $comment->user->name }}</h3>
-                                        <time class="text-xs font-medium text-slate-400" datetime="{{ $comment->created_at->toISOString() }}">{{ $comment->created_at->diffForHumans() }}</time>
-                                    </div>
-                                    <p class="mt-2 whitespace-pre-line break-words text-sm leading-6 text-slate-600">{{ $comment->body }}</p>
-                                </article>
-                            @empty
-                                <p class="text-sm leading-6 text-slate-500">No comments yet. Be the first to share your thoughts.</p>
-                            @endforelse
-                        </div>
-                    </aside>
                 </div>
             </section>
         </main>

@@ -38,21 +38,9 @@
 
             {{-- LOGO --}}
             <a href="{{ auth()->check() ? route('user_homepage') : route('home') }}"
-               class="group flex shrink-0 items-center gap-3">
+               class="group flex shrink-0 items-center transition-transform group-hover:scale-105">
 
-                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-orange-600 to-orange-400 text-xl shadow-md shadow-orange-500/20 transition-transform group-hover:scale-105">
-                    🍳
-                </div>
-
-                <div>
-                    <div class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
-                        Kitch<span class="text-orange-500">Hug</span>
-                    </div>
-
-                    <div class="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
-                        Your Recipe Box
-                    </div>
-                </div>
+                <img src="{{ asset('logo1.png') }}" alt="KitchHug — Your Recipe Box" class="h-12 w-auto object-contain">
             </a>
 
             {{-- DESKTOP NAVIGATION --}}

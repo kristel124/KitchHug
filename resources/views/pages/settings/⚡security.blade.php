@@ -166,7 +166,9 @@ new #[Title('Security settings')] class extends Component {
     }
 }; ?>
 
-<section class="w-full">
+<section class="w-full bg-[#FAF6F0]">
+    @include('partials.kitchhug_header')
+
     @include('partials.settings-heading')
 
     <flux:heading level="2" class="sr-only">{{ __('Security settings') }}</flux:heading>

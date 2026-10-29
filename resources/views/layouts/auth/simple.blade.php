@@ -33,7 +33,7 @@
             <div class="flex w-full max-w-md flex-col gap-6">
                 @if (request()->routeIs('login', 'register'))
                     <a href="{{ route('home') }}" class="inline-flex w-fit items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-white/70 hover:text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
-                        <span aria-hidden="true">←</span>
+                        <svg viewBox="0 0 24 24" fill="none" class="size-4 shrink-0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
                         {{ __('Back to home') }}
                     </a>
                 @endif

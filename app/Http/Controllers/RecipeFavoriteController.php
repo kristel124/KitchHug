@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Recipe;
 use App\Models\RecipeFavorite;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -40,7 +41,7 @@ class RecipeFavoriteController extends Controller
         return view('my_recipes', compact('recipes', 'communityRecipes'));
     }
 
-    public function toggle(Request $request): RedirectResponse
+    public function toggle(Request $request): JsonResponse|RedirectResponse
     {
         $user = $request->user();
         abort_unless($user instanceof User, 403);
@@ -57,13 +58,20 @@ class RecipeFavoriteController extends Controller
 
             if ($favorite) {
                 $favorite->delete();
-                $status = 'Recipe removed from favorites.';
+                $saved = false;
             } else {
                 $user->recipeFavorites()->create(['recipe_id' => $recipe->id]);
-                $status = 'Recipe added to favorites.';
+                $saved = true;
             }
 
-            return back()->with('status', $status);
+            if ($request->header('X-Requested-With') === 'fetch') {
+                return response()->json([
+                    'saved' => $saved,
+                    'count' => $recipe->recipeFavorites()->count(),
+                ]);
+            }
+
+            return back()->with('status', $saved ? 'Recipe added to favorites.' : 'Recipe removed from favorites.');
         }
 
         $categories = RecipeController::categoryCatalog();
@@ -81,12 +89,16 @@ class RecipeFavoriteController extends Controller
 
         if ($favorite) {
             $favorite->delete();
-            $status = 'Recipe removed from favorites.';
+            $saved = false;
         } else {
             $user->recipeFavorites()->create($data);
-            $status = 'Recipe added to favorites.';
+            $saved = true;
         }
 
-        return back()->with('status', $status);
+        if ($request->header('X-Requested-With') === 'fetch') {
+            return response()->json(['saved' => $saved]);
+        }
+
+        return back()->with('status', $saved ? 'Recipe added to favorites.' : 'Recipe removed from favorites.');
     }
 }

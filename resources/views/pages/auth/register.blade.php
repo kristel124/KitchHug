@@ -31,16 +31,49 @@
             />
 
             <!-- Password -->
-            <flux:input
-                name="password"
-                :label="__('Password')"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="__('Password')"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
+            <div x-data="{
+                strength: 0,
+                label: '',
+                color: '',
+                check(val) {
+                    let s = 0;
+                    if (val.length >= 8) s++;
+                    if (/[A-Z]/.test(val)) s++;
+                    if (/[0-9]/.test(val)) s++;
+                    if (/[^A-Za-z0-9]/.test(val)) s++;
+                    this.strength = s;
+                    this.label = ['', 'Weak', 'Fair', 'Good', 'Strong'][s];
+                    this.color = ['', 'bg-red-400', 'bg-amber-400', 'bg-yellow-400', 'bg-green-500'][s];
+                }
+            }">
+                <flux:input
+                    name="password"
+                    :label="__('Password')"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    :placeholder="__('Password')"
+                    passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
+                    viewable
+                    x-on:input="check($event.target.value)"
+                />
+                <div x-show="strength > 0" x-cloak class="mt-2">
+                    <div class="flex gap-1">
+                        <template x-for="i in 4">
+                            <div class="h-1.5 flex-1 rounded-full transition-all duration-300"
+                                 :class="i <= strength ? color : 'bg-slate-200'"></div>
+                        </template>
+                    </div>
+                    <p class="mt-1 text-xs font-semibold"
+                       :class="{
+                           'text-red-500': strength === 1,
+                           'text-amber-500': strength === 2,
+                           'text-yellow-600': strength === 3,
+                           'text-green-600': strength === 4
+                       }"
+                       x-text="label"></p>
+                </div>
+            </div>
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"

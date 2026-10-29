@@ -7,6 +7,34 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="min-h-screen bg-[#f2eadf] font-sans text-slate-800 antialiased">
+    {{-- Flash toast notification --}}
+    @if (session('status'))
+        <div
+            id="flash-toast"
+            role="alert"
+            aria-live="polite"
+            class="fixed top-5 left-1/2 z-[999] -translate-x-1/2 flex items-center gap-3 rounded-2xl bg-white border border-green-200 px-5 py-3.5 shadow-lg shadow-slate-900/10 transition-all duration-500"
+        >
+            <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+                <svg viewBox="0 0 24 24" fill="none" class="size-4" aria-hidden="true">
+                    <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            <p class="text-sm font-semibold text-slate-800">{{ session('status') }}</p>
+        </div>
+        <script>
+            (function () {
+                var toast = document.getElementById('flash-toast');
+                if (!toast) return;
+                setTimeout(function () {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateX(-50%) translateY(-12px)';
+                    setTimeout(function () { toast.remove(); }, 500);
+                }, 3000);
+            })();
+        </script>
+    @endif
+
     @hasSection('content')
         @yield('content')
     @else

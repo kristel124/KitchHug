@@ -128,14 +128,6 @@
 
                     <div class="absolute left-0 top-full z-50 mt-2 w-52 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
 
-                        {{-- COOKING TIPS --}}
-                        <a href="#"
-                           class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500">
-
-                            Cooking Tips
-
-                        </a>
-
                         {{-- BY METHODS --}}
                         <details data-navigation-dropdown class="group/method relative">
 
@@ -246,7 +238,7 @@
                      class="h-5 w-5 shrink-0"
                      aria-hidden="true">
 
-                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path>
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
 
                 </svg>
 
@@ -319,7 +311,7 @@
             </details>
 
             {{-- USER PROFILE DROPDOWN --}}
-            <details class="group relative shrink-0">
+            <details data-navigation-dropdown class="group relative shrink-0">
 
                 <summary class="flex h-10 cursor-pointer list-none items-center gap-1.5 rounded-xl px-1 text-sm font-bold text-slate-700 transition hover:opacity-80 [&::-webkit-details-marker]:hidden">
 

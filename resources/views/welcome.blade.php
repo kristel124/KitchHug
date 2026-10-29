@@ -37,7 +37,7 @@
     <!-- ================= HERO SECTION ================= -->
     <main id="main-content" class="grow">
 
-        <section data-carousel class="relative isolate overflow-hidden bg-orange-50 py-12 lg:py-20">
+        <section data-carousel class="relative isolate overflow-hidden bg-orange-50 flex items-center" style="min-height: calc(100vh - 64px);">
             <div role="region" aria-roledescription="carousel" aria-label="Featured recipe backgrounds"
                  class="absolute inset-0">
                 <article data-carousel-slide role="group" aria-roledescription="slide" aria-label="1 of 3" class="absolute inset-0">

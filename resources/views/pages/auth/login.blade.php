@@ -5,20 +5,21 @@
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
 
-        <x-passkey-verify />
 
         <form method="POST" action="{{ route('login.store') }}" class="flex flex-col gap-6">
             @csrf
+            {{-- Prevent browser autofill --}}
+            <input type="text" name="fakeuser" style="display:none" tabindex="-1" autocomplete="username">
+            <input type="password" name="fakepass" style="display:none" tabindex="-1" autocomplete="new-password">
 
             <!-- Email Address -->
             <flux:input
                 name="email"
                 :label="__('Email address')"
-                :value="old('email')"
                 type="email"
                 required
                 autofocus
-                autocomplete="email"
+                autocomplete="off"
                 placeholder="email@example.com"
             />
 

@@ -495,7 +495,7 @@ class RecipeController extends Controller
             'category' => ['required', 'string', Rule::in(self::CATEGORIES)],
             'method' => ['required', 'string', Rule::in(self::METHOD_CATEGORIES)],
             'recipe_type' => ['required', 'string', Rule::in(self::RECIPE_CATEGORIES)],
-            'description' => ['required', 'string', 'max:2000'],
+            'description' => ['required', 'string', 'min:10', 'max:2000'],
             'ingredients' => ['required', 'string', 'max:10000'],
             'instructions' => ['required', 'string', 'max:20000'],
             'prep_time_minutes' => ['required', 'integer', 'min:1', 'max:1440'],

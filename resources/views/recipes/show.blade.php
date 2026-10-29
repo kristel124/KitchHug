@@ -15,7 +15,7 @@
                 <div class="flex flex-col gap-6 lg:flex-row">
 
                     {{-- ───────────── LEFT COLUMN ───────────── --}}
-                    <div class="min-w-0 flex-1 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:self-start lg:[&::-webkit-scrollbar]:hidden lg:[scrollbar-width:none]">
+                    <div class="min-w-0 flex-1">
 
                         {{-- Video player (only shown on left if video exists) --}}
                         @if ($recipe['video_url'])
@@ -32,7 +32,7 @@
                             <p class="text-xs font-extrabold uppercase tracking-[0.2em] text-orange-500">{{ $recipe['category'] }}</p>
                             <h1 class="mt-1 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">{{ $recipe['title'] }}</h1>
 
-                            <div class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
+                            <div class="mt-1 flex flex-nowrap items-center gap-x-2 overflow-hidden text-sm text-slate-500">
                                 @if (($recipe['method'] ?? null) || ($recipe['recipe_type'] ?? null))
                                     <span class="font-semibold">
                                         @if ($recipe['recipe_type'] ?? null){{ $recipe['recipe_type'] }}@endif
@@ -68,7 +68,7 @@
                         <div class="mt-4 flex flex-wrap items-center gap-2 border-b border-t border-orange-100 py-3">
                             @if (isset($recipe['id']))
                                 @auth
-                                    <form method="POST" action="{{ route('recipes.reactions.toggle', $recipe['id']) }}">
+                                    <form method="POST" action="{{ route('recipes.reactions.toggle', $recipe['id']) }}" data-heart-form>
                                         @csrf
                                         <button type="submit" aria-label="{{ $recipe['is_liked'] ? 'Remove heart reaction' : 'React with a heart' }}" aria-pressed="{{ $recipe['is_liked'] ? 'true' : 'false' }}" class="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition {{ $recipe['is_liked'] ? 'border border-rose-200 bg-rose-100 text-rose-700 hover:bg-rose-200' : 'border border-orange-100 bg-white text-slate-700 shadow-sm hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700' }}">
                                             @if ($recipe['is_liked'])
@@ -102,8 +102,8 @@
 
                             @if (($recipe['is_curated'] ?? false) || isset($recipe['id']))
                                 @auth
-                                    <div class="flex items-center gap-2">
-                                        <form method="POST" action="{{ route('favorites.toggle') }}">
+                                    <div class="flex items-center gap-2" data-save-wrapper>
+                                        <form method="POST" action="{{ route('favorites.toggle') }}" data-save-form>
                                             @csrf
                                             @if ($recipe['is_curated'] ?? false)
                                                 <input type="hidden" name="category" value="{{ $recipe['category_slug'] }}">
@@ -122,7 +122,7 @@
                                             </button>
                                         </form>
                                         @if (isset($recipe['favorite_count']))
-                                            <span class="text-sm text-slate-500">{{ $recipe['favorite_count'] }} {{ \Illuminate\Support\Str::plural('save', $recipe['favorite_count']) }}</span>
+                                            <span class="text-sm text-slate-500" data-save-count>{{ $recipe['favorite_count'] }} {{ \Illuminate\Support\Str::plural('save', $recipe['favorite_count']) }}</span>
                                         @endif
                                     </div>
                                 @else
@@ -268,12 +268,12 @@
                     </div>
 
                     {{-- ───────────── RIGHT SIDEBAR ───────────── --}}
-                    <aside class="w-full shrink-0 lg:w-96 lg:sticky lg:top-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto lg:self-start lg:[&::-webkit-scrollbar]:hidden lg:[scrollbar-width:none]">
+                    <aside class="w-full shrink-0 lg:w-96 lg:self-start">
 
                         {{-- Photo (always in sidebar when present) --}}
                         @if ($recipe['image_url'])
                             <div class="overflow-hidden rounded-2xl shadow-sm">
-                                <img src="{{ $recipe['image_url'] }}" alt="Recipe photo for {{ $recipe['title'] }}" class="w-full object-cover">
+                                <img src="{{ $recipe['image_url'] }}" alt="Recipe photo for {{ $recipe['title'] }}" class="h-64 w-full object-cover">
                             </div>
                         @elseif (! $recipe['video_url'])
                             <div class="flex h-48 w-full items-center justify-center rounded-2xl bg-gradient-to-br from-orange-100 to-amber-50 text-8xl shadow-sm" aria-hidden="true">{{ $recipe['emoji'] }}</div>

@@ -7,17 +7,36 @@ new #[Title('Appearance settings')] class extends Component {
     //
 }; ?>
 
-<section class="w-full">
+<section class="w-full bg-[#FAF6F0]">
+    @include('partials.kitchhug_header')
+
     @include('partials.settings-heading')
 
     <flux:heading level="2" class="sr-only">{{ __('Appearance settings') }}</flux:heading>
 
     <x-pages::settings.layout :heading="__('Appearance')" :subheading="__('Update the appearance settings for your account')">
-        <!-- Defaulting $flux.appearance to 'light' -->
-        <flux:radio.group x-data x-init="$flux.appearance = 'light'" variant="segmented" x-model="$flux.appearance">
-            <flux:radio value="light" icon="sun">{{ __('Light') }}</flux:radio>
-            <flux:radio value="dark" icon="moon">{{ __('Dark') }}</flux:radio>
-            <flux:radio value="system" icon="computer-desktop">{{ __('System') }}</flux:radio>
-        </flux:radio.group>
+        <div
+            x-data="{
+                appearance: localStorage.getItem('appearance') ?? 'light',
+                apply(value) {
+                    this.appearance = value;
+                    localStorage.setItem('appearance', value);
+                    if (value === 'dark' || (value === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    $flux.appearance = value;
+                }
+            }"
+            x-init="apply(appearance)"
+        >
+            <flux:radio.group variant="segmented" x-model="appearance" @change="apply(appearance)">
+                <flux:radio value="light" icon="sun">{{ __('Light') }}</flux:radio>
+                <flux:radio value="dark" icon="moon">{{ __('Dark') }}</flux:radio>
+                <flux:radio value="system" icon="computer-desktop">{{ __('System') }}</flux:radio>
+            </flux:radio.group>
+            <p class="mt-3 text-xs text-slate-400">Your preference is saved automatically.</p>
+        </div>
     </x-pages::settings.layout>
 </section>

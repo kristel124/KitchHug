@@ -12,7 +12,7 @@
                 <div class="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
                     <div>
                         <a href="{{ route('profile.show') }}" class="inline-flex items-center gap-2 rounded-full border border-orange-200/80 bg-white/70 px-4 py-2 text-sm font-bold text-orange-700 shadow-sm transition hover:bg-white">
-                            <span aria-hidden="true">←</span> Back to profile
+                            <svg viewBox="0 0 24 24" fill="none" class="size-4 shrink-0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 19l-7-7 7-7"/></svg> Back to profile
                         </a>
                         <p class="mt-6 text-xs font-extrabold uppercase tracking-[0.2em] text-orange-600">A little taste of home</p>
                         <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">{{ $isEditing ? 'Edit your recipe' : 'Post a new recipe' }}</h1>
@@ -115,7 +115,8 @@
                             </div>
                         </div>
                         <label for="description" class="block text-sm font-bold text-slate-700">Short description</label>
-                        <textarea id="description" name="description" rows="3" maxlength="2000" required placeholder="What makes this dish worth sharing?" class="mt-2 w-full rounded-2xl border border-orange-100 bg-[#FFFCF8] px-4 py-3.5 text-sm outline-none transition placeholder:text-slate-400 hover:border-orange-200 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100/70">{{ old('description', $recipe->description) }}</textarea>
+                        <textarea id="description" name="description" rows="3" minlength="10" maxlength="2000" required placeholder="What makes this dish worth sharing?" class="mt-2 w-full rounded-2xl border border-orange-100 bg-[#FFFCF8] px-4 py-3.5 text-sm outline-none transition placeholder:text-slate-400 hover:border-orange-200 focus:border-orange-300 focus:bg-white focus:ring-4 focus:ring-orange-100/70">{{ old('description', $recipe->description) }}</textarea>
+                        <p class="mt-1 text-xs text-slate-400">Minimum 10 characters.</p>
                         @error('description') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
                     </div>
 

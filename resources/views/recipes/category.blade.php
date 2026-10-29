@@ -15,8 +15,8 @@
                 <div class="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
                     <div class="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_260px] lg:gap-16">
                         <div class="max-w-3xl">
-                            <a href="{{ auth()->check() ? route('user_homepage') : route('home') }}" class="inline-flex items-center gap-2 rounded-full border border-orange-200/80 bg-white/80 px-4 py-2 text-sm font-bold text-orange-700 shadow-sm backdrop-blur transition hover:border-orange-300 hover:bg-white">
-                                <span aria-hidden="true">←</span> Home
+                            <a href="{{ auth()->check() ? route('user_homepage') : route('home') }}" class="inline-flex items-center justify-center text-orange-500 transition hover:text-orange-700" aria-label="Home">
+                                <svg viewBox="0 0 24 24" fill="none" class="size-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
                             </a>
                             <p class="mt-7 text-xs font-extrabold uppercase tracking-[0.22em] text-orange-600">Made for your table</p>
                             <h1 class="mt-2 text-4xl font-black tracking-tight text-slate-900 sm:text-5xl">{{ $title }}</h1>

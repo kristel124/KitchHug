@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Recipe;
 use App\Models\RecipeReaction;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,7 +26,7 @@ class RecipeReactionController extends Controller
         return response(view('partials.reaction-list', ['users' => $users]));
     }
 
-    public function toggle(Request $request, Recipe $recipe): RedirectResponse
+    public function toggle(Request $request, Recipe $recipe): JsonResponse|RedirectResponse
     {
         $user = $request->user();
         abort_unless($user instanceof User, 403);
@@ -35,10 +36,24 @@ class RecipeReactionController extends Controller
         if ($reaction instanceof RecipeReaction) {
             $reaction->delete();
 
+            if ($request->header('X-Requested-With') === 'fetch') {
+                return response()->json([
+                    'liked' => false,
+                    'count' => $recipe->reactions()->count(),
+                ]);
+            }
+
             return back()->with('status', 'Heart reaction removed.');
         }
 
         $recipe->reactions()->create(['user_id' => $user->id]);
+
+        if ($request->header('X-Requested-With') === 'fetch') {
+            return response()->json([
+                'liked' => true,
+                'count' => $recipe->reactions()->count(),
+            ]);
+        }
 
         return back()->with('status', 'You hearted this recipe.');
     }

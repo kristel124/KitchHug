@@ -2,7 +2,7 @@
 
     {{-- Sidebar --}}
     <aside class="space-y-5 lg:sticky lg:top-28">
-        <div class="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm">
+        <div class="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800">
 
             {{-- User identity --}}
             <div class="flex items-center gap-3">
@@ -17,40 +17,36 @@
                 </div>
                 <div class="min-w-0">
                     @auth
-                        <p class="truncate text-sm font-black text-slate-900">{{ Auth::user()->name }}</p>
-                        <p class="truncate text-xs text-slate-500">{{ Auth::user()->email }}</p>
+                        <p class="truncate text-sm font-black text-slate-900 dark:text-white">{{ Auth::user()->name }}</p>
+                        <p class="truncate text-xs text-slate-500 dark:text-slate-400">{{ Auth::user()->email }}</p>
                     @endauth
                 </div>
             </div>
 
             {{-- Nav --}}
-            <nav aria-label="{{ __('Account settings') }}" class="mt-5 space-y-1 border-t border-orange-100 pt-4">
+            <nav aria-label="{{ __('Account settings') }}" class="mt-5 space-y-1 border-t border-orange-100 pt-4 dark:border-slate-700">
                 <a href="{{ route('profile.edit') }}" wire:navigate
-                   class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ request()->routeIs('profile.edit') ? 'bg-orange-50 font-bold text-orange-700' : 'text-slate-600 hover:bg-orange-50 hover:text-orange-700' }}">
+                   class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ request()->routeIs('profile.edit') ? 'bg-orange-50 font-bold text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' : 'text-slate-600 hover:bg-orange-50 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-700' }}">
                     <svg viewBox="0 0 24 24" fill="none" class="size-4 shrink-0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     {{ __('Profile') }}
                 </a>
-                <a href="{{ route('security.edit') }}" wire:navigate
-                   class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ request()->routeIs('security.edit') ? 'bg-orange-50 font-bold text-orange-700' : 'text-slate-600 hover:bg-orange-50 hover:text-orange-700' }}">
-                    <svg viewBox="0 0 24 24" fill="none" class="size-4 shrink-0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
-                    {{ __('Security') }}
-                </a>
                 <a href="{{ route('appearance.edit') }}" wire:navigate
-                   class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ request()->routeIs('appearance.edit') ? 'bg-orange-50 font-bold text-orange-700' : 'text-slate-600 hover:bg-orange-50 hover:text-orange-700' }}">
+                   class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition {{ request()->routeIs('appearance.edit') ? 'bg-orange-50 font-bold text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' : 'text-slate-600 hover:bg-orange-50 hover:text-orange-700 dark:text-slate-300 dark:hover:bg-slate-700' }}">
                     <svg viewBox="0 0 24 24" fill="none" class="size-4 shrink-0" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
                     {{ __('Appearance') }}
                 </a>
             </nav>
         </div>
+
     </aside>
 
     {{-- Content --}}
     <div class="min-w-0 space-y-6">
-        <div class="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm sm:p-7">
+        <div class="rounded-3xl border border-orange-100 bg-white p-5 shadow-sm dark:border-slate-700 dark:bg-slate-800 sm:p-7">
             <div class="mb-6">
-                <h2 class="text-xl font-black text-slate-900">{{ $heading ?? '' }}</h2>
+                <h2 class="text-xl font-black text-slate-900 dark:text-white">{{ $heading ?? '' }}</h2>
                 @if($subheading ?? '')
-                    <p class="mt-1 text-sm text-slate-500">{{ $subheading }}</p>
+                    <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ $subheading }}</p>
                 @endif
             </div>
             <div class="w-full max-w-lg">

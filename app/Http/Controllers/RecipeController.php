@@ -286,7 +286,7 @@ class RecipeController extends Controller
             Storage::disk('public')->delete($videoPath);
         }
 
-        return to_route('profile.show')->with('status', 'Your recipe was deleted.');
+        return to_route('profile.show');
     }
 
     public function category(string $category): View

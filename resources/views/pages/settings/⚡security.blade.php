@@ -166,14 +166,17 @@ new #[Title('Security settings')] class extends Component {
     }
 }; ?>
 
-<section class="w-full bg-[#FAF6F0]">
+<section class="flex min-h-screen w-full flex-col bg-[#FAF6F0]">
     @include('partials.kitchhug_header')
 
     @include('partials.settings-heading')
 
     <flux:heading level="2" class="sr-only">{{ __('Security settings') }}</flux:heading>
 
-    <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Keep your account secure by choosing a strong password.')">
+    <flux:toast />
+
+    <main class="flex-1">
+        <x-pages::settings.layout :heading="__('Update password')" :subheading="__('Keep your account secure by choosing a strong password.')">
         <form method="POST" wire:submit="updatePassword" class="mt-6 space-y-6">
             <flux:input
                 wire:model="current_password"
@@ -340,4 +343,8 @@ new #[Title('Security settings')] class extends Component {
             </div>
         </div>
     </flux:modal>
+
+    </main>
+
+    @include('partials.kitchhug_footer')
 </section>

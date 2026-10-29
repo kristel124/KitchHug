@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="flex min-h-screen flex-col bg-[#FAF6F0] text-slate-800 antialiased">
+    <div class="flex min-h-screen flex-col bg-[#FAF6F0] text-slate-800 antialiased dark:bg-slate-900 dark:text-slate-100">
         @include('partials.kitchhug_header')
         <main class="flex-1">
             <section data-dish-carousel class="relative isolate overflow-hidden bg-orange-50 flex items-center" style="min-height: calc(100vh - 64px);" role="region" aria-label="Dish inspiration" aria-roledescription="carousel">
@@ -54,7 +54,7 @@
                                 <a href="{{ route('recipes.create') }}" class="mt-5 inline-flex items-center justify-center rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Add a recipe</a>
                             </div>
                         @else
-                            <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                            <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 @foreach ($imageRecipes as $recipe)
                                     <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
                                         <a href="{{ route('recipes.show', $recipe) }}" class="group block">
@@ -65,7 +65,6 @@
                                             <div class="p-5">
                                                 <h3 class="text-lg font-bold leading-snug text-slate-900 group-hover:text-orange-600">{{ $recipe->title }}</h3>
                                                 <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{{ $recipe->description }}</p>
-                                                <p class="mt-4 text-sm font-semibold text-orange-700">View recipe <span aria-hidden="true">→</span></p>
                                             </div>
                                         </a>
                                         <div class="px-5 pb-4">
@@ -80,10 +79,17 @@
                                                     </span>
                                                     {{ $recipe->user->name }}
                                                 </a>
-                                                <span>{{ $recipe->prep_time_minutes }} min</span>
+                                                <button type="button" data-share-recipe
+                                                        data-share-url="{{ route('recipes.show', $recipe) }}"
+                                                        data-share-title="{{ $recipe->title }}"
+                                                        data-share-text="{{ $recipe->description }}"
+                                                        aria-label="Share post"
+                                                        title="Share post"
+                                                        class="rounded-lg p-1.5 text-slate-500 transition hover:text-orange-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></svg>
+                                                </button>
                                             </div>
                                         </div>
-                                        @include('partials.recipe-comment-preview', ['recipe' => $recipe])
                                         @include('partials.recipe-post-actions', ['recipe' => $recipe])
                                     </article>
                                 @endforeach
@@ -102,7 +108,7 @@
                                 <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">Videos shared with a recipe will appear here.</p>
                             </div>
                         @else
-                            <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                            <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 @foreach ($videoRecipes as $recipe)
                                     <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
                                         <div class="bg-slate-950">
@@ -126,10 +132,17 @@
                                                     </span>
                                                     {{ $recipe->user->name }}
                                                 </a>
-                                                <a href="{{ route('recipes.show', $recipe) }}" class="text-sm font-semibold text-orange-700 hover:text-orange-800">View recipe <span aria-hidden="true">→</span></a>
+                                                <button type="button" data-share-recipe
+                                                        data-share-url="{{ route('recipes.show', $recipe) }}"
+                                                        data-share-title="{{ $recipe->title }}"
+                                                        data-share-text="{{ $recipe->description }}"
+                                                        aria-label="Share post"
+                                                        title="Share post"
+                                                        class="rounded-lg p-1.5 text-slate-500 transition hover:text-orange-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></svg>
+                                                </button>
                                             </div>
                                         </div>
-                                        @include('partials.recipe-comment-preview', ['recipe' => $recipe])
                                         @include('partials.recipe-post-actions', ['recipe' => $recipe])
                                     </article>
                                 @endforeach

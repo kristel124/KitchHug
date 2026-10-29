@@ -4,9 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KitchHug</title>
+    {{-- Apply saved appearance before paint to avoid flash --}}
+    <script>
+        (function () {
+            var appearance = localStorage.getItem('appearance') || 'light';
+            if (appearance === 'dark' || (appearance === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-[#f2eadf] font-sans text-slate-800 antialiased">
+<body class="min-h-screen bg-[#f2eadf] font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100">
     {{-- Flash toast notification --}}
     @if (session('status'))
         <div

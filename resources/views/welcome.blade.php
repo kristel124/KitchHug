@@ -114,20 +114,12 @@
 
         <!-- ================= FEATURED RECIPES ================= -->
         <section id="explore" class="bg-white py-16 lg:py-20 border-y border-orange-100/50">
-            @php
-                $featuredRecipes = [
-                    ['name' => 'Crispy Chicken', 'slug' => 'crispy-chicken', 'category' => 'Main Course', 'time' => '30 mins', 'rating' => '4.9', 'image' => 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=80', 'description' => 'Juicy chicken coated in a crisp, savory crust.'],
-                    ['name' => 'Fluffy Pancakes', 'slug' => 'fluffy-pancakes', 'category' => 'Breakfast', 'time' => '15 mins', 'rating' => '4.8', 'image' => 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?auto=format&fit=crop&w=900&q=80', 'description' => 'Soft, golden pancakes made for a cozy breakfast.'],
-                    ['name' => 'Garlic Cream Pasta', 'slug' => 'garlic-cream-pasta', 'category' => 'Pasta', 'time' => '25 mins', 'rating' => '4.9', 'image' => 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=900&q=80', 'description' => 'Tender pasta tossed in a creamy garlic and parmesan sauce.'],
-                    ['name' => 'Fresh Garden Salad', 'slug' => 'fresh-garden-salad', 'category' => 'Healthy', 'time' => '10 mins', 'rating' => '4.7', 'image' => 'https://images.unsplash.com/photo-1546793665-c74683f339c1?auto=format&fit=crop&w=900&q=80', 'description' => 'Crisp seasonal vegetables with a bright homemade dressing.'],
-                ];
-            @endphp
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-col gap-3 text-center sm:flex-row sm:items-end sm:justify-between sm:text-left">
                     <div>
-                        <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">Made for your table</span>
-                        <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Explore Recipes</h2>
+                        <span class="text-xs font-extrabold uppercase tracking-widest text-orange-500">From the community</span>
+                        <h2 class="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Recipes shared by home cooks</h2>
                         <p class="mt-2 text-slate-500">Find a new favorite to make and share.</p>
                     </div>
                     <a href="{{ route('register') }}" class="inline-flex items-center justify-center gap-2 text-sm font-bold text-orange-600 transition hover:text-orange-700">
@@ -144,55 +136,40 @@
                     </div>
 
                     <div id="home-images-panel" role="tabpanel" aria-labelledby="home-images-tab" data-community-media-panel="images">
-                        <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                            @foreach ($featuredRecipes as $recipe)
-                                <a href="{{ route('recipes.featured', $recipe['slug']) }}"
-                                   class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
-                                    <div class="relative h-44 overflow-hidden">
-                                        <img src="{{ $recipe['image'] }}" alt="{{ $recipe['name'] }} recipe photo" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                                        <span class="absolute right-3 top-3 rounded-md bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm">Rating {{ $recipe['rating'] }}</span>
-                                    </div>
-                                    <div class="p-5">
-                                        <div class="flex items-center justify-between gap-3">
-                                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe['category'] }}</span>
-                                            <span class="shrink-0 text-xs font-semibold text-slate-500">{{ $recipe['time'] }}</span>
+                        @if ($homeImageRecipes->isEmpty())
+                            <div class="mt-8 rounded-3xl border border-slate-200 bg-slate-50 px-6 py-10 text-center">
+                                <h3 class="text-lg font-bold text-slate-900">No recipes yet</h3>
+                                <p class="mt-2 text-sm text-slate-500">Be the first to share a recipe!</p>
+                                <a href="{{ route('register') }}" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600">Get started</a>
+                            </div>
+                        @else
+                            <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                                @foreach ($homeImageRecipes->take(4) as $recipe)
+                                    <a href="{{ route('recipes.show', $recipe) }}"
+                                       class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                        <div class="relative h-44 overflow-hidden">
+                                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="{{ $recipe->title }} recipe photo" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
                                         </div>
-                                        <h3 class="mt-2 text-lg font-extrabold text-slate-900 transition-colors group-hover:text-orange-500">{{ $recipe['name'] }}</h3>
-                                        <p class="mt-2 min-h-12 text-sm leading-6 text-slate-500">{{ $recipe['description'] }}</p>
-                                        <p class="mt-4 border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
-
-                        @if ($homeImageRecipes->isNotEmpty())
-                            <h3 class="mt-10 border-b border-orange-100 pb-3 text-xl font-bold text-slate-900">Images shared by home cooks</h3>
-                            <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                                @foreach ($homeImageRecipes as $communityRecipe)
-                                    <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
-                                        <a href="{{ route('recipes.show', $communityRecipe) }}" class="group block">
-                                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->image_path) }}" alt="Recipe photo for {{ $communityRecipe->title }}" class="h-44 w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                                            <div class="p-4">
-                                                <p class="text-xs font-semibold uppercase tracking-wide text-orange-700">{{ $communityRecipe->category }}</p>
-                                                <h4 class="mt-2 font-bold text-slate-900 group-hover:text-orange-600">{{ $communityRecipe->title }}</h4>
-                                                <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ $communityRecipe->description }}</p>
+                                        <div class="p-5">
+                                            <div class="flex items-center justify-between gap-3">
+                                                <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe->category }}</span>
+                                                <span class="shrink-0 text-xs font-semibold text-slate-500">{{ $recipe->prep_time_minutes }} min</span>
                                             </div>
-                                        </a>
-                                        <div class="px-4 pb-4">
-                                            <a href="{{ route('users.show', $communityRecipe->user) }}" class="inline-flex items-center gap-2 text-xs font-semibold text-slate-700 hover:text-orange-700">
-                                                <span class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-xs font-bold text-orange-800">
-                                                    @if ($communityRecipe->user->profile_photo_path)
-                                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->user->profile_photo_path) }}" alt="{{ $communityRecipe->user->name }} profile photo" class="h-full w-full object-cover">
+                                            <h3 class="mt-2 text-lg font-extrabold text-slate-900 transition-colors group-hover:text-orange-500">{{ $recipe->title }}</h3>
+                                            <p class="mt-2 min-h-12 line-clamp-2 text-sm leading-6 text-slate-500">{{ $recipe->description }}</p>
+                                            <div class="mt-3 flex items-center gap-2">
+                                                <span class="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-[10px] font-bold text-orange-800">
+                                                    @if ($recipe->user->profile_photo_path)
+                                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->user->profile_photo_path) }}" alt="" class="h-full w-full object-cover">
                                                     @else
-                                                        {{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($communityRecipe->user->name, 0, 1)) }}
+                                                        {{ strtoupper(substr($recipe->user->name, 0, 1)) }}
                                                     @endif
                                                 </span>
-                                                {{ $communityRecipe->user->name }}
-                                            </a>
+                                                <span class="text-xs text-slate-500">{{ $recipe->user->name }}</span>
+                                            </div>
+                                            <p class="mt-4 border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
                                         </div>
-                                        @include('partials.recipe-comment-preview', ['recipe' => $communityRecipe])
-                                        @include('partials.recipe-post-actions', ['recipe' => $communityRecipe])
-                                    </article>
+                                    </a>
                                 @endforeach
                             </div>
                         @endif
@@ -229,7 +206,6 @@
                                                 {{ $communityRecipe->user->name }}
                                             </a>
                                         </div>
-                                        @include('partials.recipe-comment-preview', ['recipe' => $communityRecipe])
                                         @include('partials.recipe-post-actions', ['recipe' => $communityRecipe])
                                     </article>
                                 @endforeach

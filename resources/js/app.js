@@ -426,3 +426,17 @@ document.addEventListener('click', (event) => {
         form.dispatchEvent(new Event('submit', { cancelable: true }));
     }, 300);
 });
+
+// ── Dark mode: react to OS theme changes when "system" is selected ─────────────
+(function () {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener('change', function () {
+        if ((localStorage.getItem('appearance') || 'light') === 'system') {
+            if (mq.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        }
+    });
+})();

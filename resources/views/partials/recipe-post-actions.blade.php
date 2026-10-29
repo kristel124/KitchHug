@@ -41,14 +41,30 @@
         </div>
     @endauth
 
-    <div class="ml-auto">
-        <button type="button" data-share-recipe
-                data-share-url="{{ route('recipes.show', $recipe) }}"
-                data-share-title="{{ $recipe->title }}"
-                data-share-text="{{ $recipe->description }}"
-                class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50 hover:text-orange-700">
-            Share post
-        </button>
-        <span data-share-status role="status" aria-live="polite" class="ml-2 text-xs text-slate-500"></span>
-    </div>
+    <a href="{{ route('recipes.show', $recipe) }}#comments"
+       class="ml-auto inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 transition hover:text-orange-700">
+        <svg viewBox="0 0 24 24" fill="none" class="size-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.25 6.75h7.5M8.25 9.75h4.5M5.25 3.75h13.5A2.25 2.25 0 0 1 21 6v8.25a2.25 2.25 0 0 1-2.25 2.25H8.25L3.75 21v-4.5A2.25 2.25 0 0 1 3 14.25V6a2.25 2.25 0 0 1 2.25-2.25Z"/></svg>
+        {{ $recipe->comments_count }} {{ \Illuminate\Support\Str::plural('comment', $recipe->comments_count) }}
+    </a>
+
+    <span data-share-status role="status" aria-live="polite" class="text-xs text-slate-500"></span>
+</div>
+
+<div class="flex items-center justify-between gap-2 border-t border-slate-100 px-5 py-3">
+    <a href="{{ route('recipes.show', $recipe) }}"
+       class="text-sm font-semibold text-orange-700 hover:text-orange-800">
+        View recipe <span aria-hidden="true">→</span>
+    </a>
+    @auth
+        @if (auth()->id() === $recipe->user_id)
+            <div class="flex items-center gap-2">
+                <a href="{{ route('recipes.edit', $recipe) }}" class="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-orange-300 hover:bg-orange-50">Edit</a>
+                <form method="POST" action="{{ route('recipes.destroy', $recipe) }}" onsubmit="return confirm('Delete this recipe? This cannot be undone.')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 transition hover:bg-rose-50">Delete</button>
+                </form>
+            </div>
+        @endif
+    @endauth
 </div>

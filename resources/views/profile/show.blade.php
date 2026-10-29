@@ -160,30 +160,10 @@
                                             <span class="rounded-md border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-600">{{ $recipe->method }}</span>
                                         @endif
                                     </div>
-                                    <a href="{{ route('recipes.show', $recipe) }}" class="mt-5 inline-flex items-center text-sm font-semibold text-orange-700 hover:text-orange-800">View recipe <span class="ml-1" aria-hidden="true">→</span></a>
-                                    @include('partials.recipe-post-actions', ['recipe' => $recipe])
-                                    <details class="mt-4 border-t border-slate-100 pt-3">
-                                        <summary class="cursor-pointer text-sm font-semibold text-slate-700 hover:text-orange-700">Ingredients and instructions</summary>
-                                        <div class="mt-4 grid gap-4 sm:grid-cols-2">
-                                            <div>
-                                                <h4 class="text-xs font-bold uppercase tracking-wide text-slate-500">Ingredients</h4>
-                                                <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->ingredients }}</p>
-                                            </div>
-                                            <div>
-                                                <h4 class="text-xs font-bold uppercase tracking-wide text-slate-500">Instructions</h4>
-                                                <p class="mt-2 whitespace-pre-line text-sm leading-6 text-slate-600">{{ $recipe->instructions }}</p>
-                                            </div>
-                                        </div>
-                                    </details>
-                                    <div class="mt-5 flex items-center justify-end gap-2 border-t border-slate-100 pt-4">
-                                        <a href="{{ route('recipes.edit', $recipe) }}" class="rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-orange-300 hover:bg-orange-50">Edit</a>
-                                        <form method="POST" action="{{ route('recipes.destroy', $recipe) }}" onsubmit="return confirm('Delete this recipe? This cannot be undone.')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="rounded-lg border border-rose-200 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50">Delete</button>
-                                        </form>
-                                    </div>
+
+
                                 </div>
+                                @include('partials.recipe-post-actions', ['recipe' => $recipe])
                             </article>
                         @endforeach
                     </div>

@@ -177,12 +177,6 @@ new #[Layout('layouts.app')] #[Title('Profile settings')] class extends Componen
                         <a href="{{ route('profile.edit') }}" aria-current="page" class="flex items-center gap-3 rounded-xl bg-orange-50 px-3 py-2.5 text-sm font-bold text-orange-700">
                             <span aria-hidden="true">♙</span> Profile settings
                         </a>
-                        <a href="{{ route('security.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-orange-50 hover:text-orange-700">
-                            <span aria-hidden="true">⌑</span> Security
-                        </a>
-                        <a href="{{ route('appearance.edit') }}" class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-orange-50 hover:text-orange-700">
-                            <span aria-hidden="true">☼</span> Appearance
-                        </a>
                     </nav>
                 </div>
 

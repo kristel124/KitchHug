@@ -1,4 +1,4 @@
-<header class="sticky top-0 z-50 border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md">
+<header class="sticky top-0 z-50 border-b border-orange-100 bg-white/95 shadow-sm backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95">
 
     @php
         $recipeCategories = [
@@ -45,11 +45,11 @@
                 </div>
 
                 <div>
-                    <div class="text-2xl font-black tracking-tight text-slate-900">
+                    <div class="text-2xl font-black tracking-tight text-slate-900 dark:text-white">
                         Kitch<span class="text-orange-500">Hug</span>
                     </div>
 
-                    <div class="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">
+                    <div class="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
                         Your Recipe Box
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                 {{-- HOME --}}
                 <a href="{{ auth()->check() ? route('user_homepage') : route('home') }}"
                    class="relative py-2 transition-colors hover:text-orange-500
-                   {{ request()->routeIs('user_homepage') ? 'text-orange-500' : 'text-slate-600' }}">
+                   {{ request()->routeIs('user_homepage') ? 'text-orange-500' : 'text-slate-600 dark:text-slate-300' }}">
 
                     Home
 
@@ -73,7 +73,7 @@
                 {{-- RECIPES DROPDOWN --}}
                 <details data-navigation-dropdown class="group relative">
 
-                    <summary class="flex cursor-pointer list-none items-center gap-1 py-2 text-slate-600 transition-colors hover:text-orange-500 [&::-webkit-details-marker]:hidden">
+                    <summary class="flex cursor-pointer list-none items-center gap-1 py-2 text-slate-600 transition-colors hover:text-orange-500 dark:text-slate-300 [&::-webkit-details-marker]:hidden">
                         Recipes
 
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -90,11 +90,11 @@
                         </svg>
                     </summary>
 
-                    <div class="absolute left-0 top-full z-50 mt-2 max-h-80 w-56 overflow-y-auto rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
+                    <div class="absolute left-0 top-full z-50 mt-2 max-h-80 w-56 overflow-y-auto rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
 
                         @foreach($recipeCategories as $slug => $label)
                             <a href="{{ auth()->check() ? route('recipes.category', $slug) : route('recipes.public-category', $slug) }}"
-                               class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500">
+                               class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700">
 
                                 {{ $label }}
 
@@ -107,7 +107,7 @@
                 {{-- MORE DROPDOWN --}}
                 <details data-navigation-dropdown class="group relative">
 
-                    <summary class="flex cursor-pointer list-none items-center gap-1 py-2 text-slate-600 transition-colors hover:text-orange-500 [&::-webkit-details-marker]:hidden">
+                    <summary class="flex cursor-pointer list-none items-center gap-1 py-2 text-slate-600 transition-colors hover:text-orange-500 dark:text-slate-300 [&::-webkit-details-marker]:hidden">
 
                         More
 
@@ -126,12 +126,12 @@
 
                     </summary>
 
-                    <div class="absolute left-0 top-full z-50 mt-2 w-52 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
+                    <div class="absolute left-0 top-full z-50 mt-2 w-52 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
 
                         {{-- BY METHODS --}}
                         <details data-navigation-dropdown class="group/method relative">
 
-                            <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 [&::-webkit-details-marker]:hidden">
+                            <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700 [&::-webkit-details-marker]:hidden">
 
                                 By Methods
 
@@ -139,11 +139,11 @@
 
                             </summary>
 
-                            <div class="absolute left-full top-0 z-50 ml-1 w-48 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
+                            <div class="absolute left-full top-0 z-50 ml-1 w-48 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
 
                                 @foreach($methodCategories as $slug => $label)
                                     <a href="{{ route('recipes.by-method', $slug) }}"
-                                       class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500">
+                                       class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700">
 
                                         {{ $label }}
 
@@ -156,7 +156,7 @@
                         {{-- COURSE SUBMENU --}}
                         <details data-navigation-dropdown class="group/course relative">
 
-                            <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 [&::-webkit-details-marker]:hidden">
+                            <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700 [&::-webkit-details-marker]:hidden">
 
                                 Course
 
@@ -164,11 +164,11 @@
 
                             </summary>
 
-                            <div class="absolute left-full top-0 z-50 ml-1 w-44 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
+                            <div class="absolute left-full top-0 z-50 ml-1 w-44 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
 
                                 @foreach($courseCategories as $category)
                                     <a href="{{ route('recipes.by-course', \Illuminate\Support\Str::slug($category)) }}"
-                                       class="block rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500">
+                                       class="block rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700">
 
                                         {{ $category }}
 
@@ -194,7 +194,7 @@
                         placeholder="Search recipes or cooks..."
                         aria-label="Search recipes or cooks"
                         value="{{ request('search') }}"
-                        class="block h-10 w-full rounded-full border border-orange-100 bg-orange-50/50 py-2 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-2 focus:ring-orange-100"
+                        class="block h-10 w-full rounded-full border border-orange-100 bg-orange-50/50 py-2 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-orange-300 focus:bg-white focus:ring-2 focus:ring-orange-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:placeholder:text-slate-500 dark:focus:bg-slate-700"
                     >
 
                     <button type="submit" aria-label="Search" class="absolute left-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-orange-500 transition hover:bg-orange-100 focus:outline-none focus:ring-2 focus:ring-orange-300">
@@ -279,21 +279,21 @@
                     @endif
                 </summary>
 
-                <div class="absolute right-0 z-50 mt-3 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-xl">
-                    <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                <div class="absolute right-0 z-50 mt-3 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
+                    <div class="flex items-center justify-between border-b border-slate-100 px-4 py-3 dark:border-slate-700">
                         <div>
-                            <h2 class="text-sm font-bold text-slate-900">Notifications</h2>
-                            <p class="mt-0.5 text-xs text-slate-500">{{ $unreadNotificationCount }} unread</p>
+                            <h2 class="text-sm font-bold text-slate-900 dark:text-white">Notifications</h2>
+                            <p class="mt-0.5 text-xs text-slate-500 dark:text-slate-400">{{ $unreadNotificationCount }} unread</p>
                         </div>
                         <a href="{{ route('notifications.index') }}" class="text-xs font-semibold text-orange-700 hover:text-orange-800">View all</a>
                     </div>
                     @forelse ($headerNotifications as $notification)
                         <form method="POST" action="{{ route('notifications.open', $notification->id) }}">
                             @csrf
-                            <button type="submit" class="flex w-full items-start gap-3 border-b border-slate-100 px-4 py-3 text-left transition hover:bg-orange-50 {{ $notification->read_at ? '' : 'bg-orange-50/60' }}">
+                            <button type="submit" class="flex w-full items-start gap-3 border-b border-slate-100 px-4 py-3 text-left transition hover:bg-orange-50 dark:border-slate-700 dark:hover:bg-slate-700 {{ $notification->read_at ? '' : 'bg-orange-50/60 dark:bg-slate-700/40' }}">
                                 <span class="mt-1 h-2 w-2 shrink-0 rounded-full {{ $notification->read_at ? 'bg-transparent' : 'bg-orange-500' }}" aria-hidden="true"></span>
                                 <span class="min-w-0 flex-1">
-                                    <span class="block text-sm leading-5 text-slate-700">{{ $notification->data['message'] ?? 'You have a new notification.' }}</span>
+                                    <span class="block text-sm leading-5 text-slate-700 dark:text-slate-200">{{ $notification->data['message'] ?? 'You have a new notification.' }}</span>
                                     <time class="mt-1 block text-xs text-slate-400" datetime="{{ $notification->created_at->toISOString() }}">{{ $notification->created_at->diffForHumans() }}</time>
                                 </span>
                             </button>
@@ -334,22 +334,22 @@
 
                 </summary></summary>
 
-                <div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10">
+                <div class="absolute right-0 top-full z-50 mt-2 w-56 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
 
-                    <div class="border-b border-orange-50 px-3 py-2">
+                    <div class="border-b border-orange-50 px-3 py-2 dark:border-slate-700">
 
-                        <p class="truncate text-sm font-bold text-slate-900">
+                        <p class="truncate text-sm font-bold text-slate-900 dark:text-white">
                             {{ Auth::user()->name }}
                         </p>
 
-                        <p class="truncate text-xs text-slate-500">
+                        <p class="truncate text-xs text-slate-500 dark:text-slate-400">
                             {{ Auth::user()->email }}
                         </p>
 
                     </div>
 
                     <a href="{{ route('profile.show') }}"
-                       class="mt-1 block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-orange-50 hover:text-orange-600">
+                       class="mt-1 block rounded-lg px-3 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-orange-50 hover:text-orange-600 dark:text-slate-200 dark:hover:bg-slate-700">
 
                         My Profile
 

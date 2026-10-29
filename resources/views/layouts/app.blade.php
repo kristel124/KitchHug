@@ -65,23 +65,23 @@
         document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
     })();
     </script>
-    {{-- AI Chat Widget (authenticated users only) --}}
+    {{-- Hugsy AI Chat Widget (authenticated users only) --}}
     @auth
     <div id="ai-chat-widget">
         {{-- Floating trigger button --}}
         <button
             id="ai-chat-toggle"
             type="button"
-            aria-label="Ask AI"
+            aria-label="Chat with Hugsy"
             aria-expanded="false"
             aria-controls="ai-chat-panel"
-            class="fixed bottom-6 right-6 z-[60] flex size-14 items-center justify-center rounded-full bg-teal-700 text-white shadow-lg transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+            class="fixed bottom-6 right-6 z-[60] flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 transition hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
         >
-            {{-- AI icon (shown when closed) --}}
-            <span id="ai-chat-icon-open" aria-hidden="true" class="text-xs font-black tracking-tight">AI</span>
+            {{-- Chef hat icon (shown when closed) --}}
+            <span id="ai-chat-icon-open" aria-hidden="true" class="text-xl leading-none">🍳</span>
             {{-- Close icon (shown when open) --}}
             <svg id="ai-chat-icon-close" viewBox="0 0 24 24" fill="none" class="hidden size-5" aria-hidden="true">
-                <path d="M6 18 18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M6 18 18 6M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
             </svg>
         </button>
 
@@ -91,72 +91,86 @@
             role="dialog"
             aria-modal="true"
             aria-labelledby="ai-chat-title"
-            class="fixed bottom-24 right-6 z-[60] hidden w-[22rem] overflow-hidden rounded-2xl shadow-2xl"
-            style="max-height: 70dvh; display: flex; flex-direction: column; display: none;"
+            style="display:none; flex-direction:column; max-height:min(70dvh,560px);"
+            class="fixed bottom-24 right-6 z-[60] w-[22rem] overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-2xl shadow-orange-900/10"
         >
             {{-- Header --}}
-            <div class="flex items-center justify-between bg-teal-700 px-5 py-4">
-                <div>
-                    <h2 id="ai-chat-title" class="text-base font-bold text-white">Ask AI</h2>
-                    <p class="text-xs text-teal-200">Recipes, cooking tips &amp; more</p>
+            <div class="flex items-center gap-3 bg-gradient-to-r from-orange-500 to-orange-400 px-5 py-4">
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg">🍳</div>
+                <div class="flex-1 min-w-0">
+                    <h2 id="ai-chat-title" class="text-sm font-black text-white tracking-tight">Hugsy</h2>
+                    <p class="text-[11px] text-orange-100 font-medium">Your KitchHug cooking assistant</p>
                 </div>
-                <button id="ai-chat-close-btn" type="button" aria-label="Close AI chat" class="flex size-8 items-center justify-center rounded-full bg-teal-600 text-white transition hover:bg-teal-500">
+                <button id="ai-chat-close-btn" type="button" aria-label="Close Hugsy" class="flex size-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/30">
                     <svg viewBox="0 0 24 24" fill="none" class="size-4" aria-hidden="true">
                         <path d="M6 18 18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
                 </button>
             </div>
 
+            {{-- Quick suggestion chips --}}
+            <div id="ai-chat-suggestions" class="flex gap-2 overflow-x-auto px-4 py-3 bg-orange-50/60 border-b border-orange-100 [&::-webkit-scrollbar]:hidden" style="scrollbar-width:none;">
+                <button type="button" data-suggestion="What can I cook with chicken and garlic?" class="ai-suggestion-chip shrink-0 rounded-full border border-orange-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-orange-700 transition hover:bg-orange-50 hover:border-orange-300">🍗 Chicken ideas</button>
+                <button type="button" data-suggestion="Give me a quick 15-minute dinner recipe." class="ai-suggestion-chip shrink-0 rounded-full border border-orange-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-orange-700 transition hover:bg-orange-50 hover:border-orange-300">⚡ Quick dinner</button>
+                <button type="button" data-suggestion="What's a good substitute for butter in baking?" class="ai-suggestion-chip shrink-0 rounded-full border border-orange-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-orange-700 transition hover:bg-orange-50 hover:border-orange-300">🔄 Substitutes</button>
+                <button type="button" data-suggestion="How do I fix an over-salted dish?" class="ai-suggestion-chip shrink-0 rounded-full border border-orange-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-orange-700 transition hover:bg-orange-50 hover:border-orange-300">🧂 Fix my dish</button>
+                <button type="button" data-suggestion="Give me a simple Filipino dessert recipe." class="ai-suggestion-chip shrink-0 rounded-full border border-orange-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-orange-700 transition hover:bg-orange-50 hover:border-orange-300">🍮 Filipino dessert</button>
+            </div>
+
             {{-- Messages area --}}
-            <div id="ai-chat-messages" class="flex-1 overflow-y-auto bg-slate-50 p-4 space-y-3" style="min-height: 280px; max-height: 360px;">
+            <div id="ai-chat-messages" class="flex-1 overflow-y-auto bg-[#FAF6F0] p-4 space-y-3 [&::-webkit-scrollbar]:hidden" style="scrollbar-width:none; min-height:220px; max-height:320px;">
                 {{-- Greeting bubble --}}
-                <div class="flex justify-start">
-                    <div class="max-w-[85%] rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-sm leading-6 text-slate-700 shadow-sm">
-                        Hi! Ask me anything about recipes, cooking tips, or ingredients. 🍳
+                <div class="flex items-end gap-2 justify-start">
+                    <div class="flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-100 text-sm">🍳</div>
+                    <div class="max-w-[80%] rounded-2xl rounded-bl-sm bg-white px-4 py-3 text-sm leading-6 text-slate-700 shadow-sm border border-orange-50">
+                        Hi{{ auth()->user() ? ', ' . auth()->user()->name : '' }}! 👋 I'm <strong>Hugsy</strong>, your KitchHug cooking assistant. Ask me anything about recipes, ingredients, or cooking tips!
                     </div>
                 </div>
             </div>
 
             {{-- Input area --}}
-            <div class="border-t border-slate-200 bg-white p-3">
-                <form id="ai-chat-form" class="flex gap-2">
+            <div class="border-t border-orange-100 bg-white p-3">
+                <form id="ai-chat-form" class="flex gap-2 items-end">
                     @csrf
                     <textarea
                         id="ai-chat-input"
                         name="message"
                         rows="1"
                         maxlength="1000"
-                        placeholder="Ask about a recipe..."
-                        class="flex-1 resize-none rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-100"
+                        placeholder="Ask Hugsy anything..."
+                        class="flex-1 resize-none rounded-2xl border border-orange-200 bg-orange-50/50 px-3.5 py-2.5 text-sm text-slate-700 outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:bg-white"
                         style="min-height:40px; max-height:120px; overflow-y:auto;"
                     ></textarea>
                     <button
                         id="ai-chat-send"
                         type="submit"
-                        class="flex items-center gap-1 rounded-xl bg-teal-700 px-4 py-2 text-sm font-bold text-white transition hover:bg-teal-800 disabled:opacity-50"
-                    >Ask</button>
+                        aria-label="Send message"
+                        class="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-orange-500 text-white transition hover:bg-orange-600 disabled:opacity-40"
+                    >
+                        <svg viewBox="0 0 24 24" fill="currentColor" class="size-4" aria-hidden="true"><path d="M3.478 2.405a.75.75 0 0 0-.926.94l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.405Z"/></svg>
+                    </button>
                 </form>
-                <p class="mt-1.5 text-center text-[10px] text-slate-400">Enter to send · Shift+Enter for a new line</p>
+                <p class="mt-1.5 text-center text-[10px] text-slate-400">Enter to send · Shift+Enter for new line</p>
             </div>
         </div>
     </div>
 
     <script>
     (function () {
-        var toggle   = document.getElementById('ai-chat-toggle');
-        var panel    = document.getElementById('ai-chat-panel');
-        var closeBtn = document.getElementById('ai-chat-close-btn');
-        var iconOpen = document.getElementById('ai-chat-icon-open');
-        var iconClose= document.getElementById('ai-chat-icon-close');
-        var messages = document.getElementById('ai-chat-messages');
-        var form     = document.getElementById('ai-chat-form');
-        var input    = document.getElementById('ai-chat-input');
-        var sendBtn  = document.getElementById('ai-chat-send');
-        var csrfToken = document.querySelector('input[name="_token"]') ? document.querySelector('input[name="_token"]').value : '';
+        var toggle      = document.getElementById('ai-chat-toggle');
+        var panel       = document.getElementById('ai-chat-panel');
+        var closeBtn    = document.getElementById('ai-chat-close-btn');
+        var iconOpen    = document.getElementById('ai-chat-icon-open');
+        var iconClose   = document.getElementById('ai-chat-icon-close');
+        var messages    = document.getElementById('ai-chat-messages');
+        var form        = document.getElementById('ai-chat-form');
+        var input       = document.getElementById('ai-chat-input');
+        var sendBtn     = document.getElementById('ai-chat-send');
+        var suggestions = document.getElementById('ai-chat-suggestions');
+        var history     = [];
 
-        // Grab CSRF from the AI form's hidden input
         var tokenInput = form.querySelector('input[name="_token"]');
-        if (tokenInput) csrfToken = tokenInput.value;
+        var csrfToken  = tokenInput ? tokenInput.value : '';
 
         function openPanel() {
             panel.style.display = 'flex';
@@ -164,6 +178,7 @@
             iconOpen.classList.add('hidden');
             iconClose.classList.remove('hidden');
             input.focus();
+            scrollToBottom();
         }
 
         function closePanel() {
@@ -173,34 +188,59 @@
             iconClose.classList.add('hidden');
         }
 
-        function isOpen() {
-            return panel.style.display === 'flex';
-        }
+        function isOpen() { return panel.style.display === 'flex'; }
 
-        toggle.addEventListener('click', function () {
-            isOpen() ? closePanel() : openPanel();
-        });
-
+        toggle.addEventListener('click', function () { isOpen() ? closePanel() : openPanel(); });
         closeBtn.addEventListener('click', closePanel);
-
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && isOpen()) closePanel();
-        });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen()) closePanel(); });
 
         function scrollToBottom() {
             messages.scrollTop = messages.scrollHeight;
         }
 
+        function parseMarkdown(text) {
+            return text
+                // Bold **text** or __text__
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/__(.+?)__/g, '<strong>$1</strong>')
+                // Italic *text* or _text_ (single, not double)
+                .replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, '<em>$1</em>')
+                // Bullet list lines starting with * or -
+                .replace(/^[\*\-] (.+)$/gm, '<li>$1</li>')
+                // Numbered list lines
+                .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+                // Wrap consecutive <li> in <ul>
+                .replace(/(<li>[\s\S]*?<\/li>)/g, '<ul class="list-disc pl-4 space-y-1 my-1">$1</ul>')
+                // Line breaks
+                .replace(/\n/g, '<br>');
+        }
+
         function appendBubble(text, isUser) {
+            // Hide suggestion chips after first user message
+            if (isUser && suggestions) {
+                suggestions.style.display = 'none';
+            }
+
             var wrap = document.createElement('div');
-            wrap.className = 'flex ' + (isUser ? 'justify-end' : 'justify-start');
+            wrap.className = 'flex items-end gap-2 ' + (isUser ? 'justify-end' : 'justify-start');
+
+            if (!isUser) {
+                var avatar = document.createElement('div');
+                avatar.className = 'flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-100 text-sm';
+                avatar.textContent = '🍳';
+                wrap.appendChild(avatar);
+            }
 
             var bubble = document.createElement('div');
-            bubble.className = 'max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm whitespace-pre-wrap break-words '
+            bubble.className = 'max-w-[80%] rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm whitespace-pre-wrap break-words border '
                 + (isUser
-                    ? 'rounded-tr-sm bg-teal-700 text-white'
-                    : 'rounded-tl-sm bg-white text-slate-700');
-            bubble.textContent = text;
+                    ? 'rounded-br-sm bg-orange-500 text-white border-orange-400'
+                    : 'rounded-bl-sm bg-white text-slate-700 border-orange-50');
+            if (isUser) {
+                bubble.textContent = text;
+            } else {
+                bubble.innerHTML = parseMarkdown(text);
+            }
 
             wrap.appendChild(bubble);
             messages.appendChild(wrap);
@@ -211,11 +251,18 @@
         function appendTypingIndicator() {
             var wrap = document.createElement('div');
             wrap.id = 'ai-typing';
-            wrap.className = 'flex justify-start';
+            wrap.className = 'flex items-end gap-2 justify-start';
+
+            var avatar = document.createElement('div');
+            avatar.className = 'flex size-7 shrink-0 items-center justify-center rounded-full bg-orange-100 text-sm';
+            avatar.textContent = '🍳';
+            wrap.appendChild(avatar);
 
             var bubble = document.createElement('div');
-            bubble.className = 'rounded-2xl rounded-tl-sm bg-white px-4 py-3 text-sm text-slate-400 shadow-sm';
-            bubble.textContent = 'Thinking…';
+            bubble.className = 'rounded-2xl rounded-bl-sm bg-white px-4 py-3 text-sm text-slate-400 shadow-sm border border-orange-50 flex items-center gap-1';
+            bubble.innerHTML = '<span class="inline-block size-1.5 rounded-full bg-orange-400 animate-bounce" style="animation-delay:0ms"></span>'
+                             + '<span class="inline-block size-1.5 rounded-full bg-orange-400 animate-bounce" style="animation-delay:150ms"></span>'
+                             + '<span class="inline-block size-1.5 rounded-full bg-orange-400 animate-bounce" style="animation-delay:300ms"></span>';
 
             wrap.appendChild(bubble);
             messages.appendChild(wrap);
@@ -226,6 +273,15 @@
             var el = document.getElementById('ai-typing');
             if (el) el.remove();
         }
+
+        // Suggestion chips
+        document.querySelectorAll('.ai-suggestion-chip').forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                input.value = chip.dataset.suggestion;
+                input.dispatchEvent(new Event('input'));
+                form.dispatchEvent(new Event('submit', { cancelable: true }));
+            });
+        });
 
         // Auto-grow textarea
         input.addEventListener('input', function () {
@@ -241,12 +297,10 @@
             }
         });
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            var message = input.value.trim();
+        function sendMessage(message) {
             if (!message) return;
 
+            history.push({ role: 'user', text: message });
             appendBubble(message, true);
             input.value = '';
             input.style.height = 'auto';
@@ -260,12 +314,14 @@
                     'X-CSRF-TOKEN': csrfToken,
                     'Accept': 'application/json',
                 },
-                body: JSON.stringify({ message: message }),
+                body: JSON.stringify({ message: message, history: history.slice(-10) }),
             })
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 removeTypingIndicator();
-                appendBubble(data.reply || 'Sorry, I could not get a response.', false);
+                var reply = data.reply || 'Sorry, I could not get a response.';
+                history.push({ role: 'model', text: reply });
+                appendBubble(reply, false);
             })
             .catch(function () {
                 removeTypingIndicator();
@@ -275,6 +331,11 @@
                 sendBtn.disabled = false;
                 input.focus();
             });
+        }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            sendMessage(input.value.trim());
         });
     })();
     </script>

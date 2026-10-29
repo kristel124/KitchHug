@@ -51,35 +51,6 @@
                     <div class="mt-5">{{ $recipes->links() }}</div>
                 @endif
             </section>
-
-            <section class="mt-12" aria-labelledby="search-users-heading">
-                <div class="mb-5 flex items-end justify-between border-b border-orange-100 pb-3">
-                    <h2 id="search-users-heading" class="text-2xl font-black text-slate-900">Home cooks</h2>
-                    <span class="text-sm text-slate-500">{{ $users->total() }} {{ \Illuminate\Support\Str::plural('cook', $users->total()) }}</span>
-                </div>
-                @if ($users->isEmpty())
-                    <p class="rounded-2xl border border-orange-100 bg-white p-6 text-sm text-slate-500">No matching cooks found.</p>
-                @else
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        @foreach ($users as $user)
-                            <a href="{{ route('users.show', $user) }}" class="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-orange-200 hover:shadow-md">
-                                <span class="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-slate-900 text-lg font-black text-white">
-                                    @if ($user->profile_photo_path)
-                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($user->profile_photo_path) }}" alt="" class="h-full w-full object-cover">
-                                    @else
-                                        {{ $user->initials() }}
-                                    @endif
-                                </span>
-                                <span class="min-w-0">
-                                    <span class="block truncate font-extrabold text-slate-900">{{ $user->name }}</span>
-                                    <span class="mt-1 block text-sm text-slate-500">{{ $user->recipes_count }} {{ \Illuminate\Support\Str::plural('recipe', $user->recipes_count) }} shared</span>
-                                </span>
-                            </a>
-                        @endforeach
-                    </div>
-                    <div class="mt-5">{{ $users->links() }}</div>
-                @endif
-            </section>
         </main>
 
         @include('partials.kitchhug_footer')

@@ -25,26 +25,29 @@
                                 <p class="mt-1 truncate text-xs text-slate-500 sm:text-sm">{{ $user->email }}</p>
                                 <p class="mt-1 text-[11px] text-slate-400 sm:text-xs">Member since {{ $user->created_at->format('F Y') }}</p>
 
-                                <dl class="mt-5 grid grid-cols-3 gap-2 sm:mt-7 sm:max-w-lg sm:gap-6">
-                                    <div>
+                                <dl class="mt-5 flex flex-wrap gap-x-10 gap-y-3 sm:mt-7">
+                                    <div class="min-w-[4rem]">
                                         <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $totalRecipeCount }}</dd>
                                         <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Recipes</dt>
                                     </div>
-                                    <button type="button" onclick="openFollowModal({{ $user->id }}, 'followers')" class="group text-left">
+                                    <button type="button" onclick="openFollowModal({{ $user->id }}, 'followers')" class="group min-w-[4rem] text-left">
                                         <dd class="text-lg font-black text-slate-900 transition group-hover:text-orange-600 sm:text-xl">{{ $followersCount }}</dd>
                                         <dt class="text-[10px] font-bold text-slate-500 transition group-hover:text-orange-500 sm:text-xs">Followers</dt>
                                     </button>
-                                    <button type="button" onclick="openFollowModal({{ $user->id }}, 'following')" class="group text-left">
+                                    <button type="button" onclick="openFollowModal({{ $user->id }}, 'following')" class="group min-w-[4rem] text-left">
                                         <dd class="text-lg font-black text-slate-900 transition group-hover:text-orange-600 sm:text-xl">{{ $followingCount }}</dd>
                                         <dt class="text-[10px] font-bold text-slate-500 transition group-hover:text-orange-500 sm:text-xs">Following</dt>
                                     </button>
+                                    <div class="min-w-[4rem]">
+                                        <dd class="text-lg font-black text-slate-900 sm:text-xl">{{ $totalLikesCount }}</dd>
+                                        <dt class="text-[10px] font-bold text-slate-500 sm:text-xs">Likes</dt>
+                                    </div>
                                 </dl>
                             </div>
                         </div>
 
-                        <div class="mt-6 grid grid-cols-1 gap-3 border-t border-orange-100 pt-5 sm:grid-cols-3">
+                        <div class="mt-6 grid grid-cols-1 gap-3 border-t border-orange-100 pt-5 sm:grid-cols-2">
                             <a href="{{ route('profile.edit') }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-100">Edit profile</a>
-                            <a href="{{ route('users.show', $user) }}" class="inline-flex items-center justify-center rounded-xl border border-orange-200 bg-white px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-orange-50">View public profile</a>
                             <a href="{{ route('recipes.create') }}" class="inline-flex items-center justify-center rounded-xl bg-orange-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-orange-600">Share a recipe</a>
                         </div>
                     </div>
@@ -159,14 +162,6 @@
                                     </div>
                                     <a href="{{ route('recipes.show', $recipe) }}" class="mt-5 inline-flex items-center text-sm font-semibold text-orange-700 hover:text-orange-800">View recipe <span class="ml-1" aria-hidden="true">→</span></a>
                                     @include('partials.recipe-post-actions', ['recipe' => $recipe])
-                                    @if ($recipe->video_path)
-                                        <div class="mt-4 overflow-hidden rounded-xl bg-slate-950">
-                                            <video controls preload="metadata" data-recipe-video-player class="max-h-64 w-full" aria-label="Recipe video for {{ $recipe->title }}">
-                                                <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->video_path) }}">
-                                                Your browser does not support video playback.
-                                            </video>
-                                        </div>
-                                    @endif
                                     <details class="mt-4 border-t border-slate-100 pt-3">
                                         <summary class="cursor-pointer text-sm font-semibold text-slate-700 hover:text-orange-700">Ingredients and instructions</summary>
                                         <div class="mt-4 grid gap-4 sm:grid-cols-2">

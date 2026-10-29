@@ -43,6 +43,7 @@ class ProfileController extends Controller
             ->get();
         $followersCount = $user->followers()->count();
         $followingCount = $user->following()->count();
+        $totalLikesCount = $user->recipes()->withCount('reactions')->get()->sum('reactions_count');
 
         return view('profile.show', compact(
             'user',
@@ -55,6 +56,7 @@ class ProfileController extends Controller
             'search',
             'followersCount',
             'followingCount',
+            'totalLikesCount',
         ));
     }
 

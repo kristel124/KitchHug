@@ -40,7 +40,7 @@
             <a href="{{ auth()->check() ? route('user_homepage') : route('home') }}"
                class="group flex shrink-0 items-center transition-transform group-hover:scale-105">
 
-                <img src="{{ asset('logo1.png') }}" alt="KitchHug — Your Recipe Box" class="h-12 w-auto object-contain">
+                <img src="{{ asset('KitchHug_Logo.png') }}" alt="KitchHug — Your Recipe Box" class="h-14 w-auto object-contain">
             </a>
 
             {{-- DESKTOP NAVIGATION --}}

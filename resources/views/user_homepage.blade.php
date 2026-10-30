@@ -37,9 +37,11 @@
                     <div class="border-b border-orange-100">
                         <p class="text-[11px] font-extrabold uppercase tracking-widest text-orange-500">From the community</p>
                         <h2 class="mt-1 text-2xl font-black text-slate-900 sm:text-3xl">Recipes shared by home cooks</h2>
-                        <div class="mt-5 flex gap-8" role="tablist" aria-label="Community recipe media">
-                            <button id="community-images-tab" type="button" role="tab" aria-controls="community-images-panel" aria-selected="true" tabindex="0" data-community-media-tab="images" class="border-b-2 border-orange-500 px-1 pb-3 text-sm font-semibold text-orange-700">Images</button>
-                            <button id="community-videos-tab" type="button" role="tab" aria-controls="community-videos-panel" aria-selected="false" tabindex="-1" data-community-media-tab="videos" class="border-b-2 border-transparent px-1 pb-3 text-sm font-semibold text-slate-500 transition hover:text-slate-800">Videos</button>
+                        <div class="mt-5 flex gap-1" role="tablist" aria-label="Community recipe media">
+                            <button id="community-images-tab" type="button" role="tab" aria-controls="community-images-panel" aria-selected="true" tabindex="0" data-community-media-tab="images"
+                                class="relative px-4 pb-3 pt-1 text-sm font-semibold text-orange-600 transition after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-orange-500">Images</button>
+                            <button id="community-videos-tab" type="button" role="tab" aria-controls="community-videos-panel" aria-selected="false" tabindex="-1" data-community-media-tab="videos"
+                                class="relative px-4 pb-3 pt-1 text-sm font-semibold text-slate-500 transition hover:text-slate-800 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-transparent">Videos</button>
                         </div>
                     </div>
                     <section id="community-images-panel" role="tabpanel" aria-labelledby="community-images-tab" data-community-media-panel="images" class="mt-6">
@@ -83,6 +85,7 @@
                                                         data-share-url="{{ route('recipes.show', $recipe) }}"
                                                         data-share-title="{{ $recipe->title }}"
                                                         data-share-text="{{ $recipe->description }}"
+                                                        @guest data-login-url="{{ route('login') }}" @endguest
                                                         aria-label="Share post"
                                                         title="Share post"
                                                         class="rounded-lg p-1.5 text-slate-500 transition hover:text-orange-600">
@@ -136,6 +139,7 @@
                                                         data-share-url="{{ route('recipes.show', $recipe) }}"
                                                         data-share-title="{{ $recipe->title }}"
                                                         data-share-text="{{ $recipe->description }}"
+                                                        @guest data-login-url="{{ route('login') }}" @endguest
                                                         aria-label="Share post"
                                                         title="Share post"
                                                         class="rounded-lg p-1.5 text-slate-500 transition hover:text-orange-600">

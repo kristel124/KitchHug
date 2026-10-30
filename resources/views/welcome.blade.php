@@ -128,10 +128,16 @@
                 </div>
 
                 <div data-community-media-tabs class="mt-8">
-                    <div class="border-b border-orange-100">
-                        <div class="flex gap-8" role="tablist" aria-label="Home recipe media">
-                            <button id="home-images-tab" type="button" role="tab" aria-controls="home-images-panel" aria-selected="true" tabindex="0" data-community-media-tab="images" class="border-b-2 border-orange-500 px-1 pb-3 text-sm font-semibold text-orange-700">Images</button>
-                            <button id="home-videos-tab" type="button" role="tab" aria-controls="home-videos-panel" aria-selected="false" tabindex="-1" data-community-media-tab="videos" class="border-b-2 border-transparent px-1 pb-3 text-sm font-semibold text-slate-500 transition hover:text-slate-800">Videos</button>
+                    <div class="border-b border-slate-200">
+                        <div class="flex gap-1" role="tablist" aria-label="Home recipe media">
+                            <button id="home-images-tab" type="button" role="tab" aria-controls="home-images-panel" aria-selected="true" tabindex="0" data-community-media-tab="images"
+                                class="relative px-4 pb-3 pt-1 text-sm font-semibold text-orange-600 transition after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-orange-500">
+                                Images
+                            </button>
+                            <button id="home-videos-tab" type="button" role="tab" aria-controls="home-videos-panel" aria-selected="false" tabindex="-1" data-community-media-tab="videos"
+                                class="relative px-4 pb-3 pt-1 text-sm font-semibold text-slate-500 transition hover:text-slate-800 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-transparent">
+                                Videos
+                            </button>
                         </div>
                     </div>
 
@@ -143,33 +149,48 @@
                                 <a href="{{ route('register') }}" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600">Get started</a>
                             </div>
                         @else
-                            <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                                @foreach ($homeImageRecipes->take(4) as $recipe)
-                                    <a href="{{ route('recipes.show', $recipe) }}"
-                                       class="group flex flex-col overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
-                                        <div class="relative h-44 overflow-hidden">
-                                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="{{ $recipe->title }} recipe photo" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
-                                        </div>
-                                        <div class="flex flex-1 flex-col p-5">
-                                            <div class="flex items-center justify-between gap-3">
-                                                <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe->category }}</span>
-                                                <span class="shrink-0 text-xs font-semibold text-slate-500">{{ $recipe->prep_time_minutes }} min</span>
+                            <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                @foreach ($homeImageRecipes as $recipe)
+                                    <article class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
+                                        <a href="{{ route('recipes.show', $recipe) }}" class="group block flex-1">
+                                            <div class="relative h-48 overflow-hidden bg-slate-100">
+                                                <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}"
+                                                     alt="Recipe photo for {{ $recipe->title }}"
+                                                     class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                     loading="lazy">
+                                                <span class="absolute bottom-3 left-3 rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-800">{{ $recipe->category }}</span>
                                             </div>
-                                            <h3 class="mt-2 text-lg font-extrabold text-slate-900 transition-colors group-hover:text-orange-500">{{ $recipe->title }}</h3>
-                                            <p class="mt-2 min-h-12 line-clamp-2 text-sm leading-6 text-slate-500">{{ $recipe->description }}</p>
-                                            <div class="mt-3 flex items-center gap-2">
-                                                <span class="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-[10px] font-bold text-orange-800">
-                                                    @if ($recipe->user->profile_photo_path)
-                                                        <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->user->profile_photo_path) }}" alt="" class="h-full w-full object-cover">
-                                                    @else
-                                                        {{ strtoupper(substr($recipe->user->name, 0, 1)) }}
-                                                    @endif
-                                                </span>
-                                                <span class="text-xs text-slate-500">{{ $recipe->user->name }}</span>
+                                            <div class="p-5">
+                                                <h3 class="text-lg font-bold leading-snug text-slate-900 group-hover:text-orange-600">{{ $recipe->title }}</h3>
+                                                <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{{ $recipe->description }}</p>
                                             </div>
-                                            <p class="mt-auto border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
+                                        </a>
+                                        <div class="px-5 pb-4">
+                                            <div class="flex items-center justify-between gap-2 border-t border-slate-100 pt-4 text-xs text-slate-500">
+                                                <a href="{{ route('users.show', $recipe->user) }}" class="inline-flex items-center gap-2 font-semibold text-slate-700 hover:text-orange-700">
+                                                    <span class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-orange-100 text-xs font-bold text-orange-800">
+                                                        @if ($recipe->user->profile_photo_path)
+                                                            <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->user->profile_photo_path) }}" alt="{{ $recipe->user->name }} profile photo" class="h-full w-full object-cover">
+                                                        @else
+                                                            {{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($recipe->user->name, 0, 1)) }}
+                                                        @endif
+                                                    </span>
+                                                    {{ $recipe->user->name }}
+                                                </a>
+                                                <button type="button" data-share-recipe
+                                                        data-share-url="{{ route('recipes.show', $recipe) }}"
+                                                        data-share-title="{{ $recipe->title }}"
+                                                        data-share-text="{{ $recipe->description }}"
+                                                        @guest data-login-url="{{ route('login') }}" @endguest
+                                                        aria-label="Share post"
+                                                        title="Share post"
+                                                        class="rounded-lg p-1.5 text-slate-500 transition hover:text-orange-600">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true"><polyline points="15 17 20 12 15 7"/><path d="M4 18v-2a4 4 0 0 1 4-4h12"/></svg>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </a>
+                                        @include('partials.recipe-post-actions', ['recipe' => $recipe])
+                                    </article>
                                 @endforeach
                             </div>
                         @endif
@@ -339,57 +360,107 @@
     </main>
 
     <!-- ================= FOOTER ================= -->
-    <footer class="bg-slate-900 text-slate-300 mt-auto">
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-
-            <div class="flex flex-col md:flex-row items-center justify-between gap-6 border-b border-slate-800 pb-8">
-
-                <div class="text-center md:text-left">
-                    <a href="#" class="text-2xl font-black tracking-tight text-white inline-block">
-                        Kitch<span class="text-orange-500">Hug</span>
-                    </a>
-                    <p class="mt-1 text-xs text-slate-400">
-                        Digital recipe box — made with love.
-                    </p>
-                </div>
-
-                <nav class="flex items-center gap-6 text-sm font-medium text-slate-400">
-                    <a href="#" class="hover:text-orange-400 transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-orange-400 transition-colors">Terms of Service</a>
-                    <a href="#" class="hover:text-orange-400 transition-colors">Contact</a>
-                </nav>
-
+    <footer class="border-t border-orange-100 bg-white mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('KitchHug_Logo.png') }}" alt="KitchHug — Your Recipe Box" class="h-12 w-auto object-contain">
+                </a>
+                <p class="text-xs font-medium text-slate-400">
+                    &copy; {{ date('Y') }} KitchHug. Made with ❤️ for home cooks.
+                </p>
             </div>
-
-            <div class="mt-8 text-center md:text-left text-xs text-slate-500">
-                &copy; 2026 Kitchen Hug. All rights reserved.
-            </div>
-
         </div>
-
     </footer>
 
     <script>
         (() => {
+            // ── Reactions modal fallback (hero page has no modal) ─────────
+            if (typeof window.openReactionsModal === 'undefined') {
+                window.openReactionsModal = () => {
+                    window.location.href = '{{ route("login") }}';
+                };
+            }
+
+            // ── Carousel ──────────────────────────────────────────────────
             const carousel = document.querySelector('[data-carousel]');
-            if (!carousel) return;
+            if (carousel) {
+                const slides = Array.from(carousel.querySelectorAll('[data-carousel-slide]'));
+                let currentIndex = 0;
 
-            const slides = Array.from(carousel.querySelectorAll('[data-carousel-slide]'));
-            let currentIndex = 0;
+                const showSlide = (index) => {
+                    currentIndex = (index + slides.length) % slides.length;
+                    slides.forEach((slide, slideIndex) => {
+                        slide.classList.toggle('hidden', slideIndex !== currentIndex);
+                        slide.setAttribute('aria-hidden', String(slideIndex !== currentIndex));
+                    });
+                };
 
-            const showSlide = (index) => {
-                currentIndex = (index + slides.length) % slides.length;
-                slides.forEach((slide, slideIndex) => {
-                    slide.classList.toggle('hidden', slideIndex !== currentIndex);
-                    slide.setAttribute('aria-hidden', String(slideIndex !== currentIndex));
+                showSlide(0);
+                window.setInterval(() => showSlide(currentIndex + 1), 4000);
+            }
+
+            // ── Community media tabs ───────────────────────────────────────
+            document.addEventListener('click', (event) => {
+                const target = event.target;
+                if (!(target instanceof Element)) return;
+
+                const button = target.closest('[data-community-media-tab]');
+                if (!(button instanceof HTMLButtonElement)) return;
+
+                const tablist = button.closest('[data-community-media-tabs]');
+                if (!(tablist instanceof HTMLElement)) return;
+
+                const selectedMedia = button.dataset.communityMediaTab;
+
+                tablist.querySelectorAll('[data-community-media-tab]').forEach((tab) => {
+                    if (!(tab instanceof HTMLButtonElement)) return;
+                    const isSelected = tab === button;
+                    tab.setAttribute('aria-selected', String(isSelected));
+                    tab.tabIndex = isSelected ? 0 : -1;
+                    tab.classList.toggle('after:bg-orange-500', isSelected);
+                    tab.classList.toggle('text-orange-600', isSelected);
+                    tab.classList.toggle('after:bg-transparent', !isSelected);
+                    tab.classList.toggle('text-slate-500', !isSelected);
+                    tab.classList.toggle('hover:text-slate-800', !isSelected);
                 });
-            };
 
-            showSlide(0);
-            window.setInterval(() => {
-                showSlide(currentIndex + 1);
-            }, 4000);
+                tablist.querySelectorAll('[data-community-media-panel]').forEach((panel) => {
+                    if (panel instanceof HTMLElement) {
+                        panel.hidden = panel.dataset.communityMediaPanel !== selectedMedia;
+                    }
+                });
+            });
+
+            // ── Share button ───────────────────────────────────────────────
+            document.addEventListener('click', (event) => {
+                const target = event.target;
+                if (!(target instanceof Element)) return;
+
+                const shareButton = target.closest('[data-share-recipe]');
+                if (!(shareButton instanceof HTMLButtonElement)) return;
+
+                const loginUrl = shareButton.dataset.loginUrl;
+                if (loginUrl) { window.location.href = loginUrl; return; }
+
+                const status = shareButton.parentElement?.querySelector('[data-share-status]');
+                const url   = shareButton.dataset.shareUrl;
+                const title = shareButton.dataset.shareTitle;
+                const text  = shareButton.dataset.shareText;
+                if (!url || !title || !text) return;
+
+                (async () => {
+                    try {
+                        if (navigator.share) { await navigator.share({ title, text, url }); return; }
+                        if (!navigator.clipboard?.writeText) { if (status) status.textContent = 'Sharing unavailable in this browser.'; return; }
+                        await navigator.clipboard.writeText(url);
+                        if (status) status.textContent = 'Link copied!';
+                    } catch (e) {
+                        if (e instanceof DOMException && e.name === 'AbortError') return;
+                        if (status) status.textContent = 'Could not share the recipe link.';
+                    }
+                })();
+            });
         })();
     </script>
 

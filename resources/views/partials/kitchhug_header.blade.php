@@ -7,19 +7,16 @@
             'beef' => 'Beef Recipes',
             'pasta' => 'Pasta Recipes',
             'dips-spreads' => 'Dips & Spreads',
-            'dessert' => 'Dessert',
+            'dessert' => 'Sweet Treats',
             'pork' => 'Pork Recipes',
-            'side-dish' => 'Side Dish',
+            'side-dish' => 'Side Recipes',
         ];
 
         $courseCategories = [
-            'Breakfast',
-            'Lunch',
-            'Dinner',
             'Appetizers',
-            'Dessert',
+            'Sweet Treats',
             'Main Course',
-            'Side Dish',
+            'Side Recipes',
             'Snacks',
         ];
     @endphp

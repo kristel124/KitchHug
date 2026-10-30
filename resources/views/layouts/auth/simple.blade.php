@@ -40,12 +40,7 @@
 
                 <!-- Kitchen Hug Logo -->
                 <a href="{{ route('home') }}" class="flex flex-col items-center gap-2 group focus:outline-none" wire:navigate>
-                    <div class="w-12 h-12 rounded-2xl bg-orange-500 flex items-center justify-center text-white text-2xl shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-all">
-                        🍳
-                    </div>
-                    <span class="text-2xl font-black tracking-tight text-slate-900">
-                        Kitch<span class="text-orange-500">Hug</span>
-                    </span>
+                    <img src="{{ asset('KitchHug_Logo.png') }}" alt="KitchHug — Your Recipe Box" class="h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
                 </a>
 
                 <!-- Slot Content -->

@@ -2,13 +2,7 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-20 items-center justify-between gap-4">
             <a href="{{ route('home') }}" class="group flex shrink-0 items-center gap-3 rounded-2xl p-1 focus:outline-none focus:ring-2 focus:ring-orange-500">
-                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 text-xl text-white shadow-md shadow-orange-500/20 transition-all duration-300 group-hover:scale-105 group-hover:bg-orange-600">
-                    <span role="img" aria-label="Cooking pot">🍳</span>
-                </div>
-                <span class="leading-none">
-                    <span class="block text-2xl font-black tracking-tight text-slate-900">Kitch<span class="text-orange-500">Hug</span></span>
-                    <span class="mt-1 block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Made with love</span>
-                </span>
+                <img src="{{ asset('KitchHug_Logo.png') }}" alt="KitchHug — Your Recipe Box" class="h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-105">
             </a>
 
             <nav class="hidden items-center gap-8 text-sm font-semibold md:flex" aria-label="Main navigation">
@@ -27,9 +21,9 @@
                             'beef' => 'Beef Recipes',
                             'pasta' => 'Pasta Recipes',
                             'dips-spreads' => 'Dips & Spreads',
-                            'dessert' => 'Dessert',
+                            'dessert' => 'Sweet Treats',
                             'pork' => 'Pork Recipes',
-                            'side-dish' => 'Side Dish',
+                            'side-dish' => 'Side Recipes',
                         ] as $slug => $label)
                             <a href="{{ route('recipes.public-category', $slug) }}" class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500">
                                 {{ $label }}

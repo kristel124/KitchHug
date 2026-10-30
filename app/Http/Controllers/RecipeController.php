@@ -18,7 +18,7 @@ use RuntimeException;
 
 class RecipeController extends Controller
 {
-    private const CATEGORIES = ['Breakfast', 'Lunch', 'Dinner', 'Appetizers', 'Dessert', 'Main Course', 'Side Dish', 'Snacks'];
+    private const CATEGORIES = ['Appetizers', 'Sweet Treats', 'Main Course', 'Side Recipes', 'Snacks'];
 
     private const COURSE_CATEGORIES = self::CATEGORIES;
 
@@ -28,9 +28,9 @@ class RecipeController extends Controller
         'Beef Recipes',
         'Pasta Recipes',
         'Dips & Spreads',
-        'Dessert',
+        'Sweet Treats',
         'Pork Recipes',
-        'Side Dish',
+        'Side Recipes',
     ];
 
     private const MAX_VIDEO_SIZE_KILOBYTES = 204800;

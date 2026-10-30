@@ -26,9 +26,9 @@ const selectCommunityMediaTab = (button, shouldFocus = false) => {
         const isSelected = tab === button;
         tab.setAttribute('aria-selected', String(isSelected));
         tab.tabIndex = isSelected ? 0 : -1;
-        tab.classList.toggle('border-orange-500', isSelected);
-        tab.classList.toggle('text-orange-700', isSelected);
-        tab.classList.toggle('border-transparent', !isSelected);
+        tab.classList.toggle('after:bg-orange-500', isSelected);
+        tab.classList.toggle('text-orange-600', isSelected);
+        tab.classList.toggle('after:bg-transparent', !isSelected);
         tab.classList.toggle('text-slate-500', !isSelected);
         tab.classList.toggle('hover:text-slate-800', !isSelected);
     });
@@ -54,6 +54,13 @@ document.addEventListener('click', (event) => {
     const shareButton = target.closest('[data-share-recipe]');
 
     if (shareButton instanceof HTMLButtonElement) {
+        const loginUrl = shareButton.dataset.loginUrl;
+
+        if (loginUrl) {
+            window.location.href = loginUrl;
+            return;
+        }
+
         const status = shareButton.parentElement?.querySelector('[data-share-status]');
         const url = shareButton.dataset.shareUrl;
         const title = shareButton.dataset.shareTitle;

@@ -30,7 +30,7 @@
                     :label="__('Password')"
                     type="password"
                     required
-                    autocomplete="current-password"
+                    autocomplete="off"
                     :placeholder="__('Password')"
                     viewable
                 />

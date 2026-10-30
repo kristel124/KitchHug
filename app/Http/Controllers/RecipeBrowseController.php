@@ -20,13 +20,10 @@ class RecipeBrowseController extends Controller
     ];
 
     private const COURSES = [
-        'Breakfast',
-        'Lunch',
-        'Dinner',
         'Appetizers',
-        'Dessert',
+        'Sweet Treats',
         'Main Course',
-        'Side Dish',
+        'Side Recipes',
         'Snacks',
     ];
 

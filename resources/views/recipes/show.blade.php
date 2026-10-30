@@ -12,10 +12,10 @@
                     Back to recipes
                 </a>
 
-                <div class="flex flex-col gap-6 lg:h-[calc(100dvh-10rem)] lg:flex-row lg:overflow-hidden">
+                <div class="flex flex-col gap-6 lg:flex-row lg:items-start">
 
                     {{-- ───────────── LEFT COLUMN ───────────── --}}
-                    <div class="min-w-0 flex-1 lg:h-full lg:overflow-y-auto lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
+                    <div class="min-w-0 flex-1">
 
                         {{-- Video player (only shown on left if video exists) --}}
                         @if ($recipe['video_url'])
@@ -268,7 +268,7 @@
                     </div>
 
                     {{-- ───────────── RIGHT SIDEBAR ───────────── --}}
-                    <aside class="w-full shrink-0 lg:h-full lg:w-96 lg:overflow-y-auto lg:self-start lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
+                    <aside class="w-full shrink-0 lg:sticky lg:top-6 lg:max-h-[calc(100dvh-10rem)] lg:w-96 lg:overflow-y-auto lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
 
                         {{-- Photo (always in sidebar when present) --}}
                         @if ($recipe['image_url'])

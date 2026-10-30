@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\Admin\CommentController as AdminCommentController;
 use App\Http\Controllers\Admin\RecipeController as AdminRecipeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeBrowseController;
@@ -30,7 +30,6 @@ Route::get('/', function () {
             ])
             ->withCount('comments')
             ->latest()
-            ->take(12)
             ->get(),
         'homeVideoRecipes' => Recipe::query()
             ->withReactionSummary(auth()->id())
@@ -41,7 +40,6 @@ Route::get('/', function () {
             ->withCount('comments')
             ->whereNotNull('video_path')
             ->latest()
-            ->take(12)
             ->get(),
     ]);
 })->name('home');
@@ -67,6 +65,8 @@ Route::get('/explore/categories/{category}', [RecipeController::class, 'category
     ->middleware('guest')
     ->whereIn('category', ['chicken', 'seafood', 'beef', 'pasta', 'dips-spreads', 'dessert', 'pork', 'side-dish'])
     ->name('recipes.public-category');
+
+Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->whereNumber('recipe')->name('recipes.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/user_homepage', function () {
@@ -181,7 +181,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/recipes/{category}', [RecipeController::class, 'category'])
         ->whereIn('category', ['chicken', 'seafood', 'beef', 'pasta', 'dips-spreads', 'dessert', 'pork', 'side-dish'])
         ->name('recipes.category');
-    Route::get('/recipes/{recipe}', [RecipeController::class, 'show'])->whereNumber('recipe')->name('recipes.show');
     Route::post('/recipes/{recipe}/comments', [RecipeController::class, 'storeComment'])->whereNumber('recipe')->name('recipes.comments.store');
     Route::post('/recipes/{recipe}/comments/{comment}/replies', [RecipeController::class, 'replyComment'])->whereNumber('recipe')->whereNumber('comment')->name('recipes.comments.reply');
     Route::patch('/recipes/{recipe}/comments/{comment}', [RecipeController::class, 'updateComment'])->whereNumber('recipe')->whereNumber('comment')->name('recipes.comments.update');

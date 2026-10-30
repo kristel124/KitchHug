@@ -22,15 +22,6 @@ class RecipeController extends Controller
 
     private const COURSE_CATEGORIES = self::CATEGORIES;
 
-    private const METHOD_CATEGORIES = [
-        'Baking',
-        'Grilling',
-        'Frying',
-        'Boiling',
-        'Steaming',
-        'Roasting',
-    ];
-
     private const RECIPE_CATEGORIES = [
         'Chicken Recipes',
         'Seafood Recipes',
@@ -49,7 +40,6 @@ class RecipeController extends Controller
         return view('recipes.form', [
             'recipe' => new Recipe,
             'courseCategories' => self::COURSE_CATEGORIES,
-            'methodCategories' => self::METHOD_CATEGORIES,
             'recipeCategories' => self::RECIPE_CATEGORIES,
         ]);
     }
@@ -223,7 +213,7 @@ class RecipeController extends Controller
             fn (User $follower) => $follower->notify(new RecipeActivityNotification('new_recipe', $user, $recipe))
         );
 
-        return to_route('profile.show')->with('status', 'Your recipe was published.');
+        return to_route('profile.show');
     }
 
     public function edit(Request $request, Recipe $recipe): View
@@ -238,7 +228,6 @@ class RecipeController extends Controller
                     ? [$recipe->category]
                     : []),
             ])),
-            'methodCategories' => self::METHOD_CATEGORIES,
             'recipeCategories' => self::RECIPE_CATEGORIES,
         ]);
     }
@@ -271,7 +260,7 @@ class RecipeController extends Controller
             Storage::disk('public')->delete($oldVideoPath);
         }
 
-        return to_route('profile.show')->with('status', 'Your recipe was updated.');
+        return to_route('profile.show');
     }
 
     public function destroy(Request $request, Recipe $recipe): RedirectResponse
@@ -486,14 +475,13 @@ class RecipeController extends Controller
     }
 
     /**
-     * @return array{title: string, category: string, method: string, recipe_type: string, description: string, ingredients: string, instructions: string, prep_time_minutes: int}
+     * @return array{title: string, category: string, recipe_type: string, description: string, ingredients: string, instructions: string, prep_time_minutes: int}
      */
     private function validatedRecipeData(Request $request, bool $requirePhoto): array
     {
         return $request->validate([
             'title' => ['required', 'string', 'max:120'],
             'category' => ['required', 'string', Rule::in(self::CATEGORIES)],
-            'method' => ['required', 'string', Rule::in(self::METHOD_CATEGORIES)],
             'recipe_type' => ['required', 'string', Rule::in(self::RECIPE_CATEGORIES)],
             'description' => ['required', 'string', 'min:10', 'max:2000'],
             'ingredients' => ['required', 'string', 'max:10000'],

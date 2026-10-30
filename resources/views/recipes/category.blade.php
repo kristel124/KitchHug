@@ -29,7 +29,7 @@
                         <div class="relative mx-auto flex h-52 w-52 items-center justify-center sm:h-60 sm:w-60">
                             <div class="absolute inset-0 rotate-6 rounded-[2.5rem] bg-orange-200/60"></div>
                             <div class="absolute inset-2 -rotate-3 overflow-hidden rounded-[2.2rem] border-4 border-white shadow-xl">
-                                <img src="{{ $recipes[0]['image_url'] }}" alt="{{ $recipes[0]['name'] }} dish" class="h-full w-full object-cover">
+                                <img src="{{ $recipes[0]['image_url'] }}" alt="{{ $title }} dish" class="h-full w-full object-cover">
                             </div>
                         </div>
                     </div>
@@ -40,54 +40,14 @@
                 @if (session('status'))
                     <p role="status" class="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800">{{ session('status') }}</p>
                 @endif
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    @foreach ($recipes as $recipe)
-                        @php($recipeSlug = \Illuminate\Support\Str::slug($recipe['name']))
-                        @php($isFavorite = in_array($recipeSlug, $favorite_slugs, true))
-                        <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
-                            <div class="relative h-48 overflow-hidden bg-gradient-to-br {{ $recipe['color'] }}">
-                                <img src="{{ $recipe['image_url'] }}" alt="{{ $recipe['name'] }} recipe" class="h-full w-full object-cover" loading="lazy">
-                                <span class="absolute bottom-3 left-3 rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-800">{{ $title }}</span>
-                                <span class="absolute right-3 top-3 rounded-md bg-white/95 px-2.5 py-1 text-xs font-semibold text-slate-700 shadow-sm">{{ $recipe['time'] }}</span>
-                            </div>
-                            <div class="p-5">
-                                <div class="flex items-center justify-between gap-3">
-                                    <span class="text-xs font-medium text-slate-500">KitchHug Kitchen</span>
-                                    <span class="text-xs font-medium text-slate-500">Rating {{ $recipe['rating'] }}</span>
-                                </div>
-                                <h3 class="mt-2 text-lg font-bold leading-snug text-slate-900 group-hover:text-orange-600">{{ $recipe['name'] }}</h3>
-                                <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{{ $recipe['description'] }}</p>
-                                <div class="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
-                                    <a href="{{ route('recipes.curated.show', [$category_slug, $recipeSlug]) }}" class="text-sm font-semibold text-orange-700 transition hover:text-orange-800">View recipe <span aria-hidden="true">→</span></a>
-                                    @auth
-                                        <form method="POST" action="{{ route('favorites.toggle') }}">
-                                            @csrf
-                                            <input type="hidden" name="category" value="{{ $category_slug }}">
-                                            <input type="hidden" name="recipe_slug" value="{{ $recipeSlug }}">
-                                            <button type="submit" class="rounded-lg border px-3 py-1.5 text-sm font-semibold transition {{ $isFavorite ? 'border-rose-200 bg-rose-50 text-rose-700 hover:bg-rose-100' : 'border-slate-200 bg-white text-slate-700 hover:border-orange-200 hover:bg-orange-50' }}" aria-label="{{ $isFavorite ? 'Remove '.$recipe['name'].' from favorites' : 'Add '.$recipe['name'].' to favorites' }}">
-                                                {{ $isFavorite ? 'Saved' : 'Save recipe' }}
-                                            </button>
-                                        </form>
-                                    @else
-                                        <a href="{{ route('login') }}" class="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition hover:border-orange-200 hover:bg-orange-50" aria-label="Log in to save {{ $recipe['name'] }}">Save recipe</a>
-                                    @endauth
-                                </div>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
 
-                <div class="mb-6 mt-12 border-b border-orange-100 pb-4">
-                    <p class="text-[11px] font-extrabold uppercase tracking-widest text-orange-500">From the community</p>
-                    <h2 class="mt-1 text-2xl font-black text-slate-900">Community {{ $title }}</h2>
-                </div>
                 @if ($communityRecipes->isEmpty())
                     <p class="rounded-2xl border border-orange-100 bg-white p-6 text-sm text-slate-500">No community recipes in this collection yet.</p>
                 @else
                     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         @foreach ($communityRecipes as $communityRecipe)
-                            <article class="overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-                                <a href="{{ route('recipes.show', $communityRecipe) }}" class="group block">
+                            <article class="flex flex-col overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+                                <a href="{{ route('recipes.show', $communityRecipe) }}" class="group block flex-1">
                                     <div class="relative h-48 overflow-hidden bg-orange-50">
                                         <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->image_path) }}" alt="Recipe photo for {{ $communityRecipe->title }}" class="h-full w-full object-cover" loading="lazy">
                                         @if ($communityRecipe->video_path)

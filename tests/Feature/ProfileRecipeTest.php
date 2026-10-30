@@ -139,7 +139,6 @@ test('a user can publish and update their recipe', function () {
         ->post(route('recipes.store'), [
             'title' => 'Garden Pasta',
             'category' => 'Dinner',
-            'method' => 'Boiling',
             'recipe_type' => 'Pasta Recipes',
             'description' => 'Fresh herbs and vegetables.',
             'ingredients' => "Pasta\nTomatoes",
@@ -153,7 +152,6 @@ test('a user can publish and update their recipe', function () {
     $recipe = Recipe::query()->where('title', 'Garden Pasta')->firstOrFail();
 
     $this->assertSame($user->id, $recipe->user_id);
-    $this->assertSame('Boiling', $recipe->method);
     $this->assertSame('Pasta Recipes', $recipe->recipe_type);
     Storage::disk('public')->assertExists($recipe->image_path);
     Storage::disk('public')->assertExists($recipe->video_path);
@@ -162,7 +160,6 @@ test('a user can publish and update their recipe', function () {
         ->put(route('recipes.update', $recipe), [
             'title' => 'Herby Garden Pasta',
             'category' => 'Dinner',
-            'method' => 'Frying',
             'recipe_type' => 'Pasta Recipes',
             'description' => 'Fresh herbs and vegetables.',
             'ingredients' => "Pasta\nTomatoes",
@@ -174,7 +171,6 @@ test('a user can publish and update their recipe', function () {
     $this->assertDatabaseHas('recipes', [
         'id' => $recipe->id,
         'title' => 'Herby Garden Pasta',
-        'method' => 'Frying',
         'recipe_type' => 'Pasta Recipes',
     ]);
 
@@ -217,7 +213,6 @@ test('a user can replace their recipe photo while editing', function () {
             '_method' => 'PUT',
             'title' => $recipe->title,
             'category' => $recipe->category,
-            'method' => $recipe->method,
             'recipe_type' => $recipe->recipe_type,
             'description' => $recipe->description,
             'ingredients' => $recipe->ingredients,
@@ -295,10 +290,8 @@ test('recipe creation validates required fields', function () {
         ->assertOk()
         ->assertSee('Post a new recipe')
         ->assertSee('Publish recipe')
-        ->assertSee('name="method"', false)
         ->assertSee('name="recipe_type"', false)
         ->assertSee('Choose a course')
-        ->assertSee('Choose a method')
         ->assertSee('Choose a recipe type')
         ->assertSee('Images and videos')
         ->assertSee('>Images</h3>', false)
@@ -312,5 +305,5 @@ test('recipe creation validates required fields', function () {
     $this->from(route('recipes.create'))
         ->post(route('recipes.store'), ['title' => ''])
         ->assertRedirect(route('recipes.create'))
-        ->assertSessionHasErrors(['title', 'category', 'method', 'recipe_type', 'description', 'ingredients', 'instructions', 'prep_time_minutes', 'photo']);
+        ->assertSessionHasErrors(['title', 'category', 'recipe_type', 'description', 'ingredients', 'instructions', 'prep_time_minutes', 'photo']);
 });

@@ -12,10 +12,10 @@
                     Back to recipes
                 </a>
 
-                <div class="flex flex-col gap-6 lg:flex-row">
+                <div class="flex flex-col gap-6 lg:h-[calc(100dvh-10rem)] lg:flex-row lg:overflow-hidden">
 
                     {{-- ───────────── LEFT COLUMN ───────────── --}}
-                    <div class="min-w-0 flex-1">
+                    <div class="min-w-0 flex-1 lg:h-full lg:overflow-y-auto lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
 
                         {{-- Video player (only shown on left if video exists) --}}
                         @if ($recipe['video_url'])
@@ -268,7 +268,7 @@
                     </div>
 
                     {{-- ───────────── RIGHT SIDEBAR ───────────── --}}
-                    <aside class="w-full shrink-0 lg:w-96 lg:self-start">
+                    <aside class="w-full shrink-0 lg:h-full lg:w-96 lg:overflow-y-auto lg:self-start lg:[scrollbar-width:none] lg:[&::-webkit-scrollbar]:hidden">
 
                         {{-- Photo (always in sidebar when present) --}}
                         @if ($recipe['image_url'])
@@ -279,20 +279,6 @@
                             <div class="flex h-48 w-full items-center justify-center rounded-2xl bg-gradient-to-br from-orange-100 to-amber-50 text-8xl shadow-sm" aria-hidden="true">{{ $recipe['emoji'] }}</div>
                         @endif
 
-                        {{-- Recipe title + quick meta in sidebar --}}
-                        <div class="mt-4 rounded-2xl border border-orange-100 bg-white p-5 shadow-sm">
-                            <h2 class="text-lg font-black text-slate-900">{{ $recipe['title'] }}</h2>
-                            <div class="mt-3 flex flex-wrap gap-4 text-xs text-slate-500">
-                                <div class="flex items-center gap-1.5">
-                                    <svg viewBox="0 0 24 24" fill="none" class="size-4 text-orange-400" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v6l4 2m6-2a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z"/></svg>
-                                    <span class="font-semibold text-slate-700">{{ $recipe['prep_time'] ?? ($recipe['prep_time_minutes'].' min') }}</span>
-                                </div>
-                                <div class="flex items-center gap-1.5">
-                                    <svg viewBox="0 0 24 24" fill="none" class="size-4 text-orange-400" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.75 3.75h8.5v4.5a4.25 4.25 0 0 1-8.5 0v-4.5Zm0 2H4.5v1.5a4.25 4.25 0 0 0 4.25 4.25m7.5-5.75h3.25v1.5a4.25 4.25 0 0 1-4.25 4.25m-3.25 1v3.75m-3.5 4h7m-3.5-4a3.5 3.5 0 0 0-3.5 3.5v.5h7v-.5a3.5 3.5 0 0 0-3.5-3.5Z"/></svg>
-                                    <span class="font-semibold text-slate-700">{{ ucfirst($recipe['category']) }}</span>
-                                </div>
-                            </div>
-                        </div>
 
                         {{-- Ingredients --}}
                         @if ($recipe['ingredients'])

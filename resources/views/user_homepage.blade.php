@@ -4,7 +4,7 @@
     <div class="flex min-h-screen flex-col bg-[#FAF6F0] text-slate-800 antialiased dark:bg-slate-900 dark:text-slate-100">
         @include('partials.kitchhug_header')
         <main class="flex-1">
-            <section data-dish-carousel class="relative isolate overflow-hidden bg-orange-50 flex items-center" style="min-height: calc(100vh - 64px);" role="region" aria-label="Dish inspiration" aria-roledescription="carousel">
+            <section data-dish-carousel class="relative isolate overflow-hidden bg-orange-50 flex items-center" style="min-height: calc(100vh - 76px);" role="region" aria-label="Dish inspiration" aria-roledescription="carousel">
                 <div class="absolute inset-0" aria-hidden="true">
                     <article data-dish-slide role="group" aria-roledescription="slide" aria-label="1 of 4" class="absolute inset-0">
                         <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&amp;fit=crop&amp;w=1920&amp;q=85" alt="" class="h-full w-full object-cover" width="1920" height="1080" fetchpriority="high">
@@ -56,8 +56,8 @@
                         @else
                             <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 @foreach ($imageRecipes as $recipe)
-                                    <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
-                                        <a href="{{ route('recipes.show', $recipe) }}" class="group block">
+                                    <article class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
+                                        <a href="{{ route('recipes.show', $recipe) }}" class="group block flex-1">
                                             <div class="relative h-48 overflow-hidden bg-slate-100">
                                                 <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Recipe photo for {{ $recipe->title }}" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
                                                 <span class="absolute bottom-3 left-3 rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-slate-800">{{ $recipe->category }}</span>
@@ -110,14 +110,14 @@
                         @else
                             <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 @foreach ($videoRecipes as $recipe)
-                                    <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
+                                    <article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
                                         <div class="bg-slate-950">
                                             <video controls preload="metadata" data-recipe-video-player class="aspect-video w-full" aria-label="Recipe video for {{ $recipe->title }}">
                                                 <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->video_path) }}">
                                                 Your browser does not support video playback.
                                             </video>
                                         </div>
-                                        <div class="p-5">
+                                        <div class="flex-1 p-5">
                                             <p class="text-xs font-semibold uppercase tracking-wide text-orange-700">{{ $recipe->category }}</p>
                                             <h3 class="mt-2 text-lg font-bold leading-snug text-slate-900"><a href="{{ route('recipes.show', $recipe) }}" class="hover:text-orange-600">{{ $recipe->title }}</a></h3>
                                             <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{{ $recipe->description }}</p>

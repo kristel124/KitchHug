@@ -114,8 +114,13 @@
             aria-controls="ai-chat-panel"
             class="fixed bottom-6 right-6 z-[60] flex size-14 items-center justify-center rounded-full bg-gradient-to-br from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30 transition hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
         >
-            {{-- Chef hat icon (shown when closed) --}}
-            <span id="ai-chat-icon-open" aria-hidden="true" class="text-xl leading-none">🍳</span>
+            {{-- Messenger icon (shown when closed) --}}
+            <span id="ai-chat-icon-open" aria-hidden="true" class="flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                    <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z" />
+                    <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z" />
+                </svg>
+            </span>
             {{-- Close icon (shown when open) --}}
             <svg id="ai-chat-icon-close" viewBox="0 0 24 24" fill="none" class="hidden size-5" aria-hidden="true">
                 <path d="M6 18 18 6M6 6l12 12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
@@ -133,7 +138,12 @@
         >
             {{-- Header --}}
             <div class="flex items-center gap-3 bg-gradient-to-r from-orange-500 to-orange-400 px-5 py-4">
-                <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg">🍳</div>
+                <div class="flex size-9 shrink-0 items-center justify-center rounded-full bg-white/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5 text-white">
+                        <path d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 0 0-1.032-.211 50.89 50.89 0 0 0-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 0 0 2.433 3.984L7.28 21.53A.75.75 0 0 1 6 21v-4.03a48.527 48.527 0 0 1-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979Z" />
+                        <path d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 0 0 1.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0 0 15.75 7.5Z" />
+                    </svg>
+                </div>
                 <div class="flex-1 min-w-0">
                     <h2 id="ai-chat-title" class="text-sm font-black text-white tracking-tight">Hugsy</h2>
                     <p class="text-[11px] text-orange-100 font-medium">Your KitchHug cooking assistant</p>

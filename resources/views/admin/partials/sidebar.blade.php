@@ -1,13 +1,15 @@
 <aside class="flex w-full shrink-0 flex-col border-b border-orange-100 bg-white md:sticky md:top-0 md:h-screen md:w-64 md:border-b-0 md:border-r md:overflow-hidden">
     <div class="flex items-center justify-between px-6 py-5">
-        <a href="{{ route('admin.dashboard') }}" class="text-xl font-black tracking-tight text-slate-900">
-            Kitch<span class="text-orange-500">Hug</span>
-            <span class="ml-1 text-xs font-bold uppercase tracking-wider text-slate-400">Admin</span>
+        <a href="{{ route('admin.dashboard') }}" class="flex items-center">
+            <img src="{{ asset('KitchHug_Logo.png') }}" alt="KitchHug" class="h-10 w-auto object-contain">
         </a>
     </div>
 
     <nav aria-label="Admin navigation" class="grid grid-cols-2 gap-2 px-4 pb-4 md:flex md:flex-1 md:flex-col md:gap-1">
-        <p class="hidden px-3 pb-2 pt-5 text-xs font-bold uppercase tracking-widest text-slate-400 md:block">Workspace</p>
+        <p class="hidden px-3 pb-2 pt-5 text-xs font-bold uppercase tracking-widest text-slate-400 md:flex md:items-center md:gap-2">
+            Workspace
+            <span class="text-xs font-bold uppercase tracking-widest text-orange-500">Admin</span>
+        </p>
         <a href="{{ route('admin.dashboard') }}"
            class="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-semibold transition
                   {{ request()->routeIs('admin.dashboard') ? 'bg-orange-50 font-bold text-orange-700' : 'text-slate-600 hover:bg-orange-50 hover:text-orange-700' }}">

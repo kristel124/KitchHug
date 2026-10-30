@@ -83,8 +83,8 @@
                         </a>
 
                         {{-- Active Posters Card --}}
-                        <div class="group relative overflow-hidden rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-xl hover:shadow-emerald-100">
-                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r from-emerald-400 to-teal-400"></div>
+                        <div class="group relative overflow-hidden rounded-2xl border border-orange-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-xl hover:shadow-orange-100">
+                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl bg-gradient-to-r from-orange-400 to-amber-400"></div>
                             <div class="flex items-start justify-between">
                                 <div>
                                     <p class="text-xs font-bold uppercase tracking-widest text-slate-400">Active posters</p>
@@ -97,8 +97,8 @@
                                     </svg>
                                 </span>
                             </div>
-                            <div class="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-emerald-50">
-                                <div class="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 transition-all" style="width: {{ $activePostersRate }}%"></div>
+                            <div class="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-orange-50">
+                                <div class="h-full rounded-full bg-gradient-to-r from-orange-400 to-amber-400 transition-all" style="width: {{ $activePostersRate }}%"></div>
                             </div>
                         </div>
                     </div>

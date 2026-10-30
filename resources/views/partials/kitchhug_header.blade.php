@@ -22,18 +22,9 @@
             'Side Dish',
             'Snacks',
         ];
-
-        $methodCategories = [
-            'baking' => 'Baking',
-            'grilling' => 'Grilling',
-            'frying' => 'Frying',
-            'boiling' => 'Boiling',
-            'steaming' => 'Steaming',
-            'roasting' => 'Roasting',
-        ];
     @endphp
 
-    <div class="mx-auto max-w-[1440px] px-6">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex min-h-[76px] items-center gap-6 py-3">
 
             {{-- LOGO --}}
@@ -78,7 +69,7 @@
                         </svg>
                     </summary>
 
-                    <div class="absolute left-0 top-full z-50 mt-2 max-h-80 w-56 overflow-y-auto rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
+                    <div class="absolute left-0 top-full z-50 mt-2 w-56 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
 
                         @foreach($recipeCategories as $slug => $label)
                             <a href="{{ auth()->check() ? route('recipes.category', $slug) : route('recipes.public-category', $slug) }}"
@@ -92,12 +83,12 @@
                     </div>
                 </details>
 
-                {{-- MORE DROPDOWN --}}
+                {{-- COURSE DROPDOWN --}}
                 <details data-navigation-dropdown class="group relative">
 
                     <summary class="flex cursor-pointer list-none items-center gap-1 py-2 text-slate-600 transition-colors hover:text-orange-500 dark:text-slate-300 [&::-webkit-details-marker]:hidden">
 
-                        More
+                        Course
 
                         <svg xmlns="http://www.w3.org/2000/svg"
                              width="14" height="14"
@@ -116,55 +107,14 @@
 
                     <div class="absolute left-0 top-full z-50 mt-2 w-52 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
 
-                        {{-- BY METHODS --}}
-                        <details data-navigation-dropdown class="group/method relative">
+                        @foreach($courseCategories as $category)
+                            <a href="{{ route('recipes.by-course', \Illuminate\Support\Str::slug($category)) }}"
+                               class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700">
 
-                            <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700 [&::-webkit-details-marker]:hidden">
+                                {{ $category }}
 
-                                By Methods
-
-                                <span class="text-lg leading-none" aria-hidden="true">›</span>
-
-                            </summary>
-
-                            <div class="absolute left-full top-0 z-50 ml-1 w-48 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
-
-                                @foreach($methodCategories as $slug => $label)
-                                    <a href="{{ route('recipes.by-method', $slug) }}"
-                                       class="block rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700">
-
-                                        {{ $label }}
-
-                                    </a>
-                                @endforeach
-
-                            </div>
-                        </details>
-
-                        {{-- COURSE SUBMENU --}}
-                        <details data-navigation-dropdown class="group/course relative">
-
-                            <summary class="flex cursor-pointer list-none items-center justify-between rounded-lg px-3 py-2.5 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700 [&::-webkit-details-marker]:hidden">
-
-                                Course
-
-                                <span class="text-lg leading-none" aria-hidden="true">›</span>
-
-                            </summary>
-
-                            <div class="absolute left-full top-0 z-50 ml-1 w-44 rounded-xl border border-orange-100 bg-white p-2 shadow-xl shadow-orange-900/10 dark:border-slate-700 dark:bg-slate-800">
-
-                                @foreach($courseCategories as $category)
-                                    <a href="{{ route('recipes.by-course', \Illuminate\Support\Str::slug($category)) }}"
-                                       class="block rounded-lg px-3 py-2 text-sm text-slate-600 transition-colors hover:bg-orange-50 hover:text-orange-500 dark:text-slate-300 dark:hover:bg-slate-700">
-
-                                        {{ $category }}
-
-                                    </a>
-                                @endforeach
-
-                            </div>
-                        </details>
+                            </a>
+                        @endforeach
 
                     </div>
                 </details>

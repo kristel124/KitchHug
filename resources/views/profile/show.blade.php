@@ -133,7 +133,7 @@
                     </div>
                     <div data-profile-recipes-grid class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                         @foreach ($recipes as $recipe)
-                            <article data-profile-recipe-card class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
+                            <article data-profile-recipe-card class="group flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-lg">
                                 <div data-profile-recipe-image class="relative h-52 overflow-hidden bg-slate-100">
                                     <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="Recipe photo for {{ $recipe->title }}" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105">
                                     <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/70 to-transparent px-4 pb-4 pt-12">
@@ -143,7 +143,7 @@
                                         <span class="absolute right-3 top-3 rounded-md bg-slate-950/75 px-2.5 py-1 text-[11px] font-semibold text-white">Video</span>
                                     @endif
                                 </div>
-                                <div data-profile-recipe-content class="p-5">
+                                <div data-profile-recipe-content class="flex-1 p-5">
                                     <div class="flex items-start justify-between gap-3">
                                         <div class="min-w-0">
                                             <h3 class="text-lg font-bold leading-snug text-slate-900"><a href="{{ route('recipes.show', $recipe) }}" class="transition hover:text-orange-600">{{ $recipe->title }}</a></h3>

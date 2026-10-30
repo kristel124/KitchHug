@@ -146,11 +146,11 @@
                             <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
                                 @foreach ($homeImageRecipes->take(4) as $recipe)
                                     <a href="{{ route('recipes.show', $recipe) }}"
-                                       class="group overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
+                                       class="group flex flex-col overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500">
                                         <div class="relative h-44 overflow-hidden">
                                             <img src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($recipe->image_path) }}" alt="{{ $recipe->title }} recipe photo" class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" loading="lazy">
                                         </div>
-                                        <div class="p-5">
+                                        <div class="flex flex-1 flex-col p-5">
                                             <div class="flex items-center justify-between gap-3">
                                                 <span class="text-[10px] font-extrabold uppercase tracking-widest text-orange-500">{{ $recipe->category }}</span>
                                                 <span class="shrink-0 text-xs font-semibold text-slate-500">{{ $recipe->prep_time_minutes }} min</span>
@@ -167,7 +167,7 @@
                                                 </span>
                                                 <span class="text-xs text-slate-500">{{ $recipe->user->name }}</span>
                                             </div>
-                                            <p class="mt-4 border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
+                                            <p class="mt-auto border-t border-orange-100 pt-4 text-sm font-bold text-orange-600">View recipe <span aria-hidden="true">→</span></p>
                                         </div>
                                     </a>
                                 @endforeach
@@ -184,14 +184,14 @@
                         @else
                             <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                                 @foreach ($homeVideoRecipes as $communityRecipe)
-                                    <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+                                    <article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
                                         <div class="bg-slate-950">
                                             <video controls preload="metadata" data-recipe-video-player class="aspect-video w-full" aria-label="Recipe video for {{ $communityRecipe->title }}">
                                                 <source src="{{ \Illuminate\Support\Facades\Storage::disk('public')->url($communityRecipe->video_path) }}">
                                                 Your browser does not support video playback.
                                             </video>
                                         </div>
-                                        <div class="p-5">
+                                        <div class="flex-1 p-5">
                                             <p class="text-xs font-semibold uppercase tracking-wide text-orange-700">{{ $communityRecipe->category }}</p>
                                             <h3 class="mt-2 text-lg font-bold text-slate-900"><a href="{{ route('recipes.show', $communityRecipe) }}" class="hover:text-orange-600">{{ $communityRecipe->title }}</a></h3>
                                             <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-600">{{ $communityRecipe->description }}</p>

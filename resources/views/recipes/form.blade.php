@@ -56,8 +56,8 @@
                         <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-lg font-black text-amber-700">2</span>
                         <div class="w-full">
                             <h2 class="mt-1 text-xl font-black text-slate-900">Help cooks find your dish</h2>
-                            <p class="mt-1 text-sm text-slate-500">Choose a course, cooking method, and recipe collection.</p>
-                            <div class="mt-5 grid gap-4 rounded-3xl border border-orange-100 bg-gradient-to-br from-orange-50/80 via-white to-amber-50/60 p-4 sm:grid-cols-2 sm:p-5 lg:grid-cols-3">
+                            <p class="mt-1 text-sm text-slate-500">Choose a course and recipe collection.</p>
+                            <div class="mt-5 grid gap-4 rounded-3xl border border-orange-100 bg-gradient-to-br from-orange-50/80 via-white to-amber-50/60 p-4 sm:grid-cols-2 sm:p-5">
                                 <div>
                                     <label for="category" class="flex items-center gap-2 text-sm font-bold text-slate-700"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-100 text-orange-700" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="5"></circle><path d="M3 5v5m2-5v5m-2-2h2m14-3v5m2-5v5m-2-2h2"></path></svg></span>Course</label>
                                     <div class="relative mt-2">
@@ -72,19 +72,6 @@
                                     @error('category') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
                                 </div>
                                 <div>
-                                    <label for="method" class="flex items-center gap-2 text-sm font-bold text-slate-700"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-amber-100 text-amber-700" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M12 22c4.4 0 7-3 7-7 0-3-1.8-5.2-4-7-.2 2-1.2 3.2-2.4 3.8C12.8 8.2 10 4.7 7 3c.4 4.5-2 6.6-2 11 0 4.8 2.8 8 7 8Z"></path><path d="M12 22c-2 0-3-1.5-3-3.2 0-1.4.8-2.6 2.2-3.8.2 1.4.8 2.1 1.7 2.6.7-1.2.9-2.1.8-3.1 1.5 1.3 2.3 2.6 2.3 4.1 0 2-1.4 3.4-4 3.4Z"></path></svg></span>Methods</label>
-                                    <div class="relative mt-2">
-                                        <select id="method" name="method" required class="w-full appearance-none rounded-2xl border border-orange-200/80 bg-white px-4 py-3.5 pr-11 text-sm font-semibold text-slate-700 shadow-sm outline-none transition hover:border-orange-300 focus:border-orange-400 focus:ring-4 focus:ring-orange-100/70">
-                                            <option value="">Choose a method</option>
-                                            @foreach ($methodCategories as $method)
-                                                <option value="{{ $method }}" @selected(old('method', $recipe->method) === $method)>{{ $method }}</option>
-                                            @endforeach
-                                        </select>
-                                        <span class="pointer-events-none absolute inset-y-0 right-4 flex items-center text-orange-500" aria-hidden="true">⌄</span>
-                                    </div>
-                                    @error('method') <p class="mt-1 text-sm font-medium text-rose-600">{{ $message }}</p> @enderror
-                                </div>
-                                <div class="sm:col-span-2 lg:col-span-1">
                                     <label for="recipe_type" class="flex items-center gap-2 text-sm font-bold text-slate-700"><span class="flex h-7 w-7 items-center justify-center rounded-lg bg-rose-100 text-rose-700" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4"><path d="M11 20A8 8 0 0 1 3 12c0-4.4 3.6-8 8-8h8a2 2 0 0 1 2 2v8a8 8 0 0 1-8 8h-2Z"></path><path d="M7 13c2 0 3-1 4-3m1 6c2 0 3-1 4-3"></path></svg></span>Recipes</label>
                                     <div class="relative mt-2">
                                         <select id="recipe_type" name="recipe_type" required class="w-full appearance-none rounded-2xl border border-orange-200/80 bg-white px-4 py-3.5 pr-11 text-sm font-semibold text-slate-700 shadow-sm outline-none transition hover:border-orange-300 focus:border-orange-400 focus:ring-4 focus:ring-orange-100/70">
